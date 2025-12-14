@@ -1,0 +1,26 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: metallb
+  namespace: argocd
+spec:
+  project: default
+
+  source:
+    repoURL: "ssh://git@github.com/NSerbin/k3s-cluster-charts.git"
+    targetRevision: "main"
+    path: "charts/metallb"
+    helm:
+      valueFiles:
+        - values.yaml
+
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: metallb-system
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
