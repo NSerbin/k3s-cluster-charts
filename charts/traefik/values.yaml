@@ -50,15 +50,6 @@ traefik:
     access:
       enabled: true
       format: json
-      filters:
-        statusCodes:
-          - "200-399"
-          - "400-499"
-          - "500-599"
-      fields:
-        defaultMode: keep
-        headers:
-          defaultMode: drop
 
   metrics:
     prometheus:
@@ -72,12 +63,11 @@ traefik:
     insecure: false
 
   additionalArguments:
+    - "--ping=true"
     - "--entryPoints.web.forwardedHeaders.insecure=true"
     - "--entryPoints.websecure.forwardedHeaders.insecure=true"
-    - "--ping=true"
 
   securityContext:
-    readOnlyRootFilesystem: false
     capabilities:
       drop: [ "ALL" ]
     allowPrivilegeEscalation: false
@@ -89,7 +79,6 @@ traefik:
     enabled: false
 
 
-# --- Dashboard exposure (SIN secretos en Git) ---
 dashboard:
   enabled: true
   host: "traefik.home.lab"
@@ -97,4 +86,4 @@ dashboard:
 
   basicAuth:
     enabled: true
-    secretName: traefik-dashboard-auth 
+    secretName: traefik-dashboard-auth
