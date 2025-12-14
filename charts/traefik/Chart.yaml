@@ -1,0 +1,11 @@
+apiVersion: v2
+name: traefik
+description: Traefik (LoadBalancer via MetalLB) + optional dashboard IngressRoute
+type: application
+version: 0.1.0
+
+dependencies:
+  - name: traefik
+    repository: "https://traefik.github.io/charts"
+    version: "37.4.0"
+    alias: traefik
