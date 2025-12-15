@@ -8,12 +8,10 @@ spec:
   entryPoints:
     - {{ .Values.dashboard.entryPoint | default "websecure" }}
   routes:
-    - match: Host(`{{ required "dashboard.host is required" .Values.dashboard.host }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+    - match: Host(`{{ .Values.dashboard.host }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
-      {{- if .Values.dashboard.basicAuth.enabled }}
       middlewares:
         - name: traefik-dashboard-auth
-      {{- end }}
       services:
         - name: api@internal
           kind: TraefikService
