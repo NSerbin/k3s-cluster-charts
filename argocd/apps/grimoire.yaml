@@ -9,7 +9,7 @@ spec:
   source:
     repoURL: "https://github.com/NSerbin/k3s-cluster-charts.git"
     targetRevision: main
-    path: charts/grimoire.yaml
+    path: "charts/grimoire"
     helm:
       valueFiles:
         - values.yaml
