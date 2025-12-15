@@ -11,8 +11,10 @@ tunnel:
 
 # Cloudflare Tunnel ingress rules (host -> upstream)
 ingress:
-  - hostname: traefik.nserbin.com
-    service: http://traefik.traefik.svc.cluster.local:80
+  - hostname: "traefik.nserbin.com"
+    service: "https://traefik.traefik.svc.cluster.local:443"
+    originRequest:
+      noTLSVerify: true
 
   - hostname: argocd.nserbin.com
     service: http://argocd-server.argocd.svc.cluster.local:80
