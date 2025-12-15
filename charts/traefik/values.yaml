@@ -82,7 +82,8 @@ traefik:
 dashboard:
   enabled: true
   host: "traefik.nserbin.com"
-  entryPoint: "websecure"
+  #entryPoint: "websecure"
+  entryPoint: "web"
 
   basicAuth:
     enabled: true
