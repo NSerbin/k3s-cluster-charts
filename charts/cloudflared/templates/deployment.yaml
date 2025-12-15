@@ -40,20 +40,6 @@ spec:
               subPath: credentials.json
               readOnly: true
 
-          livenessProbe:
-            httpGet:
-              path: /ready
-              port: 2000
-            initialDelaySeconds: 10
-            periodSeconds: 20
-
-          readinessProbe:
-            httpGet:
-              path: /ready
-              port: 2000
-            initialDelaySeconds: 5
-            periodSeconds: 10
-
       volumes:
         - name: config
           configMap:
