@@ -14,7 +14,7 @@ ingress:
   - hostname: "traefik.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
 
-  - hostname: "argocd.nserbin.com"
+  - hostname: "argo.nserbin.com"
     service: "http://argocd-server.argocd.svc.cluster.local:80"
 
   - service: "http_status:404"
