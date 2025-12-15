@@ -16,8 +16,6 @@ env:
   PUBLIC_SIGNUP_DISABLED: "false"
 
 extraEnv: []
-# - name: SOME_FLAG
-#   value: "true"
 
 persistence:
   enabled: true
@@ -46,22 +44,18 @@ resources:
     cpu: 500m
     memory: 512Mi
 
-
 securityContext:
   enabled: true
   runAsNonRoot: true
   runAsUser: 1000
   runAsGroup: 1000
   fsGroup: 1000
+
 containerSecurityContext:
   allowPrivilegeEscalation: false
-  readOnlyRootFilesystem: false  
+  readOnlyRootFilesystem: false
 
 podAnnotations: {}
-# Si algún día hay /metrics, podrías usar esto:
-# prometheus.io/scrape: "true"
-# prometheus.io/port: "5173"
-# prometheus.io/path: "/metrics"
 
 ingress:
   enabled: false

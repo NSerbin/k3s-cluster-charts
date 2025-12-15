@@ -29,43 +29,18 @@ spec:
         runAsGroup: {{ .Values.securityContext.runAsGroup }}
         fsGroup: {{ .Values.securityContext.fsGroup }}
       {{- end }}
-
-      initContainers:
-        - name: init-permissions
-          image: busybox:1.36
-          imagePullPolicy: IfNotPresent
-          command:
-            - sh
-            - -c
-            - |
-              set -e
-              echo "[init] fixing permissions on /app/data"
-              chown -R {{ .Values.securityContext.runAsUser }}:{{ .Values.securityContext.runAsGroup }} /app/data
-              chmod -R 755 /app/data
-              echo "[init] done"
-          securityContext:
-            runAsUser: 0
-            allowPrivilegeEscalation: false
-            readOnlyRootFilesystem: true
-          volumeMounts:
-            - name: data
-              mountPath: /app/data
-
       containers:
         - name: grimoire
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-
           {{- with .Values.containerSecurityContext }}
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
-
           env:
             - name: PORT
               value: {{ .Values.env.PORT | quote }}
@@ -78,7 +53,6 @@ spec:
             {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-
           {{- if and .Values.probes.enabled .Values.probes.path }}
           livenessProbe:
             httpGet:
@@ -88,7 +62,6 @@ spec:
             periodSeconds: {{ .Values.probes.periodSeconds }}
             timeoutSeconds: {{ .Values.probes.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.failureThreshold }}
-
           readinessProbe:
             httpGet:
               path: {{ .Values.probes.path | quote }}
@@ -98,16 +71,13 @@ spec:
             timeoutSeconds: {{ .Values.probes.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.failureThreshold }}
           {{- end }}
-
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
-
           volumeMounts:
             - name: data
               mountPath: /app/data
-
       volumes:
         - name: data
           persistentVolumeClaim:
