@@ -1,0 +1,6 @@
+Grimoire deployed!
+
+URL(s):
+{{- range .Values.ingress.hosts }}
+  - https://{{ .host }}/
+{{- end }}

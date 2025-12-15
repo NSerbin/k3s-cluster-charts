@@ -19,6 +19,11 @@ ingress:
     originRequest:
       httpHostHeader: "argo.nserbin.com"
 
+  - hostname: "bookmarks.nserbin.com"
+    service: "http://grimoire.grimoire.svc.cluster.local:5173"
+    originRequest:
+      httpHostHeader: "bookmarks.nserbin.com"
+
   - service: "http_status:404"
 
 resources:
