@@ -16,6 +16,8 @@ ingress:
 
   - hostname: "argo.nserbin.com"
     service: "http://argocd-server.argocd.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "argo.nserbin.com"
 
   - service: "http_status:404"
 
