@@ -30,11 +30,11 @@ traefik:
         default: true
       exposedPort: 80
       protocol: TCP
-      redirections:
-        entryPoint:
-          to: websecure
-          scheme: https
-          permanent: true
+      # redirections:
+      #   entryPoint:
+      #     to: websecure
+      #     scheme: https
+      #     permanent: true
 
     websecure:
       port: 443
@@ -88,10 +88,3 @@ dashboard:
   basicAuth:
     enabled: true
     secretName: traefik-dashboard-auth
-
-ingressRoute:
-  dashboard:
-    enabled: true
-    matchRule: Host(`traefik.nserbin.com`)
-    entryPoints:
-      - web
