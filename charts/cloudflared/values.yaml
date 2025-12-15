@@ -16,11 +16,10 @@ ingress:
     originRequest:
       noTLSVerify: true
 
-  - hostname: argocd.nserbin.com
-    service: http://argocd-server.argocd.svc.cluster.local:80
+  - hostname: "argocd.nserbin.com"
+    service: "http://argocd-server.argocd.svc.cluster.local:80"
 
-  # Catch-all
-  - service: http_status:404
+  - service: "http_status:404"
 
 resources:
   requests:

@@ -13,6 +13,10 @@ data:
 {{- if .hostname }}
       - hostname: {{ .hostname | quote }}
         service: {{ required "ingress[].service is required" .service | quote }}
+{{- if .originRequest }}
+        originRequest:
+{{ toYaml .originRequest | indent 10 }}
+{{- end }}
 {{- else }}
       - service: {{ required "ingress[].service is required" .service | quote }}
 {{- end }}
