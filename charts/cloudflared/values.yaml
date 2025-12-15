@@ -20,7 +20,7 @@ ingress:
       httpHostHeader: "argo.nserbin.com"
 
   - hostname: "bookmarks.nserbin.com"
-    service: "http://tools-grimoire.tools.svc.cluster.local:5173"
+    service: "http://grimoire-grimoire.tools.svc.cluster.local:5173"
     originRequest:
       httpHostHeader: "bookmarks.nserbin.com"
 
