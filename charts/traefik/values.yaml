@@ -85,6 +85,3 @@ dashboard:
   #entryPoint: "websecure"
   entryPoint: "web"
 
-  basicAuth:
-    enabled: true
-    secretName: traefik-dashboard-auth
