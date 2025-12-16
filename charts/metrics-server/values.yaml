@@ -1,0 +1,46 @@
+metricsServer:
+  replicas: 1
+
+  apiService:
+    create: true
+
+  args:
+    - --cert-dir=/tmp
+    - --secure-port=10250
+    - --kubelet-preferred-address-types=InternalIP,ExternalIP,Hostname
+    - --kubelet-use-node-status-port
+    - --metric-resolution=15s
+
+
+  extraArgs:
+     - --kubelet-insecure-tls
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+  tolerations:
+    - key: "node-role.kubernetes.io/control-plane"
+      operator: "Exists"
+      effect: "NoSchedule"
+
+  nodeSelector: {}
+  affinity: {}
+
+  podDisruptionBudget:
+    enabled: true
+    minAvailable: 1
+
+  metrics:
+    enabled: true
+    
+  serviceMonitor:
+    enabled: true
+    interval: 1m
+    scrapeTimeout: 10s
+    additionalLabels:
+      release: kube-prometheus-stack
