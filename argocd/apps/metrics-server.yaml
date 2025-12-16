@@ -7,7 +7,7 @@ spec:
   project: default
 
   source:
-    repoURL: "ssh://git@github.com/NSerbin/k3s-cluster-charts.git"
+    repoURL: "https://github.com/NSerbin/k3s-cluster-charts.git"
     targetRevision: "main"
     path: "charts/metrics-server"
     helm:
