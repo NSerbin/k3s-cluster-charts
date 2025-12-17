@@ -34,16 +34,14 @@ spec:
 {{ toYaml .Values.securityContext | indent 12 }}
 
           volumeMounts:
-            # Necesario para nginx (cache, client_temp, etc.)
-            - name: nginx-cache
-              mountPath: /var/cache/nginx
-
-            # Necesario para nginx pid/socket
-            - name: nginx-run
-              mountPath: /var/run
-
 {{- if .Values.extraVolumeMounts }}
 {{ toYaml .Values.extraVolumeMounts | indent 12 }}
+{{- else }}
+            # Defaults needed for nginx with readOnlyRootFilesystem=true
+            - name: nginx-cache
+              mountPath: /var/cache/nginx
+            - name: nginx-run
+              mountPath: /var/run
 {{- end }}
 
           livenessProbe:
@@ -61,12 +59,11 @@ spec:
             periodSeconds: 5
 
       volumes:
-        - name: nginx-cache
-          emptyDir: {}
-
-        - name: nginx-run
-          emptyDir: {}
-
 {{- if .Values.extraVolumes }}
 {{ toYaml .Values.extraVolumes | indent 8 }}
+{{- else }}
+        - name: nginx-cache
+          emptyDir: {}
+        - name: nginx-run
+          emptyDir: {}
 {{- end }}
