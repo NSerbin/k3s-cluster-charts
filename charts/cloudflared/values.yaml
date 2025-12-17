@@ -24,7 +24,7 @@ ingress:
     originRequest:
       httpHostHeader: "bookmarks.nserbin.com"
 
-  - hostname: "it-tools.nserbin.com"
+  - hostname: "tools.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
 
   - service: "http_status:404"
