@@ -30,6 +30,18 @@ securityContext:
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: true
 
+extraVolumeMounts:
+  - name: nginx-cache
+    mountPath: /var/cache/nginx
+  - name: nginx-run
+    mountPath: /var/run
+
+extraVolumes:
+  - name: nginx-cache
+    emptyDir: {}
+  - name: nginx-run
+    emptyDir: {}
+
 podSecurityContext:
   runAsNonRoot: true
   runAsUser: 65532
