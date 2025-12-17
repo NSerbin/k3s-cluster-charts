@@ -24,7 +24,7 @@ spec:
 
           ports:
             - name: http
-              containerPort: 8080
+              containerPort: {{ .Values.containerPort | default 8080 }}
               protocol: TCP
 
           resources:
@@ -33,12 +33,14 @@ spec:
           securityContext:
 {{ toYaml .Values.securityContext | indent 12 }}
 
-          # nginx-unprivileged necesita escribir cache/pid aunque el rootfs sea RO
+          # nginx-unprivileged necesita FS escribible para temp/cache/pid con readOnlyRootFilesystem=true
           volumeMounts:
             - name: nginx-cache
               mountPath: /var/cache/nginx
             - name: nginx-run
               mountPath: /var/run
+            - name: tmp
+              mountPath: /tmp
 
           livenessProbe:
             httpGet:
@@ -58,4 +60,6 @@ spec:
         - name: nginx-cache
           emptyDir: {}
         - name: nginx-run
+          emptyDir: {}
+        - name: tmp
           emptyDir: {}
