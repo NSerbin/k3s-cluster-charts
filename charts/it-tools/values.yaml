@@ -1,0 +1,37 @@
+replicaCount: 1
+
+image:
+  repository: corentinth/it-tools
+  tag: "latest"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingressRoute:
+  enabled: true
+  entryPoints:
+    - web
+  host: "tools.nserbin.com"
+  pathPrefixes:
+    - "/"
+
+
+resources:
+  requests:
+    cpu: 20m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  runAsGroup: 65532
+  fsGroup: 65532
