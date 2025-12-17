@@ -1,13 +1,13 @@
 replicaCount: 1
 
 image:
-  repository: corentinth/it-tools
-  tag: "latest"
+  repository: ghcr.io/sharevb/it-tools
+  tag: "v2025.12.7"
   pullPolicy: IfNotPresent
 
 service:
   type: ClusterIP
-  port: 80
+  port: 8080
 
 ingressRoute:
   enabled: true
@@ -16,7 +16,6 @@ ingressRoute:
   host: "tools.nserbin.com"
   pathPrefixes:
     - "/"
-
 
 resources:
   requests:
