@@ -44,7 +44,7 @@ ingressRoute:
   enabled: true
   entryPoints:
     - web
-  host: "yopass.nserbin.com"
+  host: "share.nserbin.com"
   pathPrefixes:
     - "/"
 

@@ -8,7 +8,7 @@ spec:
   source:
     repoURL: "https://github.com/NSerbin/k3s-cluster-charts.git"
     targetRevision: "main"
-    path: "infra/charts/yopass"
+    path: "charts/yopass"
     helm:
       valueFiles:
         - values.yaml
