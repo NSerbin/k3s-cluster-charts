@@ -27,6 +27,9 @@ ingress:
   - hostname: "tools.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
 
+  - hostname: "yopass.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+
   - service: "http_status:404"
 
 resources:
