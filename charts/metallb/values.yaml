@@ -9,21 +9,21 @@ metallb:
   speaker:
     enabled: true
 
-prometheus:
-  rbacPrometheus: true
-  namespace: monitoring
-  serviceAccount: prometheus-scraper
+  prometheus:
+    rbacPrometheus: true
+    namespace: monitoring
+    serviceAccount: prometheus-scraper
 
-  serviceMonitor:
-    enabled: true
+    serviceMonitor:
+      enabled: true
 
-    speaker:
-      additionalLabels:
-        release: kube-prometheus-stack
+      speaker:
+        additionalLabels:
+          release: kube-prometheus-stack
 
-    controller:
-      additionalLabels:
-        release: kube-prometheus-stack
+      controller:
+        additionalLabels:
+          release: kube-prometheus-stack
 
 # Tu configuración homelab (CRDs de MetalLB)
 ipAddressPools:
