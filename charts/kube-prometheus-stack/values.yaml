@@ -67,7 +67,11 @@ kube-prometheus-stack:
         cookie_samesite: lax
         disable_gravatar: true
         allow_embedding: false
-
+      securityContext:
+        fsGroup: 472
+        runAsUser: 472
+        runAsGroup: 472
+        runAsNonRoot: true
       users:
         allow_sign_up: false
         allow_org_create: false
