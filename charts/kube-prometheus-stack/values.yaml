@@ -1,0 +1,138 @@
+kube-prometheus-stack:
+  fullnameOverride: monitoring
+
+  # =========================
+  # PROMETHEUS
+  # =========================
+  prometheus:
+    enabled: true
+    prometheusSpec:
+      retention: 7d
+      scrapeInterval: 30s
+      evaluationInterval: 30s
+      walCompression: true
+
+
+
+      resources:
+        requests:
+          cpu: 200m
+          memory: 512Mi
+        limits:
+          cpu: 1
+          memory: 2Gi
+
+      # Persistencia (clave)
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: local-path
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 20Gi
+
+      # Mejoras prácticas
+      walCompression: true
+      enableAdminAPI: false
+
+  # =========================
+  # GRAFANA
+  # =========================
+  grafana:
+    enabled: true
+    image:
+      repository: grafana/grafana
+      tag: "12.4.0-20321528496-ubuntu"
+      pullPolicy: IfNotPresent    
+
+    # IMPORTANT: no dejes password en claro a largo plazo.
+    # Ideal: existingSecret (más abajo te dejo recomendado)
+    adminPassword: "changeme"
+
+    defaultDashboardsEnabled: true
+    defaultDashboardsTimezone: "browser"
+
+    grafana.ini:
+      server:
+        domain: grafana.nserbin.com
+        root_url: https://grafana.nserbin.com
+        serve_from_sub_path: false
+
+      security:
+        cookie_secure: true
+        cookie_samesite: lax
+        disable_gravatar: true
+        allow_embedding: false
+
+      users:
+        allow_sign_up: false
+        allow_org_create: false
+        auto_assign_org: true
+        auto_assign_org_role: Viewer
+      log:
+        mode: console
+        level: info
+      date_formats:
+        default_timezone: browser            
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 300m
+        memory: 512Mi
+
+    persistence:
+      enabled: true
+      storageClassName: local-path
+      size: 5Gi
+
+    service:
+      type: ClusterIP
+
+  # =========================
+  # NODE EXPORTER + KSM
+  # =========================
+  nodeExporter:
+    enabled: true
+
+  kubeStateMetrics:
+    enabled: true
+
+  # =========================
+  # ALERTMANAGER
+  # =========================
+  alertmanager:
+    enabled: true
+    alertmanagerSpec:
+      retention: 120h
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: local-path
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 2Gi
+
+  # =========================
+  # COMPONENTES "vanilla k8s"
+  # =========================
+  # En k3s algunos endpoints no están expuestos igual; esto evita ruido
+  kubeEtcd:
+    enabled: false
+  kubeControllerManager:
+    enabled: true
+  kubeScheduler:
+    enabled: true
+  kubeProxy:
+    enabled: true
