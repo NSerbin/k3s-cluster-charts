@@ -14,9 +14,10 @@ metallb:
       enabled: true
       additionalLabels:
         release: kube-prometheus-stack
-
-    serviceAccount: metallb-controller
     namespace: monitoring
+    serviceAccount: prometheus-scraper
+    rbacPrometheus: true
+
 
 # Tu configuración homelab (CRDs de MetalLB)
 ipAddressPools:
