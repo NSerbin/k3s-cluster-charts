@@ -9,6 +9,10 @@ metallb:
   speaker:
     enabled: true
 
+  prometheus:
+    serviceMonitor:
+      enabled: true
+
 # Tu configuración homelab (CRDs de MetalLB)
 ipAddressPools:
   - name: default-pool
