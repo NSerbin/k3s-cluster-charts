@@ -55,15 +55,16 @@ kube-prometheus-stack:
 
     defaultDashboardsEnabled: true
     defaultDashboardsTimezone: "browser"
+    securityContext:
+      enabled: true
+      runAsNonRoot: true
+      runAsUser: 1000
+      runAsGroup: 1000
+      fsGroup: 1000
 
-  securityContext:
-    fsGroup: 472
-    runAsUser: 472
-    runAsGroup: 472
-    runAsNonRoot: true
 
-  initChownData:
-    enabled: false
+    initChownData:
+      enabled: false
 
     grafana.ini:
       server:
