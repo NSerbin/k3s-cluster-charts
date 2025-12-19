@@ -9,14 +9,28 @@ metallb:
   speaker:
     enabled: true
 
-  prometheus:
-    serviceMonitor:
-      enabled: true
+prometheus:
+  scrapeAnnotations: false
+  metricsPort: 7472
+
+  # Necesario porque el chart te obliga si serviceMonitor.enabled=true
+  rbacPrometheus: true
+  namespace: monitoring
+
+  # PONÉ ACÁ la SA REAL de Prometheus (salida del comando de arriba)
+  serviceAccount: kube-prometheus-stack-prometheus
+
+  serviceMonitor:
+    enabled: true
+
+    # ESTE era el bug: labels están separados controller/speaker
+    controller:
       additionalLabels:
         release: kube-prometheus-stack
-    namespace: monitoring
-    serviceAccount: prometheus-scraper
-    rbacPrometheus: true
+
+    speaker:
+      additionalLabels:
+        release: kube-prometheus-stack
 
 
 # Tu configuración homelab (CRDs de MetalLB)
