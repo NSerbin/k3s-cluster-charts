@@ -63,6 +63,12 @@ kube-prometheus-stack:
     initChownData:
       enabled: false
 
+    sidecar:
+      datasources:
+        enabled: true
+        initDatasources: true
+        skipReload: true
+
     grafana.ini:
       server:
         domain: grafana2.nserbin.com
