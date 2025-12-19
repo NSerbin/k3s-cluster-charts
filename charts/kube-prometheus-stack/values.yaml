@@ -124,12 +124,11 @@ kube-prometheus-stack:
         secureJsonData:
           privateKey: ${GITHUB_APP_PRIVATE_KEY}
 
-    env:
-      - name: GITHUB_APP_PRIVATE_KEY
-        valueFrom:
-          secretKeyRef:
-            name: grafana-github-app
-            key: GITHUB_APP_PRIVATE_KEY
+    envValueFrom:
+      GITHUB_APP_PRIVATE_KEY:
+        secretKeyRef:
+          name: grafana-github-app
+          key: GITHUB_APP_PRIVATE_KEY
   # =========================
   # NODE EXPORTER + KSM
   # =========================
