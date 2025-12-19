@@ -36,7 +36,9 @@ kube-prometheus-stack:
       # Mejoras prácticas
       walCompression: true
       enableAdminAPI: false
-
+  prometheusOperator:
+    admissionWebhooks:
+      enabled: false
   # =========================
   # GRAFANA
   # =========================
