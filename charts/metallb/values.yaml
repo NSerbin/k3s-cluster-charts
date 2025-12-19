@@ -16,6 +16,7 @@ metallb:
         release: kube-prometheus-stack
 
     serviceAccount: metallb-controller
+    namespace: monitoring
 
 # Tu configuración homelab (CRDs de MetalLB)
 ipAddressPools:
