@@ -13,7 +13,7 @@ metallb:
     serviceMonitor:
       enabled: true
       additionalLabels:
-        release: monitoring
+        release: kube-prometheus-stack
 
     rbacPrometheus: true
     namespace: monitoring
