@@ -1,6 +1,4 @@
 kube-prometheus-stack:
-  fullnameOverride: monitoring
-
   # =========================
   # PROMETHEUS
   # =========================
@@ -55,12 +53,12 @@ kube-prometheus-stack:
 
     defaultDashboardsEnabled: true
     defaultDashboardsTimezone: "browser"
+
     securityContext:
       runAsNonRoot: true
-      runAsUser: 1000
-      runAsGroup: 1000
-      fsGroup: 1000
-
+      runAsUser: 472
+      runAsGroup: 472
+      fsGroup: 472
 
     initChownData:
       enabled: false
