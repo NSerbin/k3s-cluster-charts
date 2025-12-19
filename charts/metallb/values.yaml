@@ -12,6 +12,12 @@ metallb:
   prometheus:
     serviceMonitor:
       enabled: true
+      additionalLabels:
+        release: monitoring
+
+    rbacPrometheus: true
+    namespace: monitoring
+    serviceAccount: prometheus-scraper
 
 # Tu configuración homelab (CRDs de MetalLB)
 ipAddressPools:
@@ -25,3 +31,8 @@ l2Advertisements:
     namespace: metallb-system
     ipAddressPools:
       - default-pool
+
+prometheusScraper:
+  enabled: true
+  namespace: monitoring
+  serviceAccountName: prometheus-scraper
