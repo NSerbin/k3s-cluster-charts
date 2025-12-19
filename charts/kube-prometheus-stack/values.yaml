@@ -56,7 +56,6 @@ kube-prometheus-stack:
     defaultDashboardsEnabled: true
     defaultDashboardsTimezone: "browser"
     securityContext:
-      enabled: true
       runAsNonRoot: true
       runAsUser: 1000
       runAsGroup: 1000
