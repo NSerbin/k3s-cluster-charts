@@ -110,6 +110,23 @@ kube-prometheus-stack:
     service:
       type: ClusterIP
 
+  additionalDataSources:
+    - name: GitHub (App)
+      type: grafana-github-datasource
+      access: proxy
+      jsonData:
+        selectedAuthType: github-app
+        appId: 2504832
+        installationId: Iv23liaUjWHUaVpQmw1W
+      secureJsonData:
+        privateKey: ${GITHUB_APP_PRIVATE_KEY}
+
+    env:
+      - name: GITHUB_APP_PRIVATE_KEY
+        valueFrom:
+          secretKeyRef:
+            name: grafana-github-app
+            key: GITHUB_APP_PRIVATE_KEY
   # =========================
   # NODE EXPORTER + KSM
   # =========================
