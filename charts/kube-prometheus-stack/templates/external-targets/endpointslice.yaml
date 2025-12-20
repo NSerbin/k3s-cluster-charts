@@ -6,24 +6,27 @@
 {{- fail (printf "externalTargets.targets[%s].ip is required" $t.name) }}
 {{- end }}
 {{- range $e := $t.exporters }}
-apiVersion: v1
-kind: Endpoints
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
 metadata:
   name: {{ printf "%s-%s" $t.name $e.name | trunc 63 | trimSuffix "-" }}
   namespace: {{ $ns }}
   labels:
+    kubernetes.io/service-name: {{ printf "%s-%s" $t.name $e.name | trunc 63 | trimSuffix "-" }}
     app.kubernetes.io/name: {{ printf "external-%s" $t.name | trunc 63 | trimSuffix "-" }}
     app.kubernetes.io/component: {{ $e.name }}
     {{- if and $rl $rl.key $rl.value }}
     {{ $rl.key }}: {{ $rl.value | quote }}
     {{- end }}
-subsets:
+addressType: IPv4
+ports:
+  - name: metrics
+    port: {{ $e.port }}
+    protocol: TCP
+endpoints:
   - addresses:
-      - ip: {{ $t.ip | quote }}
-    ports:
-      - name: metrics
-        port: {{ $e.port }}
-        protocol: TCP
+      - {{ $t.ip | quote }}
+    hostname: {{ printf "%s-%s" $t.name $e.name | quote }}      
 ---
 {{- end }}
 {{- end }}
