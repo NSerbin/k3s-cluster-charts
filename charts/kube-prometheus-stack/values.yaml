@@ -161,18 +161,16 @@ kube-prometheus-stack:
               requests:
                 storage: 2Gi
 
-  # =========================
-  # COMPONENTES "vanilla k8s"
-  # =========================
-  # En k3s algunos endpoints no están expuestos igual; esto evita ruido
-  kubeEtcd:
+  kubeApiServer:
     enabled: false
   kubeControllerManager:
-    enabled: true
+    enabled: false
   kubeScheduler:
-    enabled: true
+    enabled: false
   kubeProxy:
-    enabled: true
+    enabled: false
+  kubeEtcd:
+    enabled: false
 
 
 externalTargets:
