@@ -1,0 +1,30 @@
+{{- if .Values.externalTargets.enabled -}}
+{{- $ns := .Values.externalTargets.namespace | default .Release.Namespace -}}
+{{- $rl := .Values.externalTargets.releaseLabel -}}
+{{- range $t := .Values.externalTargets.targets }}
+{{- if not $t.ip }}
+{{- fail (printf "externalTargets.targets[%s].ip is required" $t.name) }}
+{{- end }}
+{{- range $e := $t.exporters }}
+apiVersion: v1
+kind: Endpoints
+metadata:
+  name: {{ printf "%s-%s" $t.name $e.name | trunc 63 | trimSuffix "-" }}
+  namespace: {{ $ns }}
+  labels:
+    app.kubernetes.io/name: {{ printf "external-%s" $t.name | trunc 63 | trimSuffix "-" }}
+    app.kubernetes.io/component: {{ $e.name }}
+    {{- if and $rl $rl.key $rl.value }}
+    {{ $rl.key }}: {{ $rl.value | quote }}
+    {{- end }}
+subsets:
+  - addresses:
+      - ip: {{ $t.ip | quote }}
+    ports:
+      - name: metrics
+        port: {{ $e.port }}
+        protocol: TCP
+---
+{{- end }}
+{{- end }}
+{{- end }}

@@ -173,3 +173,29 @@ kube-prometheus-stack:
     enabled: true
   kubeProxy:
     enabled: true
+
+
+externalTargets:
+  enabled: true
+
+  namespace: monitoring
+
+  releaseLabel:
+    key: release
+    value: kube-prometheus-stack
+
+  # Lista de hosts externos
+  targets:
+    - name: rpi
+      ip: 192.168.0.4
+      exporters:
+        - name: node
+          port: 9100
+          path: /metrics
+          interval: 30s
+          scrapeTimeout: 10s
+        - name: cadvisor
+          port: 8080
+          path: /metrics
+          interval: 30s
+          scrapeTimeout: 10s
