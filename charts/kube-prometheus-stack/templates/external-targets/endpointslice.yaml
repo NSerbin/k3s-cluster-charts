@@ -26,6 +26,7 @@ ports:
 endpoints:
   - addresses:
       - {{ $t.ip | quote }}
+    conditions: {}
     hostname: {{ printf "%s-%s" $t.name $e.name | quote }}      
 ---
 {{- end }}
