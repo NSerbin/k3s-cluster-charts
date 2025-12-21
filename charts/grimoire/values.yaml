@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: goniszewski/grimoire
-  tag: "latest"
+  tag: "0.5.0"
   pullPolicy: IfNotPresent
 
 service:
@@ -44,16 +44,29 @@ resources:
     cpu: 500m
     memory: 512Mi
 
+podSecurityContext:
+  enabled: true
+  fsGroup: 1000
+  fsGroupChangePolicy: "OnRootMismatch"
+
 securityContext:
   enabled: true
   runAsNonRoot: true
   runAsUser: 1000
   runAsGroup: 1000
-  fsGroup: 1000
 
 containerSecurityContext:
+  enabled: true
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: false
+
+volumePermissions:
+  enabled: true
+  image:
+    repository: busybox
+    tag: "1.36"
+  runAsUser: 0
+  runAsGroup: 0
 
 podAnnotations: {}
 

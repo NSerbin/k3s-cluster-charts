@@ -2,6 +2,8 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ include "grimoire.fullname" . }}
+  labels:
+    {{- include "grimoire.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   {{- with .Values.deployment.strategy }}
@@ -15,53 +17,65 @@ spec:
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: {{ include "grimoire.name" . }}
-        app.kubernetes.io/instance: {{ .Release.Name }}
+        {{- include "grimoire.labels" . | nindent 8 }}
       {{- with .Values.podAnnotations }}
       annotations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
     spec:
-      {{- if .Values.securityContext.enabled }}
+      {{- if and .Values.podSecurityContext.enabled .Values.podSecurityContext }}
       securityContext:
-        runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
-        runAsUser: {{ .Values.securityContext.runAsUser }}
-        runAsGroup: {{ .Values.securityContext.runAsGroup }}
-        fsGroup: {{ .Values.securityContext.fsGroup }}
+        fsGroup: {{ .Values.podSecurityContext.fsGroup }}
+        fsGroupChangePolicy: {{ .Values.podSecurityContext.fsGroupChangePolicy | quote }}
       {{- end }}
+
+      {{- if and .Values.volumePermissions.enabled .Values.persistence.enabled }}
+      initContainers:
+        - name: volume-permissions
+          image: "{{ .Values.volumePermissions.image.repository }}:{{ .Values.volumePermissions.image.tag }}"
+          imagePullPolicy: IfNotPresent
+          command: ["sh","-lc","chown -R 1000:1000 /app/data && chmod -R ug+rwX /app/data"]
+          securityContext:
+            runAsUser: {{ .Values.volumePermissions.runAsUser }}
+            runAsGroup: {{ .Values.volumePermissions.runAsGroup }}
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+      {{- end }}
+
       containers:
         - name: grimoire
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          {{- with .Values.containerSecurityContext }}
+
+          {{- if or .Values.securityContext.enabled .Values.containerSecurityContext.enabled }}
           securityContext:
-            {{- toYaml . | nindent 12 }}
+            {{- if .Values.securityContext.enabled }}
+            runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
+            runAsUser: {{ .Values.securityContext.runAsUser }}
+            runAsGroup: {{ .Values.securityContext.runAsGroup }}
+            {{- end }}
+            {{- if .Values.containerSecurityContext.enabled }}
+            allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation }}
+            readOnlyRootFilesystem: {{ .Values.containerSecurityContext.readOnlyRootFilesystem }}
+            {{- end }}
           {{- end }}
+
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+
           env:
-            - name: PORT
-              value: {{ .Values.env.PORT | quote }}
-            - name: PUBLIC_ORIGIN
-              value: {{ .Values.env.PUBLIC_ORIGIN | quote }}
-            - name: PUBLIC_HTTPS_ONLY
-              value: {{ .Values.env.PUBLIC_HTTPS_ONLY | quote }}
-            - name: PUBLIC_SIGNUP_DISABLED
-              value: {{ .Values.env.PUBLIC_SIGNUP_DISABLED | quote }}
+            {{- range $k, $v := .Values.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
             {{- with .Values.extraEnv }}
             {{- toYaml . | nindent 12 }}
             {{- end }}
-          {{- if and .Values.probes.enabled .Values.probes.path }}
-          livenessProbe:
-            httpGet:
-              path: {{ .Values.probes.path | quote }}
-              port: http
-            initialDelaySeconds: {{ .Values.probes.initialDelaySeconds }}
-            periodSeconds: {{ .Values.probes.periodSeconds }}
-            timeoutSeconds: {{ .Values.probes.timeoutSeconds }}
-            failureThreshold: {{ .Values.probes.failureThreshold }}
+
+          {{- if .Values.probes.enabled }}
           readinessProbe:
             httpGet:
               path: {{ .Values.probes.path | quote }}
@@ -70,15 +84,31 @@ spec:
             periodSeconds: {{ .Values.probes.periodSeconds }}
             timeoutSeconds: {{ .Values.probes.timeoutSeconds }}
             failureThreshold: {{ .Values.probes.failureThreshold }}
+
+          livenessProbe:
+            httpGet:
+              path: {{ .Values.probes.path | quote }}
+              port: http
+            initialDelaySeconds: {{ .Values.probes.initialDelaySeconds }}
+            periodSeconds: {{ .Values.probes.periodSeconds }}
+            timeoutSeconds: {{ .Values.probes.timeoutSeconds }}
+            failureThreshold: {{ .Values.probes.failureThreshold }}
           {{- end }}
+
           {{- with .Values.resources }}
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+
+          {{- if .Values.persistence.enabled }}
           volumeMounts:
             - name: data
               mountPath: /app/data
+          {{- end }}
+
+      {{- if .Values.persistence.enabled }}
       volumes:
         - name: data
           persistentVolumeClaim:
             claimName: {{ default (include "grimoire.fullname" .) .Values.persistence.existingClaim }}
+      {{- end }}

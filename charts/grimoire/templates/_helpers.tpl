@@ -9,3 +9,10 @@
 {{- printf "%s-%s" .Release.Name (include "grimoire.name" .) | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+
+{{- define "grimoire.labels" -}}
+app.kubernetes.io/name: {{ include "grimoire.name" . }}
+app.kubernetes.io/instance: {{ .Release.Name }}
+app.kubernetes.io/managed-by: {{ .Release.Service }}
+helm.sh/chart: {{ printf "%s-%s" .Chart.Name .Chart.Version | replace "+" "_" }}
+{{- end -}}
