@@ -29,37 +29,30 @@ spec:
         fsGroupChangePolicy: {{ .Values.podSecurityContext.fsGroupChangePolicy | quote }}
       {{- end }}
 
-      {{- if and .Values.volumePermissions.enabled .Values.persistence.enabled }}
-      initContainers:
-        - name: volume-permissions
-          image: "{{ .Values.volumePermissions.image.repository }}:{{ .Values.volumePermissions.image.tag }}"
-          imagePullPolicy: IfNotPresent
-          command: ["sh","-lc","chown -R 1000:1000 /app/data && chmod -R ug+rwX /app/data"]
-          securityContext:
-            runAsUser: {{ .Values.volumePermissions.runAsUser }}
-            runAsGroup: {{ .Values.volumePermissions.runAsGroup }}
-          volumeMounts:
-            - name: data
-              mountPath: /app/data
-      {{- end }}
-
       containers:
         - name: grimoire
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
-          {{- if or .Values.securityContext.enabled .Values.containerSecurityContext.enabled }}
           securityContext:
+            allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation }}
+            readOnlyRootFilesystem: {{ .Values.containerSecurityContext.readOnlyRootFilesystem }}
             {{- if .Values.securityContext.enabled }}
             runAsNonRoot: {{ .Values.securityContext.runAsNonRoot }}
             runAsUser: {{ .Values.securityContext.runAsUser }}
             runAsGroup: {{ .Values.securityContext.runAsGroup }}
             {{- end }}
-            {{- if .Values.containerSecurityContext.enabled }}
-            allowPrivilegeEscalation: {{ .Values.containerSecurityContext.allowPrivilegeEscalation }}
-            readOnlyRootFilesystem: {{ .Values.containerSecurityContext.readOnlyRootFilesystem }}
+            {{- if .Values.containerSecurityContext.capabilities }}
+            capabilities:
+              {{- if .Values.containerSecurityContext.capabilities.drop }}
+              drop:
+                {{- toYaml .Values.containerSecurityContext.capabilities.drop | nindent 16 }}
+              {{- end }}
+              {{- if .Values.containerSecurityContext.capabilities.add }}
+              add:
+                {{- toYaml .Values.containerSecurityContext.capabilities.add | nindent 16 }}
+              {{- end }}
             {{- end }}
-          {{- end }}
 
           ports:
             - name: http

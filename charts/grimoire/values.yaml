@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: goniszewski/grimoire
-  tag: "latest" # This guy didnt create the tag 0.5.0 - he only did latest 
+  tag: "0.5.0"          # fijá versión para debug (cambiá si querés)
   pullPolicy: IfNotPresent
 
 service:
@@ -44,29 +44,31 @@ resources:
     cpu: 500m
     memory: 512Mi
 
+# ✅ Pod-level: fsGroup para que el volumen quede usable (igual Grimoire hará chown)
 podSecurityContext:
   enabled: true
   fsGroup: 1000
   fsGroupChangePolicy: "OnRootMismatch"
 
+# ✅ Container-level: root para que el chown NO falle
 securityContext:
   enabled: true
-  runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
+  runAsNonRoot: false
+  runAsUser: 0
+  runAsGroup: 0
 
+# ✅ Root pero con capacidades mínimas (sin privilege escalation)
 containerSecurityContext:
   enabled: true
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: false
-
-volumePermissions:
-  enabled: true
-  image:
-    repository: busybox
-    tag: "1.36"
-  runAsUser: 0
-  runAsGroup: 0
+  capabilities:
+    drop:
+      - ALL
+    add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
 
 podAnnotations: {}
 
