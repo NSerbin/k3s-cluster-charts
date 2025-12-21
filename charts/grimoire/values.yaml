@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: goniszewski/grimoire
-  tag: "0.5.0"          # fijá versión para debug (cambiá si querés)
+  tag: "latest"          # this guy didnt put 0.5.0 - he put latest
   pullPolicy: IfNotPresent
 
 service:
