@@ -71,8 +71,8 @@ kube-prometheus-stack:
     sidecar:
       datasources:
         enabled: true
-        initDatasources: false
-        skipReload: true
+        initDatasources: true
+        skipReload: false
 
     grafana.ini:
       server:
@@ -197,3 +197,8 @@ externalTargets:
           path: /metrics
           interval: 30s
           scrapeTimeout: 10s
+        - name: cloudflare-tunnels
+          port: 60123
+          path: /metrics
+          interval: 30s
+          scrapeTimeout: 10s          
