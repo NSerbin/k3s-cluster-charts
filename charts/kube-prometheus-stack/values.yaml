@@ -71,8 +71,8 @@ kube-prometheus-stack:
     sidecar:
       datasources:
         enabled: true
-        initDatasources: true
-        skipReload: false
+        initDatasources: false
+        skipReload: true
 
     grafana.ini:
       server:
