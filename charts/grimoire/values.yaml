@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: goniszewski/grimoire
-  tag: "latest"          # this guy didnt put 0.5.0 - he put latest
+  tag: "develop"          # this guy didnt put 0.5.0 - he put latest
   pullPolicy: IfNotPresent
 
 service:
@@ -44,20 +44,17 @@ resources:
     cpu: 500m
     memory: 512Mi
 
-# ✅ Pod-level: fsGroup para que el volumen quede usable (igual Grimoire hará chown)
 podSecurityContext:
   enabled: true
   fsGroup: 1000
   fsGroupChangePolicy: "OnRootMismatch"
 
-# ✅ Container-level: root para que el chown NO falle
 securityContext:
   enabled: true
   runAsNonRoot: false
   runAsUser: 0
   runAsGroup: 0
 
-# ✅ Root pero con capacidades mínimas (sin privilege escalation)
 containerSecurityContext:
   enabled: true
   allowPrivilegeEscalation: false
@@ -72,7 +69,6 @@ containerSecurityContext:
 
 podAnnotations: {}
 
-# ✅ Traefik IngressRoute (lo que querés)
 ingressRoute:
   enabled: true
   entryPoints:
