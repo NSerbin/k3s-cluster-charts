@@ -40,10 +40,10 @@ ingress:
     originRequest:
       httpHostHeader: prometheus.nserbin.com
 
-  - hostname: "alertmanager.nserbin.com"
+  - hostname: "alerts.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
     originRequest:
-      httpHostHeader: alertmanager.nserbin.com
+      httpHostHeader: alerts.nserbin.com
 
   - service: "http_status:404"
 

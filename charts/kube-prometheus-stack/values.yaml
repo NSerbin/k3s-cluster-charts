@@ -231,7 +231,7 @@ traefikRoutes:
 
     - name: alertmanager
       enabled: true
-      host: alertmanager.nserbin.com
+      host: alerts.nserbin.com
       service:
         name: kube-prometheus-stack-alertmanager
         port: 9093
