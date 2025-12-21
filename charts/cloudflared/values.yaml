@@ -30,6 +30,21 @@ ingress:
   - hostname: "share.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
 
+  - hostname: "monitor.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: monitor.nserbin.com
+
+  - hostname: "prometheus.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: prometheus.nserbin.com
+
+  - hostname: "alertmanager.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: alertmanager.nserbin.com
+
   - service: "http_status:404"
 
 resources:

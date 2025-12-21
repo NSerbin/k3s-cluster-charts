@@ -76,8 +76,8 @@ kube-prometheus-stack:
 
     grafana.ini:
       server:
-        domain: grafana2.nserbin.com
-        root_url: https://grafana2.nserbin.com
+        domain: monitor.nserbin.com
+        root_url: https://monitor.nserbin.com
         serve_from_sub_path: false
 
       security:
@@ -201,4 +201,39 @@ externalTargets:
           port: 60123
           path: /metrics
           interval: 30s
-          scrapeTimeout: 10s          
+          scrapeTimeout: 10s
+
+
+traefikRoutes:
+  enabled: true
+  namespace: monitoring
+  entryPoints:
+    - web
+
+  routes:
+    - name: grafana
+      enabled: true
+      host: monitor.nserbin.com
+      service:
+        name: kube-prometheus-stack-grafana
+        port: 80
+      pathPrefixes: ["/"]
+      middlewares: []
+
+    - name: prometheus
+      enabled: true
+      host: prometheus.nserbin.com
+      service:
+        name: kube-prometheus-stack-prometheus
+        port: 9090
+      pathPrefixes: ["/"]
+      middlewares: []
+
+    - name: alertmanager
+      enabled: true
+      host: alertmanager.nserbin.com
+      service:
+        name: kube-prometheus-stack-alertmanager
+        port: 9093
+      pathPrefixes: ["/"]
+      middlewares: []
