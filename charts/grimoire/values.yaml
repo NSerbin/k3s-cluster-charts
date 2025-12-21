@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: goniszewski/grimoire
-  tag: "0.5.0"
+  tag: "latest" # This guy didnt create the tag 0.5.0 - he only did latest 
   pullPolicy: IfNotPresent
 
 service:
