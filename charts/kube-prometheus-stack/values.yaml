@@ -1,0 +1,239 @@
+kube-prometheus-stack:
+  # =========================
+  # PROMETHEUS
+  # =========================
+  prometheus:
+    enabled: true
+    prometheusSpec:
+      retention: 7d
+      scrapeInterval: 30s
+      evaluationInterval: 30s
+      walCompression: true
+
+      serviceMonitorSelector: {}
+      serviceMonitorNamespaceSelector: {}
+      podMonitorSelector: {}
+      podMonitorNamespaceSelector: {}
+
+      resources:
+        requests:
+          cpu: 200m
+          memory: 512Mi
+        limits:
+          cpu: 1
+          memory: 2Gi
+
+      # Persistencia (clave)
+      storageSpec:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: local-path
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 20Gi
+
+      # Mejoras prácticas
+      walCompression: true
+      enableAdminAPI: false
+  prometheusOperator:
+    admissionWebhooks:
+      enabled: false
+  # =========================
+  # GRAFANA
+  # =========================
+  grafana:
+    enabled: true
+    image:
+      repository: grafana/grafana
+      tag: "12.4.0-20321528496-ubuntu"
+      pullPolicy: IfNotPresent    
+
+    # IMPORTANT: no dejes password en claro a largo plazo.
+    # Ideal: existingSecret (más abajo te dejo recomendado)
+    adminPassword: "changeme"
+
+    defaultDashboardsEnabled: true
+    defaultDashboardsTimezone: "browser"
+
+    plugins:
+      - grafana-github-datasource
+
+    securityContext:
+      runAsNonRoot: true
+      runAsUser: 472
+      runAsGroup: 472
+      fsGroup: 472
+
+    initChownData:
+      enabled: false
+
+    sidecar:
+      datasources:
+        enabled: true
+        initDatasources: false
+        skipReload: true
+
+    grafana.ini:
+      server:
+        domain: monitor.nserbin.com
+        root_url: https://monitor.nserbin.com
+        serve_from_sub_path: false
+
+      security:
+        cookie_secure: true
+        cookie_samesite: lax
+        disable_gravatar: true
+        allow_embedding: false
+
+      users:
+        allow_sign_up: false
+        allow_org_create: false
+        auto_assign_org: true
+        auto_assign_org_role: Viewer
+      log:
+        mode: console
+        level: info
+      date_formats:
+        default_timezone: browser            
+
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 300m
+        memory: 512Mi
+
+    persistence:
+      enabled: true
+      storageClassName: local-path
+      size: 5Gi
+
+    service:
+      type: ClusterIP
+
+    additionalDataSources:
+      - name: GitHub (App)
+        type: grafana-github-datasource
+        access: proxy
+        jsonData:
+          selectedAuthType: github-app
+          appId: 2504832
+          installationId: Iv23liaUjWHUaVpQmw1W
+        secureJsonData:
+          privateKey: ${GITHUB_APP_PRIVATE_KEY}
+
+    envValueFrom:
+      GITHUB_APP_PRIVATE_KEY:
+        secretKeyRef:
+          name: grafana-github-app
+          key: GITHUB_APP_PRIVATE_KEY
+  # =========================
+  # NODE EXPORTER + KSM
+  # =========================
+  nodeExporter:
+    enabled: true
+
+  kubeStateMetrics:
+    enabled: true
+
+  # =========================
+  # ALERTMANAGER
+  # =========================
+  alertmanager:
+    enabled: true
+    alertmanagerSpec:
+      retention: 120h
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: local-path
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 2Gi
+
+  kubeApiServer:
+    enabled: false
+  kubeControllerManager:
+    enabled: false
+  kubeScheduler:
+    enabled: false
+  kubeProxy:
+    enabled: false
+  kubeEtcd:
+    enabled: false
+
+
+externalTargets:
+  enabled: true
+
+  namespace: monitoring
+
+  releaseLabel:
+    key: release
+    value: kube-prometheus-stack
+
+  # Lista de hosts externos
+  targets:
+    - name: rpi
+      ip: 192.168.0.4
+      exporters:
+        - name: node
+          port: 9100
+          path: /metrics
+          interval: 30s
+          scrapeTimeout: 10s
+        - name: cadvisor
+          port: 8080
+          path: /metrics
+          interval: 30s
+          scrapeTimeout: 10s
+        - name: cloudflare-tunnels
+          port: 60123
+          path: /metrics
+          interval: 30s
+          scrapeTimeout: 10s
+
+
+traefikRoutes:
+  enabled: true
+  namespace: monitoring
+  entryPoints:
+    - web
+
+  routes:
+    - name: grafana
+      enabled: true
+      host: monitor.nserbin.com
+      service:
+        name: kube-prometheus-stack-grafana
+        port: 80
+      pathPrefixes: ["/"]
+      middlewares: []
+
+    - name: prometheus
+      enabled: true
+      host: prometheus.nserbin.com
+      service:
+        name: kube-prometheus-stack-prometheus
+        port: 9090
+      pathPrefixes: ["/"]
+      middlewares: []
+
+    - name: alertmanager
+      enabled: true
+      host: alerts.nserbin.com
+      service:
+        name: kube-prometheus-stack-alertmanager
+        port: 9093
+      pathPrefixes: ["/"]
+      middlewares: []

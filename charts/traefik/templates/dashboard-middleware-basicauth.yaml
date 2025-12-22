@@ -1,0 +1,12 @@
+{{- $dash := .Values.dashboard | default dict -}}
+{{- $ba := $dash.basicAuth | default dict -}}
+{{- if and ($dash.enabled | default false) ($ba.enabled | default false) }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-dashboard-auth
+  namespace: traefik
+spec:
+  basicAuth:
+    secret: {{ $ba.secretName | default "traefik-dashboard-auth" }}
+{{- end }}

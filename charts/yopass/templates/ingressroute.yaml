@@ -1,0 +1,19 @@
+{{- if .Values.ingressRoute.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "yopass.fullname" . }}
+  labels:
+{{ include "yopass.labels" . | indent 4 }}
+spec:
+  entryPoints:
+{{- range .Values.ingressRoute.entryPoints }}
+    - {{ . }}
+{{- end }}
+  routes:
+    - match: Host(`{{ .Values.ingressRoute.host }}`) && ({{- $first := true -}}{{- range .Values.ingressRoute.pathPrefixes -}}{{- if not $first }} || {{- end -}}PathPrefix(`{{ . }}`){{- $first = false -}}{{- end -}})
+      kind: Rule
+      services:
+        - name: {{ include "yopass.fullname" . }}
+          port: {{ .Values.service.port }}
+{{- end }}

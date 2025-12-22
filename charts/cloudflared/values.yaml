@@ -1,0 +1,63 @@
+replicaCount: 2
+
+image:
+  repository: cloudflare/cloudflared
+  tag: "2025.11.1"
+  pullPolicy: IfNotPresent
+
+tunnel:
+  id: "694bff59-1973-4b16-9f24-9e76c67fad04"
+  credentialsSecretName: "cloudflared-credentials"
+
+# Cloudflare Tunnel ingress rules (host -> upstream)
+ingress:
+  - hostname: "traefik.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+
+  - hostname: "argo.nserbin.com"
+    service: "http://argocd-server.argocd.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "argo.nserbin.com"
+
+  - hostname: "bookmarks.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "bookmarks.nserbin.com"
+
+
+  - hostname: "tools.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+
+  - hostname: "share.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+
+  - hostname: "monitor.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: monitor.nserbin.com
+
+  - hostname: "prometheus.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: prometheus.nserbin.com
+
+  - hostname: "alerts.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: alerts.nserbin.com
+
+  - service: "http_status:404"
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 65532
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true

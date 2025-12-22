@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cloudflared-config
+data:
+  config.yaml: |
+    tunnel: {{ required "tunnel.id is required" .Values.tunnel.id }}
+    credentials-file: /etc/cloudflared/credentials.json
+    no-autoupdate: true
+
+    ingress:
+{{- range .Values.ingress }}
+{{- if .hostname }}
+      - hostname: {{ .hostname | quote }}
+        service: {{ required "ingress[].service is required" .service | quote }}
+{{- if .originRequest }}
+        originRequest:
+{{ toYaml .originRequest | indent 10 }}
+{{- end }}
+{{- else }}
+      - service: {{ required "ingress[].service is required" .service | quote }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,35 @@
+{{- if and (.Values.traefikRoutes) (.Values.traefikRoutes.enabled | default false) }}
+{{- $ns := (.Values.traefikRoutes.namespace | default "monitoring") -}}
+{{- $eps := (.Values.traefikRoutes.entryPoints | default (list "web")) -}}
+
+{{- range $r := (.Values.traefikRoutes.routes | default (list)) }}
+{{- if ($r.enabled | default true) }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ $r.name | quote }}
+  namespace: {{ $ns }}
+spec:
+  entryPoints:
+{{- range $eps }}
+    - {{ . }}
+{{- end }}
+  routes:
+    - match: Host(`{{ $r.host }}`) && ({{- $first := true -}}{{- range ($r.pathPrefixes | default (list "/")) -}}{{- if not $first }} || {{- end -}}PathPrefix(`{{ . }}`){{- $first = false -}}{{- end -}})
+      kind: Rule
+{{- if $r.middlewares }}
+      middlewares:
+{{- range $mw := $r.middlewares }}
+        - name: {{ $mw.name }}
+{{- if $mw.namespace }}
+          namespace: {{ $mw.namespace }}
+{{- end }}
+{{- end }}
+{{- end }}
+      services:
+        - name: {{ required "traefikRoutes.routes[].service.name is required" $r.service.name }}
+          port: {{ required "traefikRoutes.routes[].service.port is required" $r.service.port }}
+{{- end }}
+{{- end }}
+{{- end }}

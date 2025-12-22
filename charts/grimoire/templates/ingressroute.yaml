@@ -1,0 +1,32 @@
+{{- if .Values.ingressRoute.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "grimoire.fullname" . }}
+  labels:
+    {{- include "grimoire.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    {{- toYaml .Values.ingressRoute.entryPoints | nindent 4 }}
+  routes:
+    - match: Host(`{{ .Values.ingressRoute.host }}`) && PathPrefix(`{{ .Values.ingressRoute.pathPrefix }}`)
+      kind: Rule
+      {{- if .Values.ingressRoute.middlewares }}
+      middlewares:
+        {{- range .Values.ingressRoute.middlewares }}
+        - name: {{ .name }}
+          {{- if .namespace }}
+          namespace: {{ .namespace }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      services:
+        - name: {{ include "grimoire.fullname" . }}
+          port: {{ .Values.service.port }}
+  {{- if .Values.ingressRoute.tls.enabled }}
+  tls:
+    {{- if .Values.ingressRoute.tls.secretName }}
+    secretName: {{ .Values.ingressRoute.tls.secretName }}
+    {{- end }}
+  {{- end }}
+{{- end }}

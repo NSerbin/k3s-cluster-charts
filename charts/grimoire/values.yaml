@@ -1,0 +1,84 @@
+replicaCount: 1
+
+image:
+  repository: goniszewski/grimoire
+  tag: "develop"          # this guy didnt put 0.5.0 - he put latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 5173
+
+env:
+  PORT: "5173"
+  PUBLIC_ORIGIN: "https://bookmarks.nserbin.com"
+  PUBLIC_HTTPS_ONLY: "true"
+  PUBLIC_SIGNUP_DISABLED: "false"
+
+extraEnv: []
+
+persistence:
+  enabled: true
+  size: 5Gi
+  accessMode: ReadWriteOnce
+  storageClassName: "local-path"
+  existingClaim: ""
+
+deployment:
+  strategy:
+    type: Recreate
+
+probes:
+  enabled: true
+  path: /api/health
+  initialDelaySeconds: 15
+  periodSeconds: 10
+  timeoutSeconds: 5
+  failureThreshold: 3
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+podSecurityContext:
+  enabled: true
+  fsGroup: 1000
+  fsGroupChangePolicy: "OnRootMismatch"
+
+securityContext:
+  enabled: true
+  runAsNonRoot: false
+  runAsUser: 0
+  runAsGroup: 0
+
+containerSecurityContext:
+  enabled: true
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+    add:
+      - CHOWN
+      - FOWNER
+      - DAC_OVERRIDE
+
+podAnnotations: {}
+
+ingressRoute:
+  enabled: true
+  entryPoints:
+    - web
+
+  host: "bookmarks.nserbin.com"
+  pathPrefix: "/"
+
+  middlewares: []
+
+  tls:
+    enabled: false
+    secretName: ""

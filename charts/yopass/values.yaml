@@ -1,0 +1,54 @@
+replicaCount: 1
+
+image:
+  repository: jhaals/yopass
+  tag: "12.5.0"
+  pullPolicy: IfNotPresent
+
+memcached:
+  image:
+    repository: memcached
+    tag: "1.6-alpine"
+    pullPolicy: IfNotPresent
+  args:
+    - "-m"
+    - "64"
+
+yopass:
+  args:
+    - "--memcached=localhost:11211"
+
+service:
+  type: ClusterIP
+  port: 1337
+
+containerPort: 1337
+
+resources:
+  yopass:
+    requests:
+      cpu: 100m
+      memory: 50Mi
+    limits:
+      cpu: 100m
+      memory: 50Mi
+  memcached:
+    requests:
+      cpu: 100m
+      memory: 100Mi
+    limits:
+      cpu: 100m
+      memory: 100Mi
+
+ingressRoute:
+  enabled: true
+  entryPoints:
+    - web
+  host: "share.nserbin.com"
+  pathPrefixes:
+    - "/"
+
+# Opcional (pero útil)
+nodeSelector: {}
+tolerations: []
+affinity: {}

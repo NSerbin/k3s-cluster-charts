@@ -1,0 +1,26 @@
+1. Grimoire has been deployed.
+
+{{- if .Values.ingressRoute.enabled }}
+IngressRoute is enabled.
+
+Access it via:
+  https://{{ .Values.ingressRoute.host }}{{ .Values.ingressRoute.pathPrefix }}
+
+{{- else if and .Values.ingress.enabled .Values.ingress.hosts }}
+Ingress is enabled.
+
+{{- range .Values.ingress.hosts }}
+Access it via:
+  http{{ if $.Values.ingress.tls }}s{{ end }}://{{ .host }}{{ (index .paths 0).path | default "/" }}
+{{- end }}
+
+{{- else }}
+Ingress is disabled.
+
+To access Grimoire locally, run:
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "grimoire.fullname" . }} {{ .Values.service.port }}:{{ .Values.service.port }}
+
+Then open:
+  http://127.0.0.1:{{ .Values.service.port }}
+
+{{- end }}

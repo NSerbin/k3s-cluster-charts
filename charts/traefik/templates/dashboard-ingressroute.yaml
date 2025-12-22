@@ -1,0 +1,21 @@
+{{- if .Values.dashboard.enabled }}
+{{- $ba := (.Values.dashboard.basicAuth | default dict) -}}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: traefik-dashboard
+  namespace: traefik
+spec:
+  entryPoints:
+    - {{ .Values.dashboard.entryPoint | default "web" }}
+  routes:
+    - match: Host(`{{ .Values.dashboard.host }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
+      kind: Rule
+      {{- if ($ba.enabled | default false) }}
+      middlewares:
+        - name: traefik-dashboard-auth
+      {{- end }}
+      services:
+        - name: api@internal
+          kind: TraefikService
+{{- end }}

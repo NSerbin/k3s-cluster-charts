@@ -1,0 +1,11 @@
+apiVersion: v2
+name: metrics-server
+description: Wrapper chart for kubernetes-sigs/metrics-server with homelab defaults
+type: application
+version: 0.1.0
+
+dependencies:
+  - name: metrics-server
+    repository: "https://kubernetes-sigs.github.io/metrics-server"
+    version: "3.13.0"
+    alias: metricsServer

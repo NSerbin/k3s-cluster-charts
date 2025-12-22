@@ -1,0 +1,13 @@
+{{- range .Values.ipAddressPools }}
+apiVersion: metallb.io/v1beta1
+kind: IPAddressPool
+metadata:
+  name: {{ required "ipAddressPools[].name is required" .name }}
+  namespace: {{ .namespace | default "metallb-system" }}
+spec:
+  addresses:
+  {{- range $addr := .addresses }}
+    - {{ $addr }}
+  {{- end }}
+---
+{{- end }}

@@ -1,0 +1,39 @@
+# Values del dependency "metallb" (van bajo .Values.metallb.* gracias al alias)
+metallb:
+  crds:
+    enabled: true
+
+  controller:
+    enabled: true
+
+  speaker:
+    enabled: true
+
+  prometheus:
+    rbacPrometheus: true
+    namespace: monitoring
+    serviceAccount: prometheus-scraper
+
+    serviceMonitor:
+      enabled: true
+
+      speaker:
+        additionalLabels:
+          release: kube-prometheus-stack
+
+      controller:
+        additionalLabels:
+          release: kube-prometheus-stack
+
+# Tu configuración homelab (CRDs de MetalLB)
+ipAddressPools:
+  - name: default-pool
+    namespace: metallb-system
+    addresses:
+      - 192.168.0.233-192.168.0.253
+
+l2Advertisements:
+  - name: default
+    namespace: metallb-system
+    ipAddressPools:
+      - default-pool
