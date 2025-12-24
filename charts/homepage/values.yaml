@@ -187,7 +187,7 @@ config:
         - Grafana:
             href: https://monitor.nserbin.com
             ping: https://monitor.nserbin.com
-            description: Grafana (Cluster)
+            description: Grafana
             widget:
               type: grafana
               version: 2
@@ -199,7 +199,7 @@ config:
         - Prometheus:
             href: https://prometheus.nserbin.com
             ping: https://prometheus.nserbin.com
-            description: Prometheus (Cluster)
+            description: Prometheus
             widget:
               type: prometheus
               url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
@@ -207,10 +207,7 @@ config:
         - Alertmanager:
             href: https://alerts.nserbin.com
             ping: https://alerts.nserbin.com
-            description: Alertmanager (Cluster)
-            widget:
-              type: alertmanager
-              url: http://kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093
+            description: Alertmanager
 
         - Uptime Kuma:
             icon: uptime-kuma.png
@@ -232,8 +229,8 @@ config:
             server: rpi
             widget:
               type: freshrss
-              url: http://192.168.0.4:85
-              username: koopernic
+              url: https://rss.nserbin.com
+              username: ${FRESHRSS_USERNAME}
               password: ${FRESHRSS_PASSWORD}
 
     - Networking:
@@ -332,10 +329,6 @@ config:
         memory: true
         network: default
         label: System
-
-    - resources:
-        label: Storage
-        disk: /
 
     - resources:
         label: Uptime
