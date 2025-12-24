@@ -256,13 +256,6 @@ config:
             siteMonitor: http://192.168.0.4:9000
             description: Portainer
             server: rpi
-            widget:
-              type: portainer
-              url: http://192.168.0.4:9000
-              env: 1
-              key: dummy
-              headers:
-                X-API-Key: ${PORTAINER_KEY}
 
     - Tools:
         - DocuSeal:
