@@ -250,7 +250,7 @@ config:
             icon: mdi-router-network
             href: https://traefik.nserbin.com
             ping: https://traefik.nserbin.com
-            description: Traefik (Cluster)
+            description: Traefik
             widget:
               type: traefik
               url: http://traefik.traefik.svc.cluster.local

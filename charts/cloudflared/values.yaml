@@ -46,6 +46,13 @@ ingress:
     originRequest:
       httpHostHeader: alerts.nserbin.com
 
+
+  - hostname: "home.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: home.nserbin.com
+
+
   - service: "http_status:404"
 
 resources:
