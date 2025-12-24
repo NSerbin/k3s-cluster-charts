@@ -253,7 +253,7 @@ config:
             description: Traefik
             widget:
               type: traefik
-              url: http://traefik.traefik.svc.cluster.local
+              url: http://traefik.traefik
 
     - Management:
         - Portainer:
