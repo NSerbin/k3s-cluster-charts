@@ -250,8 +250,8 @@ config:
 
         - Traefik:
             icon: mdi-router-network
-            href: https://traefik.nserbin.com
-            ping: https://traefik.nserbin.com
+            href: https://traefik.nserbin.com/dashboard/
+            ping: https://traefik.nserbin.com/dashboard/
             description: Traefik
             widget:
               type: traefik
