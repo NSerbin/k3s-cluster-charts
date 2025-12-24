@@ -169,6 +169,7 @@ config:
     - Cluster:
         - Argo CD:
             href: https://argo.nserbin.com
+            siteMonitor: http://argocd-server.argocd
             description: GitOps
             icon: si-argo.svg
             widget:
@@ -186,7 +187,7 @@ config:
 
         - Grafana:
             href: https://monitor.nserbin.com
-            ping: http://kube-prometheus-stack-grafana.monitoring/api/health
+            siteMonitor: http://kube-prometheus-stack-grafana.monitoring/api/health
             description: Grafana
             widget:
                 type: prometheusmetric
@@ -200,7 +201,7 @@ config:
 
         - Prometheus:
             href: https://prometheus.nserbin.com
-            ping: http://kube-prometheus-stack-prometheus.monitoring:9090/-/healthy
+            siteMonitor: http://kube-prometheus-stack-prometheus.monitoring:9090/-/healthy
             description: Prometheus
             widget:
               type: prometheus
@@ -208,7 +209,7 @@ config:
 
         - Alertmanager:
             href: https://alerts.nserbin.com
-            ping: https://alerts.nserbin.com
+            siteMonitor: https://alerts.nserbin.com/-/healthy
             description: Alertmanager
 
         - Uptime Kuma:
@@ -251,7 +252,7 @@ config:
         - Traefik:
             icon: mdi-router-network
             href: https://traefik.nserbin.com/dashboard/
-            ping: http://traefik.traefik:9000/ping
+            siteMonitor: https://traefik.nserbin.com
             description: Traefik
             widget:
               type: traefik
@@ -261,7 +262,7 @@ config:
         - Portainer:
             icon: portainer.svg
             href: https://portainer.nserbin.com/
-            ping: https://portainer.nserbin.com/
+            siteMonitor: http://192.168.0.4:9000
             description: Portainer
             server: rpi
             widget:
