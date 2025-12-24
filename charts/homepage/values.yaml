@@ -186,7 +186,7 @@ config:
 
         - Grafana:
             href: https://monitor.nserbin.com
-            ping: https://monitor.nserbin.com
+            ping: http://kube-prometheus-stack-grafana.monitoring/api/health
             description: Grafana
             widget:
                 type: prometheusmetric
@@ -200,7 +200,7 @@ config:
 
         - Prometheus:
             href: https://prometheus.nserbin.com
-            ping: https://prometheus.nserbin.com
+            ping: http://kube-prometheus-stack-prometheus.monitoring:9090/-/healthy
             description: Prometheus
             widget:
               type: prometheus
@@ -251,7 +251,7 @@ config:
         - Traefik:
             icon: mdi-router-network
             href: https://traefik.nserbin.com/dashboard/
-            ping: https://traefik.nserbin.com/dashboard/
+            ping: http://traefik.traefik:9000/ping
             description: Traefik
             widget:
               type: traefik
