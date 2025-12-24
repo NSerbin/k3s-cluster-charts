@@ -323,14 +323,6 @@ config:
           showLabel: true
 
     - resources:
-        backend: resources
-        expanded: true
-        cpu: true
-        memory: true
-        network: default
-        label: System
-
-    - resources:
         label: Uptime
         uptime: true
 
