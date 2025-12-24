@@ -352,7 +352,7 @@ traefik:
   ingressRoute:
     enabled: true
     entryPoints:
-      - websecure
+      - web
     host: "home.nserbin.com"
     tls:
       enabled: true
