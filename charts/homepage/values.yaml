@@ -260,7 +260,9 @@ config:
               type: portainer
               url: http://192.168.0.4:9000
               env: 1
-              key: ${PORTAINER_KEY}
+              key: dummy
+              headers:
+                X-API-Key: ${PORTAINER_KEY}
 
     - Tools:
         - DocuSeal:
