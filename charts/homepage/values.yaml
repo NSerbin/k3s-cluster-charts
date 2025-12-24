@@ -244,7 +244,7 @@ config:
               key: "${PIHOLE_KEY}"
 
         - Traefik:
-            icon: mdi-router-network
+            icon: traefik.svg
             href: https://traefik.nserbin.com/dashboard/
             siteMonitor: http://traefik-api.traefik:9000/ping
             description: Traefik
