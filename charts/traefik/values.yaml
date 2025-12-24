@@ -42,6 +42,13 @@ traefik:
         default: true
       exposedPort: 443
       protocol: TCP
+    traefik:
+      port: 9000
+      expose:
+        default: false
+      exposedPort: 9000
+      protocol: TCP
+
 
   logs:
     general:
