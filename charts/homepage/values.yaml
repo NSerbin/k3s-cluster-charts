@@ -237,7 +237,7 @@ config:
         - Traefik:
             icon: traefik.svg
             href: https://traefik.nserbin.com/dashboard/
-            siteMonitor: http://traefik-api.traefik:9000/ping
+            siteMonitor: http://traefik-api.traefik:9000
             description: Traefik
 
     - Management:
