@@ -203,7 +203,7 @@ config:
         - Alertmanager:
             icon: alertmanager.png
             href: https://alerts.nserbin.com
-            siteMonitor: https://alerts.nserbin.com/-/healthy
+            siteMonitor: http://kube-prometheus-stack-alertmanager.monitoring:9093/-/healthy
             description: Alertmanager
 
         - Uptime Kuma:
@@ -272,7 +272,7 @@ config:
         - Watchtower:
             icon: watchtower.svg
             href: http://192.168.0.4:8081/
-            siteMonitor: http://192.168.0.4:8081/
+            siteMonitor: http://192.168.0.4:8081/metrics
             description: Service to pull images
             server: rpi
             widget:
