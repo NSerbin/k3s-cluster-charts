@@ -180,7 +180,7 @@ config:
     - Monitoring:
         - cAdvisor:
             icon: cadvisor.png
-            ping: https://cadvisor.nserbin.com
+            siteMonitor: https://cadvisor.nserbin.com
             href: https://cadvisor.nserbin.com
             description: cAdvisor Dashboard
             server: rpi
@@ -215,7 +215,7 @@ config:
         - Uptime Kuma:
             icon: uptime-kuma.png
             href: https://status.nserbin.com/
-            ping: https://status.nserbin.com/
+            siteMonitor: http://192.168.0.4:3001
             description: Status dashboard for all the services
             server: rpi
             widget:
@@ -227,7 +227,7 @@ config:
         - FreshRSS:
             icon: freshrss.svg
             href: http://rss.nserbin.com
-            ping: http://rss.nserbin.com
+            siteMonitor: http://rss.nserbin.com
             description: Fresh RSS
             server: rpi
             widget:
@@ -240,7 +240,7 @@ config:
         - Pi-hole:
             icon: pi-hole.svg
             href: https://pihole.nserbin.com/admin
-            ping: https://pihole.nserbin.com/admin
+            siteMonitor: http://192.168.0.4:83/admin
             description: Pi-hole DNS
             server: rpi
             widget:
@@ -252,11 +252,8 @@ config:
         - Traefik:
             icon: mdi-router-network
             href: https://traefik.nserbin.com/dashboard/
-            siteMonitor: https://traefik.nserbin.com
+            siteMonitor: http://traefik-api.traefik:9000/ping
             description: Traefik
-            widget:
-              type: traefik
-              url: http://traefik.traefik:9000
 
     - Management:
         - Portainer:
@@ -274,14 +271,14 @@ config:
     - Tools:
         - DocuSeal:
             href: https://docs.nserbin.com/
-            ping: https://docs.nserbin.com/
+            siteMonitor: https://docs.nserbin.com/
             description: Sign documents
             server: rpi
 
         - Watchtower:
             icon: watchtower.svg
             href: http://192.168.0.4:8081/
-            ping: http://192.168.0.4:8081/
+            siteMonitor: http://192.168.0.4:8081/
             description: Service to pull images
             server: rpi
             widget:
@@ -292,14 +289,14 @@ config:
         - SSH:
             icon: shell.svg
             href: https://ssh-tunnel.nserbin.com/
-            ping: https://ssh-tunnel.nserbin.com/
+            siteMonitor: https://ssh-tunnel.nserbin.com/
             description: SSH Tunnel to RPi
             server: rpi
 
         - Vault:
             icon: filebrowser.png
             href: https://vault.nserbin.com/
-            ping: https://vault.nserbin.com/
+            siteMonitor: https://vault.nserbin.com/
             description: FileBrowser
             server: rpi
 
@@ -307,7 +304,7 @@ config:
         - Bitwarden:
             icon: bitwarden.svg
             href: https://btw.nserbin.com
-            ping: https://btw.nserbin.com
+            siteMonitor: http://192.168.0.4:8484
             description: Bitwarden
             server: rpi
 
