@@ -67,7 +67,7 @@ traefik:
 
   api:
     dashboard: true
-    insecure: false
+    insecure: true
 
   additionalArguments:
     - "--ping=true"
