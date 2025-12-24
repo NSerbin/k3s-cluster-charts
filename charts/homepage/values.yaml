@@ -255,7 +255,7 @@ config:
             description: Traefik
             widget:
               type: traefik
-              url: http://traefik.traefik
+              url: http://traefik.traefik:9000
 
     - Management:
         - Portainer:
