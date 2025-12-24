@@ -1,0 +1,32 @@
+{{- if .Values.traefik.ingressRoute.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "homepage.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "homepage.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  entryPoints:
+{{ toYaml .Values.traefik.ingressRoute.entryPoints | indent 4 }}
+  routes:
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`)
+      kind: Rule
+      services:
+        - name: {{ include "homepage.fullname" . }}
+          port: {{ .Values.service.port }}
+{{- if .Values.traefik.ingressRoute.stickySessions.enabled }}
+          sticky:
+            cookie:
+              name: {{ .Values.traefik.ingressRoute.stickySessions.cookie.name | quote }}
+              secure: {{ .Values.traefik.ingressRoute.stickySessions.cookie.secure }}
+              httpOnly: {{ .Values.traefik.ingressRoute.stickySessions.cookie.httpOnly }}
+              sameSite: {{ .Values.traefik.ingressRoute.stickySessions.cookie.sameSite }}
+{{- end }}
+{{- if and .Values.traefik.ingressRoute.tls.enabled (or .Values.traefik.ingressRoute.tls.secretName (not .Values.traefik.ingressRoute.tls.secretName)) }}
+  tls:
+{{- if .Values.traefik.ingressRoute.tls.secretName }}
+    secretName: {{ .Values.traefik.ingressRoute.tls.secretName | quote }}
+{{- end }}
+{{- end }}
+{{- end }}

@@ -1,0 +1,81 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "homepage.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "homepage.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+spec:
+  revisionHistoryLimit: 3
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "homepage.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "homepage.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      serviceAccountName: {{ include "homepage.serviceAccountName" . }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
+      containers:
+        - name: homepage
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: HOMEPAGE_ALLOWED_HOSTS
+              value: {{ .Values.env.HOMEPAGE_ALLOWED_HOSTS | quote }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.secrets.existingSecret | quote }}
+          ports:
+            - name: http
+              containerPort: 3000
+              protocol: TCP
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+          volumeMounts:
+            - name: config
+              mountPath: /app/config/kubernetes.yaml
+              subPath: kubernetes.yaml
+            - name: config
+              mountPath: /app/config/settings.yaml
+              subPath: settings.yaml
+            - name: config
+              mountPath: /app/config/bookmarks.yaml
+              subPath: bookmarks.yaml
+            - name: config
+              mountPath: /app/config/services.yaml
+              subPath: services.yaml
+            - name: config
+              mountPath: /app/config/widgets.yaml
+              subPath: widgets.yaml
+            - name: config
+              mountPath: /app/config/docker.yaml
+              subPath: docker.yaml
+            - name: config
+              mountPath: /app/config/custom.css
+              subPath: custom.css
+            - name: config
+              mountPath: /app/config/custom.js
+              subPath: custom.js
+            - name: logs
+              mountPath: /app/config/logs
+      volumes:
+        - name: config
+          configMap:
+            name: {{ if .Values.config.existingConfigMap -}}
+              {{ .Values.config.existingConfigMap }}
+              {{- else -}}
+              {{ include "homepage.fullname" . }}-config
+              {{- end }}
+        - name: logs
+          emptyDir: {}
+      nodeSelector:
+{{ toYaml .Values.nodeSelector | indent 8 }}
+      tolerations:
+{{ toYaml .Values.tolerations | indent 8 }}
+      affinity:
+{{ toYaml .Values.affinity | indent 8 }}

@@ -1,0 +1,41 @@
+{{- if .Values.rbac.create }}
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: {{ include "homepage.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "homepage.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+rules:
+  - apiGroups: [""]
+    resources: ["namespaces","pods","nodes"]
+    verbs: ["get","list"]
+  - apiGroups: ["networking.k8s.io"]
+    resources: ["ingresses"]
+    verbs: ["get","list"]
+  - apiGroups: ["traefik.io"]
+    resources: ["ingressroutes"]
+    verbs: ["get","list"]
+  - apiGroups: ["gateway.networking.k8s.io"]
+    resources: ["httproutes","gateways"]
+    verbs: ["get","list"]
+  - apiGroups: ["metrics.k8s.io"]
+    resources: ["nodes","pods"]
+    verbs: ["get","list"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRoleBinding
+metadata:
+  name: {{ include "homepage.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "homepage.name" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: ClusterRole
+  name: {{ include "homepage.fullname" . }}
+subjects:
+  - kind: ServiceAccount
+    name: {{ include "homepage.serviceAccountName" . }}
+    namespace: {{ .Release.Namespace }}
+{{- end }}

@@ -1,0 +1,381 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/gethomepage/homepage
+  tag: 1.8.0
+  pullPolicy: IfNotPresent
+
+nameOverride: ""
+fullnameOverride: ""
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: true
+
+rbac:
+  create: true
+
+service:
+  type: ClusterIP
+  port: 3000
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+env:
+  # Ideal: "home.nserbin.com" (y listo). Si te da paja por ahora, "*" funciona.
+  HOMEPAGE_ALLOWED_HOSTS: "*"
+
+# Solo referencia a un Secret existente (creado localmente en el cluster)
+secrets:
+  existingSecret: homepage-secrets
+
+config:
+  existingConfigMap: ""
+
+  kubernetesYaml: |
+    mode: cluster
+    traefik: true
+
+  settingsYaml: |
+    title: My Homepage Dashboard
+    theme: dark
+    iconStyle: theme
+    color: slate
+    language: en
+
+    headerStyle: underlined
+    # statusStyle: dot
+
+    # Homepage espera logs en /app/config/logs (vos montás /app/config/logs)
+    logpath: /app/config/logs
+
+    base: https://home.nserbin.com/
+
+    hideErrors: false
+    useEqualHeights: true
+
+    quicklaunch:
+      searchDescriptions: true
+      hideInternetSearch: true
+      hideVisitURL: true
+
+    target: _blank
+    showStats: true
+
+    layout:
+      Management:
+        icon: mdi-view-dashboard
+      Monitoring:
+        icon: mdi-monitor-eye
+      Networking:
+        icon: mdi-wan
+      News:
+        icon: mdi-newspaper
+      Security:
+        icon: mdi-security
+      Tools:
+        icon: mdi-tools
+      Cluster:
+        icon: mdi-kubernetes
+
+  bookmarksYaml: |
+    - Courses:
+        - Udemy:
+            - icon: udemy.png
+              abbr: U
+              href: https://www.udemy.com/
+              description: Udemy
+        - TutorialsDojo:
+            - icon: ""
+              abbr: TD
+              href: https://tutorialsdojo.com/
+              description: Tutorials Dojo
+
+    - Developer:
+        - GitHub:
+            - icon: github-light.png
+              abbr: GH
+              href: https://github.com/Nserbin
+              description: Github Repository
+        - GitLab:
+            - icon: gitlab.png
+              abbr: GL
+              href: https://gitlab.com/
+              description: Gitlab Repository
+        - GitGuardian:
+            - icon: ""
+              abbr: GG
+              href: https://dashboard.gitguardian.com/
+              description: Check leaks in repositories
+
+    - IA:
+        - ChatGPT:
+            - icon: chatgpt.svg
+              abbr: AI
+              href: https://chat.openai.com/
+              description: ChatGPT
+        - Gemini:
+            - icon: si-googlebard
+              abbr: GM
+              href: https://bard.google.com/chat
+              description: Gemini
+
+    - Notes:
+        - Keep:
+            - icon: google-keep.svg
+              abbr: GK
+              href: https://keep.google.com
+              description: Google Keep
+        - Notion:
+            - icon: notion.png
+              abbr: NT
+              href: https://www.notion.so/koopernic
+              description: Notion
+
+    - Social:
+        - Reddit:
+            - icon: reddit.png
+              abbr: RE
+              href: https://reddit.com/
+              description: Reddit
+
+    - Entertainment:
+        - Amazon Music:
+            - icon: amazon.png
+              abbr: AM
+              href: https://music.amazon.com
+              description: Amazon Music
+        - YouTube:
+            - icon: youtube.png
+              abbr: YT
+              href: https://youtube.com/
+              description: YouTube
+        - SoundCloud:
+            - icon: mdi-soundcloud
+              abbr: SC
+              href: https://soundcloud.com
+              description: SoundCloud
+        - Netflix:
+            - icon: netflix.png
+              abbr: NF
+              href: https://netflix.com
+              description: Netflix
+
+  servicesYaml: |
+    - Cluster:
+        - Argo CD:
+            href: https://argo.nserbin.com
+            description: GitOps
+            icon: si-argo.svg
+            widget:
+              type: argocd
+              url: http://argocd-server.argocd.svc.cluster.local
+              key: ${ARGOCD_KEY}
+
+    - Monitoring:
+        - cAdvisor:
+            icon: cadvisor.png
+            ping: https://cadvisor.nserbin.com
+            href: https://cadvisor.nserbin.com
+            description: cAdvisor Dashboard
+            server: rpi
+
+        - Grafana:
+            href: https://monitor.nserbin.com
+            ping: https://monitor.nserbin.com
+            description: Grafana (Cluster)
+            widget:
+              type: grafana
+              version: 2
+              alerts: alertmanager
+              url: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local
+              username: ${GRAFANA_USERNAME}
+              password: ${GRAFANA_PASSWORD}
+
+        - Prometheus:
+            href: https://prometheus.nserbin.com
+            ping: https://prometheus.nserbin.com
+            description: Prometheus (Cluster)
+            widget:
+              type: prometheus
+              url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+
+        - Alertmanager:
+            href: https://alerts.nserbin.com
+            ping: https://alerts.nserbin.com
+            description: Alertmanager (Cluster)
+            widget:
+              type: alertmanager
+              url: http://kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093
+
+        - Uptime Kuma:
+            icon: uptime-kuma.png
+            href: https://status.nserbin.com/
+            ping: https://status.nserbin.com/
+            description: Status dashboard for all the services
+            server: rpi
+            widget:
+              type: uptimekuma
+              url: http://192.168.0.4:3001
+              slug: default
+
+    - News:
+        - FreshRSS:
+            icon: freshrss.svg
+            href: http://rss.nserbin.com
+            ping: http://rss.nserbin.com
+            description: Fresh RSS
+            server: rpi
+            widget:
+              type: freshrss
+              url: http://192.168.0.4:85
+              username: koopernic
+              password: ${FRESHRSS_PASSWORD}
+
+    - Networking:
+        - Pi-hole:
+            icon: pi-hole.svg
+            href: https://pihole.nserbin.com/admin
+            ping: https://pihole.nserbin.com/admin
+            description: Pi-hole DNS
+            server: rpi
+            widget:
+              type: pihole
+              url: http://192.168.0.4:83
+              version: 6
+              key: ${PIHOLE_KEY}
+
+        - Traefik:
+            icon: mdi-router-network
+            href: https://traefik.nserbin.com
+            ping: https://traefik.nserbin.com
+            description: Traefik (Cluster)
+            widget:
+              type: traefik
+              url: http://traefik.traefik.svc.cluster.local
+
+    - Management:
+        - Portainer:
+            icon: portainer.svg
+            href: https://portainer.nserbin.com/
+            ping: https://portainer.nserbin.com/
+            description: Portainer
+            server: rpi
+            widget:
+              type: portainer
+              url: http://192.168.0.4:9000
+              env: 1
+              key: ${PORTAINER_KEY}
+
+    - Tools:
+        - DocuSeal:
+            href: https://docs.nserbin.com/
+            ping: https://docs.nserbin.com/
+            description: Sign documents
+            server: rpi
+
+        - Watchtower:
+            icon: watchtower.svg
+            href: http://192.168.0.4:8081/
+            ping: http://192.168.0.4:8081/
+            description: Service to pull images
+            server: rpi
+            widget:
+              type: watchtower
+              url: http://192.168.0.4:8081
+              key: ${WATCHTOWER_KEY}
+
+        - SSH:
+            icon: shell.svg
+            href: https://ssh-tunnel.nserbin.com/
+            ping: https://ssh-tunnel.nserbin.com/
+            description: SSH Tunnel to RPi
+            server: rpi
+
+        - Vault:
+            icon: filebrowser.png
+            href: https://vault.nserbin.com/
+            ping: https://vault.nserbin.com/
+            description: FileBrowser
+            server: rpi
+
+    - Security:
+        - Bitwarden:
+            icon: bitwarden.svg
+            href: https://btw.nserbin.com
+            ping: https://btw.nserbin.com
+            description: Bitwarden
+            server: rpi
+
+  widgetsYaml: |
+    - kubernetes:
+        cluster:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+          label: "cluster"
+        nodes:
+          show: true
+          cpu: true
+          memory: true
+          showLabel: true
+
+    - resources:
+        backend: resources
+        expanded: true
+        cpu: true
+        memory: true
+        network: default
+        label: System
+
+    - resources:
+        label: Storage
+        disk: /
+
+    - resources:
+        label: Uptime
+        uptime: true
+
+    - datetime:
+        text_size: l
+        locale: es
+        format:
+          timeStyle: short
+          hourCycle: h23
+          dateStyle: short
+
+    - search:
+        provider: duckduckgo
+        target: _blank
+
+  dockerYaml: ""
+  customCss: ""
+  customJs: ""
+
+persistence:
+  logs:
+    enabled: false
+    size: 1Gi
+    storageClassName: ""
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - websecure
+    host: "home.nserbin.com"
+    tls:
+      enabled: true
+      secretName: ""
+    stickySessions:
+      enabled: false
+      cookie:
+        name: "homepage_sticky"
+        secure: true
+        httpOnly: true
+        sameSite: "none"
