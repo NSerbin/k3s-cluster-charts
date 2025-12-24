@@ -239,7 +239,7 @@ config:
             server: rpi
             widget:
               type: pihole
-              url: http://192.168.0.4:83/admin
+              url: http://192.168.0.4:83
               version: 6
               key: "${PIHOLE_KEY}"
 
