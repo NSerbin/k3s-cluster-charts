@@ -154,18 +154,17 @@ kube-prometheus-stack:
   # =========================
   # ALERTMANAGER
   # =========================
-
   alertmanager:
     enabled: true
 
     alertmanagerSpec:
       retention: 120h
+
       configSecret: alertmanager-kube-prometheus-stack-alertmanager
-      
+
       additionalArgs:
         - name: config.expand-env
           value: "true"
-
 
       resources:
         requests:
@@ -184,12 +183,14 @@ kube-prometheus-stack:
               requests:
                 storage: 2Gi
 
-      env:
-        - name: SLACK_WEBHOOK_URL
-          valueFrom:
-            secretKeyRef:
-              name: alertmanager-secrets
-              key: SLACK_WEBHOOK_URL
+      containers:
+        - name: alertmanager
+          env:
+            - name: SLACK_WEBHOOK_URL
+              valueFrom:
+                secretKeyRef:
+                  name: alertmanager-secrets
+                  key: SLACK_WEBHOOK_URL
 
     config:
       global:
@@ -229,6 +230,7 @@ kube-prometheus-stack:
             - api_url: ${SLACK_WEBHOOK_URL}
               channel: "#ns-alarms-grafana"
               send_resolved: true
+
 
   kubeApiServer:
     enabled: false
