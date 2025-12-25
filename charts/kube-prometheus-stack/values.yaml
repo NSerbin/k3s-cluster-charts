@@ -156,73 +156,73 @@ kube-prometheus-stack:
   # =========================
 
   alertmanager:
-  enabled: true
+    enabled: true
 
-  alertmanagerSpec:
-    retention: 120h
+    alertmanagerSpec:
+      retention: 120h
 
-    resources:
-      requests:
-        cpu: 50m
-        memory: 128Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
+      resources:
+        requests:
+          cpu: 50m
+          memory: 128Mi
+        limits:
+          cpu: 200m
+          memory: 256Mi
 
-    storage:
-      volumeClaimTemplate:
-        spec:
-          storageClassName: local-path
-          accessModes: ["ReadWriteOnce"]
-          resources:
-            requests:
-              storage: 2Gi
+      storage:
+        volumeClaimTemplate:
+          spec:
+            storageClassName: local-path
+            accessModes: ["ReadWriteOnce"]
+            resources:
+              requests:
+                storage: 2Gi
 
-    env:
-      - name: SLACK_WEBHOOK_URL
-        valueFrom:
-          secretKeyRef:
-            name: alertmanager-secrets
-            key: SLACK_WEBHOOK_URL
+      env:
+        - name: SLACK_WEBHOOK_URL
+          valueFrom:
+            secretKeyRef:
+              name: alertmanager-secrets
+              key: SLACK_WEBHOOK_URL
 
-  config:
-    global:
-      resolve_timeout: 5m
+    config:
+      global:
+        resolve_timeout: 5m
 
-    route:
-      receiver: "slack-warnings"
-      group_by: ["alertname", "namespace", "severity"]
-      group_wait: 30s
-      group_interval: 5m
-      repeat_interval: 12h
+      route:
+        receiver: "slack-warnings"
+        group_by: ["alertname", "namespace", "severity"]
+        group_wait: 30s
+        group_interval: 5m
+        repeat_interval: 12h
 
-      routes:
-        - matchers:
-            - alertname="Watchdog"
-          receiver: "null"
+        routes:
+          - matchers:
+              - alertname="Watchdog"
+            receiver: "null"
 
-        - matchers:
-            - severity="critical"
-          receiver: "slack-critical"
+          - matchers:
+              - severity="critical"
+            receiver: "slack-critical"
 
-        - matchers:
-            - severity="warning"
-          receiver: "slack-warnings"
+          - matchers:
+              - severity="warning"
+            receiver: "slack-warnings"
 
-    receivers:
-      - name: "null"
+      receivers:
+        - name: "null"
 
-      - name: "slack-warnings"
-        slack_configs:
-          - api_url: ${SLACK_WEBHOOK_URL}
-            channel: "#alerts"
-            send_resolved: true
+        - name: "slack-warnings"
+          slack_configs:
+            - api_url: ${SLACK_WEBHOOK_URL}
+              channel: "#alerts"
+              send_resolved: true
 
-      - name: "slack-critical"
-        slack_configs:
-          - api_url: ${SLACK_WEBHOOK_URL}
-            channel: "#ns-alarms-grafana"
-            send_resolved: true      
+        - name: "slack-critical"
+          slack_configs:
+            - api_url: ${SLACK_WEBHOOK_URL}
+              channel: "#ns-alarms-grafana"
+              send_resolved: true      
 
   kubeApiServer:
     enabled: false
