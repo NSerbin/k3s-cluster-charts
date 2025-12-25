@@ -163,7 +163,9 @@ kube-prometheus-stack:
       configSecret: alertmanager-kube-prometheus-stack-alertmanager
       
       additionalArgs:
-        - --config.expand-env
+        - name: config.expand-env
+          value: "true"
+
 
       resources:
         requests:
