@@ -146,7 +146,7 @@ config:
     - Entertainment:
         - Amazon Music:
             - icon: amazon.png
-              abbr: AM
+              abbr: AMM
               href: https://music.amazon.com
               description: Amazon Music
         - YouTube:
@@ -164,6 +164,28 @@ config:
               abbr: NF
               href: https://netflix.com
               description: Netflix
+
+    - Marketplace:
+        - Amazon:
+            - icon: amazon.png
+              abbr: AM
+              href: https://amazon.es
+              description: Amazon
+        - Hagglezone:
+            - icon: 
+              abbr: HG
+              href: https://www.hagglezon.com/
+              description: Hagglezon
+        - OLX:
+            - icon: 
+              abbr: OLX
+              href: https://olx.pt
+              description: SoundCloud
+        - Vinted:
+            - icon: 
+              abbr: V
+              href: https://vinted.pt
+              description: Vinted
 
   servicesYaml: |
     - Cluster:
