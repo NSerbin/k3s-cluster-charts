@@ -155,11 +155,15 @@ kube-prometheus-stack:
   # ALERTMANAGER
   # =========================
 
-  alertmanager:
+alertmanager:
     enabled: true
 
     alertmanagerSpec:
       retention: 120h
+      configSecret: alertmanager-kube-prometheus-stack-alertmanager
+      
+      additionalArgs:
+        - --config.expand-env
 
       resources:
         requests:
@@ -222,7 +226,7 @@ kube-prometheus-stack:
           slack_configs:
             - api_url: ${SLACK_WEBHOOK_URL}
               channel: "#ns-alarms-grafana"
-              send_resolved: true      
+              send_resolved: true
 
   kubeApiServer:
     enabled: false
