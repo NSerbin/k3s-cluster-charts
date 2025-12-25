@@ -1,7 +1,9 @@
 kube-prometheus-stack:
+  
   # =========================
-  # PROMETHEUS
+  # PROMETHEUS              
   # =========================
+  
   prometheus:
     enabled: true
     prometheusSpec:
@@ -23,7 +25,6 @@ kube-prometheus-stack:
           cpu: 1
           memory: 2Gi
 
-      # Persistencia (clave)
       storageSpec:
         volumeClaimTemplate:
           spec:
@@ -33,25 +34,25 @@ kube-prometheus-stack:
               requests:
                 storage: 20Gi
 
-      # Mejoras prácticas
       walCompression: true
       enableAdminAPI: false
+
   prometheusOperator:
     admissionWebhooks:
       enabled: false
+
   # =========================
   # GRAFANA
   # =========================
+  
   grafana:
     enabled: true
     image:
       repository: grafana/grafana
       tag: "12.4.0-20321528496-ubuntu"
-      pullPolicy: IfNotPresent    
+      pullPolicy: IfNotPresent
 
-    # IMPORTANT: no dejes password en claro a largo plazo.
-    # Ideal: existingSecret (más abajo te dejo recomendado)
-    adminPassword: "changeme"
+    existingSecret: grafana-admin-credentials
 
     defaultDashboardsEnabled: true
     defaultDashboardsTimezone: "browser"
@@ -95,7 +96,7 @@ kube-prometheus-stack:
         mode: console
         level: info
       date_formats:
-        default_timezone: browser            
+        default_timezone: browser
 
     resources:
       requests:
@@ -119,8 +120,8 @@ kube-prometheus-stack:
         access: proxy
         jsonData:
           selectedAuthType: github-app
-          appId: 2504832
-          installationId: Iv23liaUjWHUaVpQmw1W
+          appId: ${GITHUB_APP_ID}
+          installationId: ${GITHUB_APP_INSTALLATION_ID}
         secureJsonData:
           privateKey: ${GITHUB_APP_PRIVATE_KEY}
 
@@ -129,9 +130,21 @@ kube-prometheus-stack:
         secretKeyRef:
           name: grafana-github-app
           key: GITHUB_APP_PRIVATE_KEY
+
+      GITHUB_APP_ID:
+        secretKeyRef:
+          name: grafana-github-app
+          key: GITHUB_APP_ID
+
+      GITHUB_APP_INSTALLATION_ID:
+        secretKeyRef:
+          name: grafana-github-app
+          key: GITHUB_APP_INSTALLATION_ID
+
   # =========================
   # NODE EXPORTER + KSM
   # =========================
+  
   nodeExporter:
     enabled: true
 
@@ -141,6 +154,7 @@ kube-prometheus-stack:
   # =========================
   # ALERTMANAGER
   # =========================
+  
   alertmanager:
     enabled: true
     alertmanagerSpec:
@@ -182,7 +196,7 @@ externalTargets:
     key: release
     value: kube-prometheus-stack
 
-  # Lista de hosts externos
+  # External Hosts
   targets:
     - name: rpi
       ip: 192.168.0.4
