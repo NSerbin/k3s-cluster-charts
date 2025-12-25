@@ -155,7 +155,7 @@ kube-prometheus-stack:
   # ALERTMANAGER
   # =========================
 
-alertmanager:
+  alertmanager:
     enabled: true
 
     alertmanagerSpec:
