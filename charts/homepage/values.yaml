@@ -264,7 +264,7 @@ config:
         - Traefik:
             icon: traefik.svg
             href: https://traefik.nserbin.com/dashboard/
-            siteMonitor: http://traefik.traefik.svc:80/ping
+            siteMonitor: http://traefik.traefik.svc.cluster.local/ping
             description: Traefik
 
     - Management:
