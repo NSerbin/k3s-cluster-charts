@@ -1,22 +1,20 @@
 {{/* =========================================================
-   Alertmanager Telegram Templates (HTML)
+   Telegram Templates (Alertmanager)
+   Usar con telegram_configs (parse_mode: HTML)
    - telegram.title
-   - telegram.text
-   Compatible con Alertmanager v0.30+
+   - telegram.message
+   Sin sprig. Usar: toUpper, printf, index, range, with, if.
    ========================================================= */}}
 
-{{ define "telegram.title" -}}
-{{ if eq .Status "firing" }}🚨 FIRING{{ else }}✅ RESOLVED{{ end }} |
-{{ with index .CommonLabels "severity" }}{{ . | upper }}{{ else }}UNKNOWN{{ end }} |
-{{ with index .CommonLabels "alertname" }}{{ . }}{{ else }}Alert{{ end }}
-{{- end }}
+{{ define "telegram.title" }}
+{{ if eq .Status "firing" }}🚨 FIRING{{ else }}✅ RESOLVED{{ end }} | {{ with index .CommonLabels "severity" }}{{ . | toUpper }}{{ else }}UNKNOWN{{ end }} | {{ with index .CommonLabels "alertname" }}{{ . }}{{ else }}Alert{{ end }}
+{{ end }}
 
-{{ define "telegram.text" -}}
+{{ define "telegram.message" }}
 <b>{{ template "telegram.title" . }}</b>
 
-{{ with index .CommonAnnotations "summary" }}
-<b>Summary:</b> {{ . }}
-{{ end }}
+<b>Summary:</b>
+{{ with index .CommonAnnotations "summary" }}{{ . }}{{ else }}(no summary annotation){{ end }}
 
 {{ with index .CommonAnnotations "description" }}
 <b>Description:</b>
@@ -29,27 +27,15 @@
 {{ with index .CommonLabels "instance" }}• <b>instance</b>: <code>{{ . }}</code>{{ end }}
 {{ with index .CommonLabels "pod" }}• <b>pod</b>: <code>{{ . }}</code>{{ end }}
 {{ with index .CommonLabels "service" }}• <b>service</b>: <code>{{ . }}</code>{{ end }}
+{{ with index .CommonLabels "controller" }}• <b>controller</b>: <code>{{ . }}</code>{{ end }}
 
-{{ $printed := false }}
-{{ range .CommonLabels.SortedPairs }}
-{{ if and
-  (ne .Name "alertname")
-  (ne .Name "severity")
-  (ne .Name "namespace")
-  (ne .Name "job")
-  (ne .Name "instance")
-  (ne .Name "pod")
-  (ne .Name "service")
-}}
-{{ if not $printed }}<b>Other labels:</b>{{ $printed = true }}{{ end }}
-• <b>{{ .Name }}</b>: <code>{{ .Value }}</code>
-{{ end }}
-{{ end }}
+{{ $runbook := index .CommonAnnotations "runbook_url" }}
+{{ $grafana := index .CommonAnnotations "grafana_url" }}
+{{ if or $runbook $grafana .ExternalURL }}
 
-{{ if or (index .CommonAnnotations "runbook_url") (index .CommonAnnotations "grafana_url") .ExternalURL }}
 <b>Links:</b>
-{{ with index .CommonAnnotations "runbook_url" }}• 📘 <a href="{{ . }}">Runbook</a>{{ end }}
-{{ with index .CommonAnnotations "grafana_url" }}• 📈 <a href="{{ . }}">Grafana</a>{{ end }}
-{{ with .ExternalURL }}• 🔗 <a href="{{ . }}">Alertmanager</a>{{ end }}
+{{ with $runbook }}• 📘 {{ . }}{{ end }}
+{{ with $grafana }}• 📈 {{ . }}{{ end }}
+{{ with .ExternalURL }}• 🔗 {{ . }}{{ end }}
 {{ end }}
-{{- end }}
+{{ end }}
