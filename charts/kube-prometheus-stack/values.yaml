@@ -121,6 +121,7 @@ kube-prometheus-stack:
         email_attribute_path: email
         role_attribute_path: "'GrafanaAdmin'"
         allow_assign_grafana_admin: true
+        role_attribute_strict: true
         
 
       log:
