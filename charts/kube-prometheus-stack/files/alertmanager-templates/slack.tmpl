@@ -1,70 +1,59 @@
-{{/* =========================
-   Slack Templates (Alertmanager)
+{{/* =========================================================
+   Slack templates for Alertmanager
    - slack.title
    - slack.text
-   NOTES:
-     - NO usar {{- o -}} (te rompe el formato en Slack)
-   ========================= */}}
+   ========================================================= */}}
 
-{{ define "slack.title" }}
-{{ $status := .Status | toUpper }}
-{{ $emoji := "✅" }}
-{{ if eq $status "FIRING" }}{{ $emoji = "🚨" }}{{ end }}
+{{/* ---------- TITLE ---------- */}}
+{{- define "slack.title" -}}
+{{- if eq .Status "firing" -}}🚨 FIRING{{- else -}}✅ RESOLVED{{- end -}}
+ | {{ .CommonLabels.severity | toUpper }}
+ | {{ .CommonLabels.alertname }}
+{{- end -}}
 
-{{ $sev := "UNKNOWN" }}
-{{ if (index .CommonLabels "severity") }}{{ $sev = (index .CommonLabels "severity") | toUpper }}{{ end }}
+{{/* ---------- BODY ---------- */}}
+{{- define "slack.text" -}}
 
-{{ $name := "Alert" }}
-{{ if (index .CommonLabels "alertname") }}{{ $name = (index .CommonLabels "alertname") }}{{ end }}
+{{/* ----- SUMMARY ----- */}}
+*📝 Summary*
+{{- if .CommonAnnotations.summary }}
+{{ .CommonAnnotations.summary }}
+{{- else }}
+_(no summary annotation)_
+{{- end }}
 
-{{ $emoji }} {{ $status }} | {{ $sev }} | {{ $name }}
-{{ end }}
+{{/* ----- DESCRIPTION ----- */}}
+{{- if .CommonAnnotations.description }}
 
+*📄 Description*
+{{ .CommonAnnotations.description }}
+{{- end }}
 
-{{ define "slack.text" }}
-{{/* Fallbacks por si el alert viene “plano” (amtool) */}}
-{{ $summary := "" }}
-{{ if (index .CommonAnnotations "summary") }}
-{{ $summary = index .CommonAnnotations "summary" }}
-{{ else if (index .CommonLabels "summary") }}
-{{ $summary = index .CommonLabels "summary" }}
-{{ end }}
+{{/* ----- CONTEXT (KEY LABELS) ----- */}}
+*📌 Context*
+{{- with .CommonLabels.namespace }}
+• *Namespace:* `{{ . }}`
+{{- end }}
+{{- with .CommonLabels.pod }}
+• *Pod:* `{{ . }}`
+{{- end }}
+{{- with .CommonLabels.container }}
+• *Container:* `{{ . }}`
+{{- end }}
+{{- with .CommonLabels.node }}
+• *Node:* `{{ . }}`
+{{- end }}
+{{- with .CommonLabels.job }}
+• *Job:* `{{ . }}`
+{{- end }}
 
-{{ $desc := "" }}
-{{ if (index .CommonAnnotations "description") }}
-{{ $desc = index .CommonAnnotations "description" }}
-{{ else if (index .CommonLabels "description") }}
-{{ $desc = index .CommonLabels "description" }}
-{{ end }}
+{{/* ----- LINKS ----- */}}
+*🔗 Links*
+{{- if .CommonAnnotations.runbook_url }}
+• 📘 <{{ .CommonAnnotations.runbook_url }}|Runbook>
+{{- end }}
+{{- if .ExternalURL }}
+• 🔍 <{{ .ExternalURL }}|Alertmanager>
+{{- end }}
 
-{{ $runbook := "" }}
-{{ if (index .CommonAnnotations "runbook_url") }}{{ $runbook = index .CommonAnnotations "runbook_url" }}{{ end }}
-
-*Summary:* {{ if $summary }}{{ $summary }}{{ else }}_(no summary)_{{ end }}
-
-{{ if $desc }}
-*Description:*
-{{ $desc }}
-{{ end }}
-
-*Key labels:*
-{{ if (index .CommonLabels "namespace") }}• *namespace:* `{{ index .CommonLabels "namespace" }}`{{ end }}
-{{ if (index .CommonLabels "pod") }}
-• *pod:* `{{ index .CommonLabels "pod" }}`
-{{ end }}
-{{ if (index .CommonLabels "container") }}
-• *container:* `{{ index .CommonLabels "container" }}`
-{{ end }}
-{{ if (index .CommonLabels "job") }}
-• *job:* `{{ index .CommonLabels "job" }}`
-{{ end }}
-{{ if (index .CommonLabels "instance") }}
-• *instance:* `{{ index .CommonLabels "instance" }}`
-{{ end }}
-
-*Links:*
-{{ if $runbook }}• 📘 <{{ $runbook }}|Runbook>{{ end }}
-{{ if and $runbook .ExternalURL }}
-{{ end }}
-{{ if .ExternalURL }}• 🔗 <{{ .ExternalURL }}|Alertmanager>{{ end }}
-{{ end }}
+{{- end }}
