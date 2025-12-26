@@ -154,6 +154,7 @@ kube-prometheus-stack:
   # =========================
   # ALERTMANAGER
   # =========================
+
   alertmanager:
     enabled: true
 
@@ -181,9 +182,13 @@ kube-prometheus-stack:
         - name: alertmanager-templates
           configMap:
             name: alertmanager-templates
+            items:
+              - key: slack.tmpl
+                path: slack.tmpl
       volumeMounts:
         - name: alertmanager-templates
-          mountPath: /etc/alertmanager/config
+          mountPath: /etc/alertmanager/config/slack.tmpl
+          subPath: slack.tmpl
           readOnly: true
 
       alertmanagerConfigNamespaceSelector: {}
