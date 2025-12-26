@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: alertmanager-templates
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app.kubernetes.io/name: alertmanager
+    app.kubernetes.io/component: templates
+    app.kubernetes.io/part-of: kube-prometheus-stack
+data:
+  {{- $files := .Files.Glob "files/alertmanager-templates/*.tmpl" }}
+  {{- if not $files }}
+  _warning.txt: "No Alertmanager templates found in files/alertmanager-templates/*.tmpl"
+  {{- end }}
+  {{- range $path, $bytes := $files }}
+  {{ base $path }}: |
+{{ $bytes | toString | nindent 4 }}
+  {{- end }}

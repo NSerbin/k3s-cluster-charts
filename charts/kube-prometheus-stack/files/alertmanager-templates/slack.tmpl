@@ -1,0 +1,60 @@
+{{/* =========================
+   Slack Templates (Alertmanager)
+   - slack.title
+   - slack.text
+   ========================= */}}
+
+{{- define "slack.title" -}}
+{{- $status := .Status | toUpper -}}
+{{- $sev := (index .CommonLabels "severity") | default "unknown" | toUpper -}}
+{{- if eq $status "FIRING" -}}🚨{{- else -}}✅{{- end -}} {{ $status }} | {{ $sev }} | {{ (index .CommonLabels "alertname") | default "Alert" }}
+{{- end -}}
+
+{{- define "slack.text" -}}
+{{- $summary := (index .CommonAnnotations "summary") | default "" -}}
+{{- $desc := (index .CommonAnnotations "description") | default "" -}}
+{{- $runbook := (index .CommonAnnotations "runbook_url") | default "" -}}
+{{- $grafana := (index .CommonAnnotations "grafana_url") | default "" -}}
+
+{{- if $summary -}}
+*Summary:* {{ $summary }}
+{{- else -}}
+*Summary:* _(no summary annotation)_
+{{- end -}}
+
+{{- if $desc -}}
+*Description:*
+{{ $desc }}
+{{- end -}}
+
+{{- /* Mostrar solo labels "útiles" primero */ -}}
+*Key labels:*
+{{- $keys := list "namespace" "job" "instance" "pod" "service" "controller" -}}
+{{- range $k := $keys -}}
+{{- $v := (index $.CommonLabels $k) -}}
+{{- if $v -}}
+• *{{ $k }}:* `{{ $v }}`
+{{- end -}}
+{{- end -}}
+
+{{- /* Resto de labels (evita spam: filtramos los ya listados) */ -}}
+{{- $skip := dict "alertname" true "severity" true "namespace" true "job" true "instance" true "pod" true "service" true "controller" true -}}
+{{- $extra := "" -}}
+{{- range .CommonLabels.SortedPairs -}}
+{{- if not (hasKey $skip .Name) -}}
+{{- $extra = printf "%s• *%s:* `%s`\n" $extra .Name .Value -}}
+{{- end -}}
+{{- end -}}
+{{- if $extra -}}
+*Other labels:*
+{{ $extra -}}
+{{- end -}}
+
+{{- /* Links */ -}}
+{{- if or $runbook $grafana .ExternalURL -}}
+*Links:*
+{{- if $runbook }} • <{{ $runbook }}|📘 Runbook>{{ end -}}
+{{- if $grafana }} • <{{ $grafana }}|📈 Grafana>{{ end -}}
+{{- if .ExternalURL }} • <{{ .ExternalURL }}|🔗 Alertmanager>{{ end -}}
+{{- end -}}
+{{- end -}}

@@ -177,6 +177,15 @@ kube-prometheus-stack:
               requests:
                 storage: 2Gi
 
+      volumes:
+        - name: alertmanager-templates
+          configMap:
+            name: alertmanager-templates
+      volumeMounts:
+        - name: alertmanager-templates
+          mountPath: /etc/alertmanager/config
+          readOnly: true
+
       alertmanagerConfigNamespaceSelector: {}
       alertmanagerConfigSelector:
         matchLabels:
@@ -304,6 +313,8 @@ alerting:
         name: alertmanager-secrets
         key: SLACK_WEBHOOK_URL
       sendResolved: true
+      titleTemplate: "slack.title"
+      textTemplate: "slack.text"   
 
     - name: slack-critical
       type: slack
@@ -312,6 +323,8 @@ alerting:
         name: alertmanager-secrets
         key: SLACK_WEBHOOK_URL
       sendResolved: true
+      titleTemplate: "slack.title"
+      textTemplate: "slack.text"   
 
 
   routes:
