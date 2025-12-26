@@ -6,15 +6,22 @@
 
 {{- define "slack.title" -}}
 {{- $status := .Status | toUpper -}}
-{{- $sev := (index .CommonLabels "severity") | default "unknown" | toUpper -}}
-{{- if eq $status "FIRING" -}}🚨{{- else -}}✅{{- end -}} {{ $status }} | {{ $sev }} | {{ (index .CommonLabels "alertname") | default "Alert" }}
+{{- $sev := "UNKNOWN" -}}
+{{- with (index .CommonLabels "severity") -}}{{- $sev = (. | toUpper) -}}{{- end -}}
+{{- $an := "Alert" -}}
+{{- with (index .CommonLabels "alertname") -}}{{- $an = . -}}{{- end -}}
+{{- if eq $status "FIRING" -}}🚨{{- else -}}✅{{- end -}} {{ $status }} | {{ $sev }} | {{ $an }}
 {{- end -}}
 
 {{- define "slack.text" -}}
-{{- $summary := (index .CommonAnnotations "summary") | default "" -}}
-{{- $desc := (index .CommonAnnotations "description") | default "" -}}
-{{- $runbook := (index .CommonAnnotations "runbook_url") | default "" -}}
-{{- $grafana := (index .CommonAnnotations "grafana_url") | default "" -}}
+{{- $summary := "" -}}
+{{- with (index .CommonAnnotations "summary") -}}{{- $summary = . -}}{{- end -}}
+{{- $desc := "" -}}
+{{- with (index .CommonAnnotations "description") -}}{{- $desc = . -}}{{- end -}}
+{{- $runbook := "" -}}
+{{- with (index .CommonAnnotations "runbook_url") -}}{{- $runbook = . -}}{{- end -}}
+{{- $grafana := "" -}}
+{{- with (index .CommonAnnotations "grafana_url") -}}{{- $grafana = . -}}{{- end -}}
 
 {{- if $summary -}}
 *Summary:* {{ $summary }}
@@ -27,21 +34,27 @@
 {{ $desc }}
 {{- end -}}
 
-{{- /* Mostrar solo labels "útiles" primero */ -}}
 *Key labels:*
-{{- $keys := list "namespace" "job" "instance" "pod" "service" "controller" -}}
-{{- range $k := $keys -}}
-{{- $v := (index $.CommonLabels $k) -}}
-{{- if $v -}}
-• *{{ $k }}:* `{{ $v }}`
-{{- end -}}
-{{- end -}}
+{{- with (index .CommonLabels "namespace") -}}• *namespace:* `{{ . }}`{{ "\n" }}{{- end -}}
+{{- with (index .CommonLabels "job") -}}• *job:* `{{ . }}`{{ "\n" }}{{- end -}}
+{{- with (index .CommonLabels "instance") -}}• *instance:* `{{ . }}`{{ "\n" }}{{- end -}}
+{{- with (index .CommonLabels "pod") -}}• *pod:* `{{ . }}`{{ "\n" }}{{- end -}}
+{{- with (index .CommonLabels "service") -}}• *service:* `{{ . }}`{{ "\n" }}{{- end -}}
+{{- with (index .CommonLabels "controller") -}}• *controller:* `{{ . }}`{{ "\n" }}{{- end -}}
 
-{{- /* Resto de labels (evita spam: filtramos los ya listados) */ -}}
-{{- $skip := dict "alertname" true "severity" true "namespace" true "job" true "instance" true "pod" true "service" true "controller" true -}}
+{{- /* Other labels (filtramos los key labels + alertname/severity) */ -}}
 {{- $extra := "" -}}
 {{- range .CommonLabels.SortedPairs -}}
-{{- if not (hasKey $skip .Name) -}}
+{{- if and
+    (ne .Name "alertname")
+    (ne .Name "severity")
+    (ne .Name "namespace")
+    (ne .Name "job")
+    (ne .Name "instance")
+    (ne .Name "pod")
+    (ne .Name "service")
+    (ne .Name "controller")
+  -}}
 {{- $extra = printf "%s• *%s:* `%s`\n" $extra .Name .Value -}}
 {{- end -}}
 {{- end -}}
@@ -50,7 +63,6 @@
 {{ $extra -}}
 {{- end -}}
 
-{{- /* Links */ -}}
 {{- if or $runbook $grafana .ExternalURL -}}
 *Links:*
 {{- if $runbook }} • <{{ $runbook }}|📘 Runbook>{{ end -}}
