@@ -227,7 +227,7 @@ config:
         - Uptime Kuma:
             icon: uptime-kuma.png
             href: https://status.nserbin.com/
-            siteMonitor: http://192.168.0.4:3001/
+            siteMonitor: http://192.168.0.4:3001
             description: Status dashboard for all the services
             server: rpi
             widget:
@@ -239,7 +239,7 @@ config:
         - FreshRSS:
             icon: freshrss.svg
             href: http://rss.nserbin.com
-            siteMonitor: http:/192.168.0.4:85/
+            siteMonitor: http://192.168.0.4:85
             description: Fresh RSS
             server: rpi
             widget:
@@ -284,7 +284,7 @@ config:
         - Watchtower:
             icon: watchtower.svg
             href: http://192.168.0.4:8081/
-            siteMonitor: http://192.168.0.4:8081/
+            siteMonitor: http://192.168.0.4:8081
             description: Service to pull images
             server: rpi
 
@@ -297,7 +297,7 @@ config:
         - Vault:
             icon: filebrowser.png
             href: https://vault.nserbin.com/
-            siteMonitor: http://192.168.0.4:8082/
+            siteMonitor: http://192.168.0.4:8082
             description: FileBrowser
             server: rpi
 
@@ -305,7 +305,7 @@ config:
         - Bitwarden:
             icon: bitwarden.svg
             href: https://btw.nserbin.com
-            siteMonitor: http://192.168.0.4:8484/
+            siteMonitor: http://192.168.0.4:8484
             description: Bitwarden
             server: rpi
 
