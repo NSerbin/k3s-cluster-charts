@@ -1,75 +1,76 @@
 {{/* =========================
    Slack Templates (Alertmanager)
-   Defines:
-     - slack.title
-     - slack.text
-   Notes:
-     - Works with Alertmanager template funcs (no "default", no "upper")
-     - Adds fallback to labels when annotations are missing (amtool case)
+   - slack.title
+   - slack.text
+   IMPORTANT:
+     - NO usar {{- o -}} porque destruye los saltos de línea
    ========================= */}}
 
-{{- define "slack.title" -}}
-{{- $status := .Status | toUpper -}}
-{{- $emoji := "✅" -}}
-{{- if eq $status "FIRING" -}}{{- $emoji = "🚨" -}}{{- end -}}
+{{ define "slack.title" }}
+{{ $status := .Status | toUpper }}
+{{ $emoji := "✅" }}
+{{ if eq $status "FIRING" }}{{ $emoji = "🚨" }}{{ end }}
 
-{{- $sev := "" -}}
-{{- if (index .CommonLabels "severity") -}}
-  {{- $sev = (index .CommonLabels "severity") | toUpper -}}
-{{- else -}}
-  {{- $sev = "UNKNOWN" -}}
-{{- end -}}
+{{ $sev := "UNKNOWN" }}
+{{ if (index .CommonLabels "severity") }}{{ $sev = (index .CommonLabels "severity") | toUpper }}{{ end }}
 
-{{- $name := "" -}}
-{{- if (index .CommonLabels "alertname") -}}
-  {{- $name = (index .CommonLabels "alertname") -}}
-{{- else -}}
-  {{- $name = "Alert" -}}
-{{- end -}}
+{{ $name := "Alert" }}
+{{ if (index .CommonLabels "alertname") }}{{ $name = (index .CommonLabels "alertname") }}{{ end }}
 
 {{ $emoji }} {{ $status }} | {{ $sev }} | {{ $name }}
-{{- end -}}
+{{ end }}
 
-{{- define "slack.text" -}}
-{{- /* Fallbacks: if annotations missing, allow summary/description in labels (amtool) */ -}}
-{{- $summary := "" -}}
-{{- if (index .CommonAnnotations "summary") -}}
-  {{- $summary = index .CommonAnnotations "summary" -}}
-{{- else if (index .CommonLabels "summary") -}}
-  {{- $summary = index .CommonLabels "summary" -}}
-{{- end -}}
 
-{{- $desc := "" -}}
-{{- if (index .CommonAnnotations "description") -}}
-  {{- $desc = index .CommonAnnotations "description" -}}
-{{- else if (index .CommonLabels "description") -}}
-  {{- $desc = index .CommonLabels "description" -}}
-{{- end -}}
+{{ define "slack.text" }}
+{{/* Fallbacks: si no hay annotations, permitimos summary/description como labels (amtool) */}}
+{{ $summary := "" }}
+{{ if (index .CommonAnnotations "summary") }}
+{{ $summary = index .CommonAnnotations "summary" }}
+{{ else if (index .CommonLabels "summary") }}
+{{ $summary = index .CommonLabels "summary" }}
+{{ end }}
 
-{{- $runbook := "" -}}
-{{- if (index .CommonAnnotations "runbook_url") -}}
-  {{- $runbook = index .CommonAnnotations "runbook_url" -}}
-{{- end -}}
+{{ $desc := "" }}
+{{ if (index .CommonAnnotations "description") }}
+{{ $desc = index .CommonAnnotations "description" }}
+{{ else if (index .CommonLabels "description") }}
+{{ $desc = index .CommonLabels "description" }}
+{{ end }}
 
-{{- /* ===== Summary ===== */ -}}
-*Summary:* {{- if $summary -}} {{ $summary }}{{- else -}} _(missing summary)_{{- end }}
+{{ $runbook := "" }}
+{{ if (index .CommonAnnotations "runbook_url") }}{{ $runbook = index .CommonAnnotations "runbook_url" }}{{ end }}
 
-{{- /* ===== Description ===== */ -}}
-{{- if $desc }}
+{{/* -------- Summary -------- */}}
+*Summary:* {{ if $summary }}{{ $summary }}{{ else }}_(no summary)_{{ end }}
+
+{{ "\n" }}
+{{ "\n" }}
+
+{{/* -------- Description -------- */}}
+{{ if $desc }}
 *Description:*
 {{ $desc }}
-{{- end }}
 
-{{- /* ===== Key labels ===== */ -}}
+{{ "\n" }}
+{{ end }}
+
+{{/* -------- Key labels -------- */}}
 *Key labels:*
-{{- if (index .CommonLabels "namespace") }}• *namespace:* `{{ index .CommonLabels "namespace" }}`{{ end }}
-{{- if (index .CommonLabels "pod") }}• *pod:* `{{ index .CommonLabels "pod" }}`{{ end }}
-{{- if (index .CommonLabels "container") }}• *container:* `{{ index .CommonLabels "container" }}`{{ end }}
-{{- if (index .CommonLabels "job") }}• *job:* `{{ index .CommonLabels "job" }}`{{ end }}
-{{- if (index .CommonLabels "instance") }}• *instance:* `{{ index .CommonLabels "instance" }}`{{ end }}
+{{ if (index .CommonLabels "namespace") }}• *namespace:* `{{ index .CommonLabels "namespace" }}`{{ end }}
+{{ "\n" }}
+{{ if (index .CommonLabels "pod") }}• *pod:* `{{ index .CommonLabels "pod" }}`{{ end }}
+{{ "\n" }}
+{{ if (index .CommonLabels "container") }}• *container:* `{{ index .CommonLabels "container" }}`{{ end }}
+{{ "\n" }}
+{{ if (index .CommonLabels "job") }}• *job:* `{{ index .CommonLabels "job" }}`{{ end }}
+{{ "\n" }}
+{{ if (index .CommonLabels "instance") }}• *instance:* `{{ index .CommonLabels "instance" }}`{{ end }}
 
-{{- /* ===== Links ===== */ -}}
+{{ "\n" }}
+{{ "\n" }}
+
+{{/* -------- Links -------- */}}
 *Links:*
-{{- if $runbook }}• 📘 <{{ $runbook }}|Runbook>{{ end }}
-{{- if .ExternalURL }}• 🔗 <{{ .ExternalURL }}|Alertmanager>{{ end }}
-{{- end -}}
+{{ if $runbook }}• 📘 <{{ $runbook }}|Runbook>{{ "\n" }}{{ end }}
+{{ if .ExternalURL }}• 🔗 <{{ .ExternalURL }}|Alertmanager>{{ end }}
+{{ end }}
