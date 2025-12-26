@@ -278,7 +278,6 @@ config:
     - Tools:
         - DocuSeal:
             href: https://docs.nserbin.com/
-            siteMonitor: http://192.168.0.4:3008/
             description: Sign documents
             server: rpi
 
