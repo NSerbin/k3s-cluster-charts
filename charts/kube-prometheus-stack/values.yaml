@@ -59,6 +59,8 @@ kube-prometheus-stack:
 
     plugins:
       - grafana-github-datasource
+      - andrewbmchugh-flow-panel
+      - grafana-polystat-panel
 
     securityContext:
       runAsNonRoot: true
