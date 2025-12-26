@@ -1,40 +1,42 @@
-{{/* =========================
-   Slack Templates (Alertmanager)
-   - slack.title
-   - slack.text
-   ========================= */}}
+{{/* =========================================================
+   Slack Templates for Alertmanager
+   Templates:
+     - slack.title
+     - slack.text
+   ========================================================= */}}
 
-{{- define "slack.title" -}}
-{{- $status := .Status | toUpper -}}
-{{- $sev := "UNKNOWN" -}}
-{{- with (index .CommonLabels "severity") -}}{{- $sev = (. | toUpper) -}}{{- end -}}
-{{- $an := "Alert" -}}
-{{- with (index .CommonLabels "alertname") -}}{{- $an = . -}}{{- end -}}
-{{- if eq $status "FIRING" -}}🚨{{- else -}}✅{{- end -}} {{ $status }} | {{ $sev }} | {{ $an }}
-{{- end -}}
+{{/* -------------------------
+   Title
+   ------------------------- */}}
+{{ define "slack.title" -}}
+{{- if eq .Status "firing" -}}🚨 FIRING{{- else -}}✅ RESOLVED{{- end -}}
+ | {{- with (index .CommonLabels "severity") -}}{{ . | toUpper }}{{- else -}}UNKNOWN{{- end -}}
+ | {{- with (index .CommonLabels "alertname") -}}{{ . }}{{- else -}}Alert{{- end -}}
+{{- end }}
 
-{{- define "slack.text" -}}
-{{- $summary := "" -}}
-{{- with (index .CommonAnnotations "summary") -}}{{- $summary = . -}}{{- end -}}
-{{- $desc := "" -}}
-{{- with (index .CommonAnnotations "description") -}}{{- $desc = . -}}{{- end -}}
-{{- $runbook := "" -}}
-{{- with (index .CommonAnnotations "runbook_url") -}}{{- $runbook = . -}}{{- end -}}
-{{- $grafana := "" -}}
-{{- with (index .CommonAnnotations "grafana_url") -}}{{- $grafana = . -}}{{- end -}}
 
-{{- if $summary -}}
-*Summary:* {{ $summary }}
+{{/* -------------------------
+   Body
+   ------------------------- */}}
+{{ define "slack.text" -}}
+
+{{- $sep := "────────────────────────────" -}}
+
+{{/* Summary */}}
+{{ $sep }}
+{{- with (index .CommonAnnotations "summary") -}}
+*Summary:* {{ . }}
 {{- else -}}
 *Summary:* _(no summary annotation)_
 {{- end -}}
 
-{{- if $desc -}}
-*Description:*
-{{ $desc }}
-{{- end -}}
+{{/* Description */}}
+{{- with (index .CommonAnnotations "description") }}
+{{ "\n" }}*Description:*{{ "\n" }}{{ . }}
+{{- end }}
 
-*Key labels:*
+{{/* Key labels */}}
+{{ "\n" }}*Key labels:*{{ "\n" -}}
 {{- with (index .CommonLabels "namespace") -}}• *namespace:* `{{ . }}`{{ "\n" }}{{- end -}}
 {{- with (index .CommonLabels "job") -}}• *job:* `{{ . }}`{{ "\n" }}{{- end -}}
 {{- with (index .CommonLabels "instance") -}}• *instance:* `{{ . }}`{{ "\n" }}{{- end -}}
@@ -42,7 +44,7 @@
 {{- with (index .CommonLabels "service") -}}• *service:* `{{ . }}`{{ "\n" }}{{- end -}}
 {{- with (index .CommonLabels "controller") -}}• *controller:* `{{ . }}`{{ "\n" }}{{- end -}}
 
-{{- /* Other labels (filtramos los key labels + alertname/severity) */ -}}
+{{/* Other labels (filtered) */}}
 {{- $extra := "" -}}
 {{- range .CommonLabels.SortedPairs -}}
 {{- if and
@@ -59,14 +61,17 @@
 {{- end -}}
 {{- end -}}
 {{- if $extra -}}
-*Other labels:*
-{{ $extra -}}
+{{ "\n" }}*Other labels:*{{ "\n" }}{{ $extra -}}
 {{- end -}}
 
-{{- if or $runbook $grafana .ExternalURL -}}
+{{/* Links */}}
+{{- $hasLinks := false -}}
+{{- with (index .CommonAnnotations "runbook_url") }}{{ $hasLinks = true }}{{ end -}}
+{{- with (index .CommonAnnotations "grafana_url") }}{{ $hasLinks = true }}{{ end -}}
+{{- if .ExternalURL }}{{ $hasLinks = true }}{{ end -}}
+
+{{- if $hasLinks -}}
+{{ $sep }}
 *Links:*
-{{- if $runbook }} • <{{ $runbook }}|📘 Runbook>{{ end -}}
-{{- if $grafana }} • <{{ $grafana }}|📈 Grafana>{{ end -}}
-{{- if .ExternalURL }} • <{{ .ExternalURL }}|🔗 Alertmanager>{{ end -}}
-{{- end -}}
-{{- end -}}
+{{- with (index .CommonAnnotations "runbook_url") }}
+{{ "\n" }}• <{{ . }}|📘

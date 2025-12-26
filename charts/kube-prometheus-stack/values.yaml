@@ -159,6 +159,7 @@ kube-prometheus-stack:
     enabled: true
 
     alertmanagerSpec:
+      externalUrl: https://alerts.nserbin.com    
       retention: 120h
 
       resources:
