@@ -160,12 +160,6 @@ kube-prometheus-stack:
     alertmanagerSpec:
       retention: 120h
 
-      configSecret: alertmanager-kube-prometheus-stack-alertmanager
-
-      additionalArgs:
-        - name: config.expand-env
-          value: "true"
-
       resources:
         requests:
           cpu: 50m
@@ -183,54 +177,20 @@ kube-prometheus-stack:
               requests:
                 storage: 2Gi
 
-      containers:
-        - name: alertmanager
-          env:
-            - name: SLACK_WEBHOOK_URL
-              valueFrom:
-                secretKeyRef:
-                  name: alertmanager-secrets
-                  key: SLACK_WEBHOOK_URL
+      alertmanagerConfigNamespaceSelector: {}
+      alertmanagerConfigSelector: {}
 
     config:
       global:
         resolve_timeout: 5m
-
       route:
-        receiver: "slack-warnings"
+        receiver: "null"
         group_by: ["alertname", "namespace", "severity"]
         group_wait: 30s
         group_interval: 5m
         repeat_interval: 12h
-
-        routes:
-          - matchers:
-              - alertname="Watchdog"
-            receiver: "null"
-
-          - matchers:
-              - severity="critical"
-            receiver: "slack-critical"
-
-          - matchers:
-              - severity="warning"
-            receiver: "slack-warnings"
-
       receivers:
         - name: "null"
-
-        - name: "slack-warnings"
-          slack_configs:
-            - api_url: ${SLACK_WEBHOOK_URL}
-              channel: "#alerts"
-              send_resolved: true
-
-        - name: "slack-critical"
-          slack_configs:
-            - api_url: ${SLACK_WEBHOOK_URL}
-              channel: "#ns-alarms-grafana"
-              send_resolved: true
-
 
   kubeApiServer:
     enabled: false
@@ -326,3 +286,57 @@ traefikRoutes:
         port: 9093
       pathPrefixes: ["/"]
       middlewares: []
+
+alerting:
+  enabled: true
+  namespace: monitoring
+
+  selectorLabels:
+    alertmanagerconfig: "enabled"
+
+  receivers:
+    - name: slack-warnings
+      type: slack
+      channel: "#ns-alarms-grafana"
+      apiURLSecretRef:
+        name: alertmanager-secrets
+        key: slack_webhook_url
+      sendResolved: true
+
+    - name: slack-critical
+      type: slack
+      channel: "#ns-alarms-grafana"
+      apiURLSecretRef:
+        name: alertmanager-secrets
+        key: slack_webhook_url
+      sendResolved: true
+
+
+  routes:
+    rootReceiver: slack-warnings
+    groupBy: ["alertname", "namespace", "severity"]
+    groupWait: 30s
+    groupInterval: 5m
+    repeatInterval: 12h
+
+    rules:
+      - name: drop-watchdog
+        receiver: "null"
+        matchers:
+          - name: alertname
+            value: Watchdog
+            matchType: "="
+
+      - name: critical-to-critical
+        receiver: slack-critical
+        matchers:
+          - name: severity
+            value: critical
+            matchType: "="
+
+      - name: warning-to-warnings
+        receiver: slack-warnings
+        matchers:
+          - name: severity
+            value: warning
+            matchType: "="      

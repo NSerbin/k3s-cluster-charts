@@ -1,0 +1,49 @@
+{{- if .Values.alerting.enabled }}
+apiVersion: monitoring.coreos.com/v1alpha1
+kind: AlertmanagerConfig
+metadata:
+  name: am-routing
+  namespace: {{ .Values.alerting.namespace | default "monitoring" }}
+  labels:
+{{- range $k, $v := .Values.alerting.selectorLabels }}
+    {{ $k }}: {{ $v | quote }}
+{{- end }}
+spec:
+  route:
+    receiver: {{ .Values.alerting.routes.rootReceiver | quote }}
+    groupBy:
+{{- range .Values.alerting.routes.groupBy }}
+      - {{ . | quote }}
+{{- end }}
+    groupWait: {{ .Values.alerting.routes.groupWait | default "30s" }}
+    groupInterval: {{ .Values.alerting.routes.groupInterval | default "5m" }}
+    repeatInterval: {{ .Values.alerting.routes.repeatInterval | default "12h" }}
+
+    routes:
+{{- range .Values.alerting.routes.rules }}
+      - receiver: {{ .receiver | quote }}
+        matchers:
+{{- range .matchers }}
+          - name: {{ .name | quote }}
+            value: {{ .value | quote }}
+            matchType: {{ .matchType | default "=" | quote }}
+{{- end }}
+{{- end }}
+
+  receivers:
+    - name: "null"
+
+{{- range .Values.alerting.receivers }}
+    - name: {{ .name | quote }}
+{{- if eq .type "slack" }}
+      slackConfigs:
+        - channel: {{ .channel | quote }}
+          sendResolved: {{ .sendResolved | default true }}
+          apiURL:
+            name: {{ .apiURLSecretRef.name | quote }}
+            key: {{ .apiURLSecretRef.key | quote }}
+{{- else }}
+      # receiver type not implemented: {{ .type }}
+{{- end }}
+{{- end }}
+{{- end }}
