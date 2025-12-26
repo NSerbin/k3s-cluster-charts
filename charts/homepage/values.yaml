@@ -252,7 +252,7 @@ config:
         - Pi-hole:
             icon: pi-hole.svg
             href: https://pihole.nserbin.com/admin
-            siteMonitor: http://192.168.0.4:83/api/status
+            siteMonitor: http://192.168.0.4:83
             description: Pi-hole DNS
             server: rpi
             widget:
