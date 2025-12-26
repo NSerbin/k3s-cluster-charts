@@ -1,49 +1,53 @@
 {{/* =========================================================
    Slack Templates for Alertmanager
-   Templates:
-     - slack.title
-     - slack.text
-   Compatible with Alertmanager v0.30
+   - slack.title
+   - slack.text
+   Compatible with Alertmanager v0.30.x (Go templates)
    ========================================================= */}}
 
 {{/* ========================
    TITLE
    ======================== */}}
 {{ define "slack.title" }}
-{{ if eq .Status "firing" }}🚨 FIRING{{ else }}✅ RESOLVED{{ end }}
- | {{ with (index .CommonLabels "severity") }}{{ . | toUpper }}{{ else }}UNKNOWN{{ end }}
- | {{ with (index .CommonLabels "alertname") }}{{ . }}{{ else }}Alert{{ end }}
+{{- if eq .Status "firing" -}}🚨 FIRING{{- else -}}✅ RESOLVED{{- end -}}
+ | {{- with (index .CommonLabels "severity") -}}{{ . | toUpper }}{{- else -}}UNKNOWN{{- end -}}
+ | {{- with (index .CommonLabels "alertname") -}}{{ . }}{{- else -}}Alert{{- end -}}
 {{ end }}
-
 
 {{/* ========================
    BODY
    ======================== */}}
 {{ define "slack.text" }}
-
 {{- $summary := (index .CommonAnnotations "summary") -}}
 {{- $description := (index .CommonAnnotations "description") -}}
 {{- $runbook := (index .CommonAnnotations "runbook_url") -}}
 
 *Summary:*
-```{{ if $summary }}{{ $summary }}{{ else }}(no summary annotation){{ end }}
+```{{- if $summary -}}{{ $summary }}{{- else -}}(no summary annotation){{- end -}}
 
-{{ if $description }}
+{{- if $description }}
 *Description:*
 ```{}
 
 *Key labels:*
-• *namespace:* `{{ index .CommonLabels "namespace" }}`
-{{ with (index .CommonLabels "job") }}
-• *job:* `{{ . }}`{{ end }}
-{{ with (index .CommonLabels "instance") }}
-• *instance:* `{{ . }}`{{ end }}
-{{ with (index .CommonLabels "pod") }}
-• *pod:* `{{ . }}`{{ end }}
-{{ with (index .CommonLabels "service") }}
-• *service:* `{{ . }}`{{ end }}
-{{ with (index .CommonLabels "controller") }}
-• *controller:* `{{ . }}`{{ end }}
+{{- with (index .CommonLabels "namespace") }}
+• *namespace:* `{{ . }}`
+{{- end }}
+{{- with (index .CommonLabels "job") }}
+• *job:* `{{ . }}`
+{{- end }}
+{{- with (index .CommonLabels "instance") }}
+• *instance:* `{{ . }}`
+{{- end }}
+{{- with (index .CommonLabels "pod") }}
+• *pod:* `{{ . }}`
+{{- end }}
+{{- with (index .CommonLabels "service") }}
+• *service:* `{{ . }}`
+{{- end }}
+{{- with (index .CommonLabels "controller") }}
+• *controller:* `{{ . }}`
+{{- end }}
 
 {{- /* Other labels (filtered) */ -}}
 {{- $extra := "" -}}
@@ -61,14 +65,13 @@
 {{- $extra = printf "%s• *%s:* `%s`\n" $extra .Name .Value -}}
 {{- end -}}
 {{- end -}}
-{{- if $extra }}
 
+{{- if $extra }}
 *Other labels:*
 {{ $extra }}
 {{- end }}
 
 *Links:*
-{{ if $runbook }}• 📘 <{{ $runbook }}|Runbook>{{ end }}
-{{ if .ExternalURL }}• 🔗 <{{ .ExternalURL }}|Alertmanager>{{ end }}
-
+{{- if $runbook }}• 📘 <{{ $runbook }}|Runbook>{{ end }}
+{{- if .ExternalURL }}• 🔗 <{{ .ExternalURL }}|Alertmanager>{{ end }}
 {{ end }}
