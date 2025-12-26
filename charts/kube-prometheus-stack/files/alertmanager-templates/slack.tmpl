@@ -1,51 +1,63 @@
-{{/* Slack templates for Alertmanager */}}
+{{/* =========================================================
+   Alertmanager Slack Templates
+   Compatible con Alertmanager v0.30+
+   ========================================================= */}}
 
 {{ define "slack.title" -}}
-{{- if eq .Status "firing" -}}🚨 FIRING{{- else -}}✅ RESOLVED{{- end -}}
- | {{- with (index .CommonLabels "severity") -}}{{ . | toUpper }}{{- else -}}UNKNOWN{{- end -}}
- | {{- with (index .CommonLabels "alertname") -}}{{ . }}{{- else -}}Alert{{- end -}}
+{{ if eq .Status "firing" }}🚨 FIRING {{ else }}✅ RESOLVED {{ end }} |
+{{ with index .CommonLabels "severity" }}{{ . | upper }}{{ else }}UNKNOWN{{ end }} |
+{{ with index .CommonLabels "alertname" }}{{ . }}{{ else }}Alert{{ end }}
 {{- end }}
 
 {{ define "slack.text" -}}
-{{- $summary := (index .CommonAnnotations "summary") -}}
-{{- $description := (index .CommonAnnotations "description") -}}
-{{- $runbook := (index .CommonAnnotations "runbook_url") -}}
 
-*Summary:*
-{{- if $summary -}}
-{{ $summary }}
-{{- else -}}
-(no summary annotation)
-{{- end -}}
+{{/* ---------- SUMMARY ---------- */}}
+{{ with index .CommonAnnotations "summary" -}}
+*Summary:* {{ . }}
+{{- end }}
 
-{{- if $description }}
+{{/* ---------- DESCRIPTION ---------- */}}
+{{ with index .CommonAnnotations "description" }}
 
 *Description:*
-{{ $description }}
+{{ . }}
 {{- end }}
 
+{{/* ---------- KEY LABELS ---------- */}}
 *Key labels:*
-{{- with (index .CommonLabels "namespace") }}
-• *namespace:* `{{ . }}`
-{{- end }}
-{{- with (index .CommonLabels "job") }}
-• *job:* `{{ . }}`
-{{- end }}
-{{- with (index .CommonLabels "instance") }}
-• *instance:* `{{ . }}`
-{{- end }}
-{{- with (index .CommonLabels "pod") }}
-• *pod:* `{{ . }}`
-{{- end }}
-{{- with (index .CommonLabels "service") }}
-• *service:* `{{ . }}`
-{{- end }}
+{{ with index .CommonLabels "namespace" }}• *namespace:* `{{ . }}`{{ end }}
+{{ with index .CommonLabels "job" }}• *job:* `{{ . }}`{{ end }}
+{{ with index .CommonLabels "instance" }}• *instance:* `{{ . }}`{{ end }}
+{{ with index .CommonLabels "pod" }}• *pod:* `{{ . }}`{{ end }}
+{{ with index .CommonLabels "service" }}• *service:* `{{ . }}`{{ end }}
 
+{{/* ---------- OTHER LABELS ---------- */}}
+{{ $printed := false }}
+{{ range .CommonLabels.SortedPairs }}
+{{ if and
+  (ne .Name "alertname")
+  (ne .Name "severity")
+  (ne .Name "namespace")
+  (ne .Name "job")
+  (ne .Name "instance")
+  (ne .Name "pod")
+  (ne .Name "service")
+}}
+{{ if not $printed }}*Other labels:*{{ $printed = true }}{{ end }}
+• *{{ .Name }}:* `{{ .Value }}`
+{{ end }}
+{{ end }}
+
+{{/* ---------- LINKS ---------- */}}
+{{ if or
+  (index .CommonAnnotations "runbook_url")
+  (index .CommonAnnotations "grafana_url")
+  .ExternalURL
+}}
 *Links:*
-{{- if $runbook }}
-• 📘 <{{ $runbook }}|Runbook>
-{{- end }}
-{{- if .ExternalURL }}
-• 🔗 <{{ .ExternalURL }}|Alertmanager>
-{{- end }}
+{{ with index .CommonAnnotations "runbook_url" }}• 📘 <{{ . }}|Runbook>{{ end }}
+{{ with index .CommonAnnotations "grafana_url" }}• 📈 <{{ . }}|Grafana>{{ end }}
+{{ with .ExternalURL }}• 🔗 <{{ . }}|Alertmanager>{{ end }}
+{{ end }}
+
 {{- end }}
