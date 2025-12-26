@@ -118,12 +118,14 @@ kube-prometheus-stack:
         auth_url: https://github.com/login/oauth/authorize
         token_url: https://github.com/login/oauth/access_token
         api_url: https://api.github.com/user
-        # team_ids: "12345,67890"   # opcional
-
+        email_attribute_path: email
+        role_attribute_path: "'Admin'"
+        allow_assign_grafana_admin: true
 
       log:
         mode: console
-        level: info
+        #level: info
+        level: debug
       date_formats:
         default_timezone: browser
 
