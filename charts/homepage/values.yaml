@@ -244,7 +244,7 @@ config:
             server: rpi
             widget:
               type: freshrss
-              url: https://rss.nserbin.com
+              url: http://192.168.0.4:85
               username: ${FRESHRSS_USERNAME}
               password: "${FRESHRSS_PASSWORD}"
 
@@ -257,14 +257,14 @@ config:
             server: rpi
             widget:
               type: pihole
-              url: http://192.168.0.4:83/api
+              url: http://192.168.0.4:83
               version: 6
               key: ${PIHOLE_KEY}
 
         - Traefik:
             icon: traefik.svg
             href: https://traefik.nserbin.com/dashboard/
-            siteMonitor: http://traefik.traefik.svc.cluster.local:80/ping
+            siteMonitor: http://traefik.traefik.svc:80/ping
             description: Traefik
 
     - Management:
