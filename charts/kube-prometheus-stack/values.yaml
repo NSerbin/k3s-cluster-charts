@@ -198,6 +198,8 @@ kube-prometheus-stack:
           alertmanagerconfig: "enabled"
 
     config:
+      templates:
+        - /etc/alertmanager/templates/*.tmpl    
       global:
         resolve_timeout: 5m
       route:
