@@ -119,8 +119,9 @@ kube-prometheus-stack:
         token_url: https://github.com/login/oauth/access_token
         api_url: https://api.github.com/user
         email_attribute_path: email
-        role_attribute_path: "'Admin'"
+        role_attribute_path: "'GrafanaAdmin'"
         allow_assign_grafana_admin: true
+        
 
       log:
         mode: console
