@@ -178,7 +178,9 @@ kube-prometheus-stack:
                 storage: 2Gi
 
       alertmanagerConfigNamespaceSelector: {}
-      alertmanagerConfigSelector: {}
+      alertmanagerConfigSelector:
+        matchLabels:
+          alertmanagerconfig: "enabled"
 
     config:
       global:
