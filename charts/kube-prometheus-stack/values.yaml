@@ -91,7 +91,7 @@ kube-prometheus-stack:
 
       security:
         cookie_secure: true
-        cookie_samesite: strict
+        cookie_samesite: lax
         disable_gravatar: true
         allow_embedding: false
         csrf_trusted_origins: https://monitor.nserbin.com
