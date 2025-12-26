@@ -178,24 +178,14 @@ kube-prometheus-stack:
               requests:
                 storage: 2Gi
 
-      volumes:
-        - name: alertmanager-templates
-          configMap:
-            name: alertmanager-templates
-            items:
-              - key: slack.tmpl
-                path: slack.tmpl
-
-      volumeMounts:
-        - name: alertmanager-templates
-          mountPath: /etc/alertmanager/config/slack.tmpl
-          subPath: slack.tmpl
-          readOnly: true
 
       alertmanagerConfigNamespaceSelector: {}
       alertmanagerConfigSelector:
         matchLabels:
           alertmanagerconfig: "enabled"
+
+      configMaps:
+              - alertmanager-templates
 
     config:
       templates:
