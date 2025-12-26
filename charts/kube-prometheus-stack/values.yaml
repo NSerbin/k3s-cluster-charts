@@ -61,6 +61,9 @@ kube-prometheus-stack:
       - grafana-github-datasource
       - andrewbmchugh-flow-panel
       - grafana-polystat-panel
+      - volkovlabs-echarts-panel
+      - sentinelone-dataset-datasource
+      - yesoreyeram-infinity-datasource
 
     securityContext:
       runAsNonRoot: true
