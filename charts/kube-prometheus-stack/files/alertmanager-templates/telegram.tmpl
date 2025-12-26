@@ -1,0 +1,55 @@
+{{/* =========================================================
+   Alertmanager Telegram Templates (HTML)
+   - telegram.title
+   - telegram.text
+   Compatible con Alertmanager v0.30+
+   ========================================================= */}}
+
+{{ define "telegram.title" -}}
+{{ if eq .Status "firing" }}🚨 FIRING{{ else }}✅ RESOLVED{{ end }} |
+{{ with index .CommonLabels "severity" }}{{ . | upper }}{{ else }}UNKNOWN{{ end }} |
+{{ with index .CommonLabels "alertname" }}{{ . }}{{ else }}Alert{{ end }}
+{{- end }}
+
+{{ define "telegram.text" -}}
+<b>{{ template "telegram.title" . }}</b>
+
+{{ with index .CommonAnnotations "summary" }}
+<b>Summary:</b> {{ . }}
+{{ end }}
+
+{{ with index .CommonAnnotations "description" }}
+<b>Description:</b>
+{{ . }}
+{{ end }}
+
+<b>Key labels:</b>
+{{ with index .CommonLabels "namespace" }}• <b>namespace</b>: <code>{{ . }}</code>{{ end }}
+{{ with index .CommonLabels "job" }}• <b>job</b>: <code>{{ . }}</code>{{ end }}
+{{ with index .CommonLabels "instance" }}• <b>instance</b>: <code>{{ . }}</code>{{ end }}
+{{ with index .CommonLabels "pod" }}• <b>pod</b>: <code>{{ . }}</code>{{ end }}
+{{ with index .CommonLabels "service" }}• <b>service</b>: <code>{{ . }}</code>{{ end }}
+
+{{ $printed := false }}
+{{ range .CommonLabels.SortedPairs }}
+{{ if and
+  (ne .Name "alertname")
+  (ne .Name "severity")
+  (ne .Name "namespace")
+  (ne .Name "job")
+  (ne .Name "instance")
+  (ne .Name "pod")
+  (ne .Name "service")
+}}
+{{ if not $printed }}<b>Other labels:</b>{{ $printed = true }}{{ end }}
+• <b>{{ .Name }}</b>: <code>{{ .Value }}</code>
+{{ end }}
+{{ end }}
+
+{{ if or (index .CommonAnnotations "runbook_url") (index .CommonAnnotations "grafana_url") .ExternalURL }}
+<b>Links:</b>
+{{ with index .CommonAnnotations "runbook_url" }}• 📘 <a href="{{ . }}">Runbook</a>{{ end }}
+{{ with index .CommonAnnotations "grafana_url" }}• 📈 <a href="{{ . }}">Grafana</a>{{ end }}
+{{ with .ExternalURL }}• 🔗 <a href="{{ . }}">Alertmanager</a>{{ end }}
+{{ end }}
+{{- end }}
