@@ -1,18 +1,25 @@
+{{- /*
+ConfigMap: Alertmanager templates
+- Carga TODOS los archivos: files/alertmanager-templates/*.tmpl
+- NO usa tpl (para que Helm no intente renderizar los {{ }} del template de Alertmanager)
+*/ -}}
+{{- if .Values.alerting.enabled }}
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: alertmanager-templates
-  namespace: {{ .Release.Namespace }}
+  namespace: {{ .Values.alerting.namespace | default "monitoring" }}
   labels:
-    app.kubernetes.io/name: alertmanager
-    app.kubernetes.io/component: templates
+    app.kubernetes.io/name: alertmanager-templates
     app.kubernetes.io/part-of: kube-prometheus-stack
 data:
-  {{- $files := .Files.Glob "files/alertmanager-templates/*.tmpl" }}
-  {{- if not $files }}
-  _warning.txt: "No Alertmanager templates found in files/alertmanager-templates/*.tmpl"
-  {{- end }}
-  {{- range $path, $bytes := $files }}
-  {{ base $path }}: |
-{{ $bytes | toString | nindent 4 }}
-  {{- end }}
+{{- $files := .Files.Glob "files/alertmanager-templates/*.tmpl" }}
+{{- if not $files }}
+  _empty: "true"
+{{- else }}
+{{- range $path, $_ := $files }}
+  {{ base $path }}: |-
+{{ $.Files.Get $path | nindent 4 }}
+{{- end }}
+{{- end }}
+{{- end }}
