@@ -114,7 +114,7 @@ kube-prometheus-stack:
         allow_sign_up: true
         client_id: $__env{GF_AUTH_GITHUB_CLIENT_ID}
         client_secret: $__env{GF_AUTH_GITHUB_CLIENT_SECRET}
-        scopes: user:email
+        scopes: user:email,read:org
         auth_url: https://github.com/login/oauth/authorize
         token_url: https://github.com/login/oauth/access_token
         api_url: https://api.github.com/user
