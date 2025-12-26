@@ -42,14 +42,12 @@ spec:
           apiURL:
             name: {{ .apiURLSecretRef.name | quote }}
             key: {{ .apiURLSecretRef.key | quote }}
-
-          {{- if .titleTemplate }}
-          title: '{{ printf "{{ template %q . }}" .titleTemplate }}'
-          {{- end }}
-          {{- if .textTemplate }}
-          text: '{{ printf "{{ template %q . }}" .textTemplate }}'
-          {{- end }}
-
+{{- if .titleTemplate }}
+          title: '{{`{{ template "`}}{{ .titleTemplate }}{{`" . }}`}}'
+{{- end }}
+{{- if .textTemplate }}
+          text: '{{`{{ template "`}}{{ .textTemplate }}{{`" . }}`}}'
+{{- end }}
 {{- else }}
       # receiver type not implemented: {{ .type }}
 {{- end }}

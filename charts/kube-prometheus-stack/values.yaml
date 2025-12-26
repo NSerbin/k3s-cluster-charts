@@ -185,6 +185,7 @@ kube-prometheus-stack:
             items:
               - key: slack.tmpl
                 path: slack.tmpl
+
       volumeMounts:
         - name: alertmanager-templates
           mountPath: /etc/alertmanager/config/slack.tmpl
