@@ -1,33 +1,28 @@
-{{/* =========================================================
-   Slack Templates for Alertmanager
-   - slack.title
-   - slack.text
-   Compatible with Alertmanager v0.30.x (Go templates)
-   ========================================================= */}}
+{{/* Slack templates for Alertmanager */}}
 
-{{/* ========================
-   TITLE
-   ======================== */}}
-{{ define "slack.title" }}
+{{ define "slack.title" -}}
 {{- if eq .Status "firing" -}}🚨 FIRING{{- else -}}✅ RESOLVED{{- end -}}
  | {{- with (index .CommonLabels "severity") -}}{{ . | toUpper }}{{- else -}}UNKNOWN{{- end -}}
  | {{- with (index .CommonLabels "alertname") -}}{{ . }}{{- else -}}Alert{{- end -}}
-{{ end }}
+{{- end }}
 
-{{/* ========================
-   BODY
-   ======================== */}}
-{{ define "slack.text" }}
+{{ define "slack.text" -}}
 {{- $summary := (index .CommonAnnotations "summary") -}}
 {{- $description := (index .CommonAnnotations "description") -}}
 {{- $runbook := (index .CommonAnnotations "runbook_url") -}}
 
 *Summary:*
-```{{- if $summary -}}{{ $summary }}{{- else -}}(no summary annotation){{- end -}}
+{{- if $summary -}}
+{{ $summary }}
+{{- else -}}
+(no summary annotation)
+{{- end -}}
 
 {{- if $description }}
+
 *Description:*
-```{}
+{{ $description }}
+{{- end }}
 
 *Key labels:*
 {{- with (index .CommonLabels "namespace") }}
@@ -45,33 +40,12 @@
 {{- with (index .CommonLabels "service") }}
 • *service:* `{{ . }}`
 {{- end }}
-{{- with (index .CommonLabels "controller") }}
-• *controller:* `{{ . }}`
-{{- end }}
-
-{{- /* Other labels (filtered) */ -}}
-{{- $extra := "" -}}
-{{- range .CommonLabels.SortedPairs -}}
-{{- if and
-    (ne .Name "alertname")
-    (ne .Name "severity")
-    (ne .Name "namespace")
-    (ne .Name "job")
-    (ne .Name "instance")
-    (ne .Name "pod")
-    (ne .Name "service")
-    (ne .Name "controller")
-  -}}
-{{- $extra = printf "%s• *%s:* `%s`\n" $extra .Name .Value -}}
-{{- end -}}
-{{- end -}}
-
-{{- if $extra }}
-*Other labels:*
-{{ $extra }}
-{{- end }}
 
 *Links:*
-{{- if $runbook }}• 📘 <{{ $runbook }}|Runbook>{{ end }}
-{{- if .ExternalURL }}• 🔗 <{{ .ExternalURL }}|Alertmanager>{{ end }}
-{{ end }}
+{{- if $runbook }}
+• 📘 <{{ $runbook }}|Runbook>
+{{- end }}
+{{- if .ExternalURL }}
+• 🔗 <{{ .ExternalURL }}|Alertmanager>
+{{- end }}
+{{- end }}
