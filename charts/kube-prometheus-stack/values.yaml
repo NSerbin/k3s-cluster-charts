@@ -178,6 +178,15 @@ kube-prometheus-stack:
               requests:
                 storage: 2Gi
 
+      volumes:
+        - name: alertmanager-templates
+          configMap:
+            name: alertmanager-templates
+      volumeMounts:
+        - name: alertmanager-templates
+          mountPath: /etc/alertmanager/templates
+          readOnly: true
+
 
       alertmanagerConfigNamespaceSelector: {}
       alertmanagerConfigSelector:
