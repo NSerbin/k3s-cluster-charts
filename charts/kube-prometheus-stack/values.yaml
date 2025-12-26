@@ -81,7 +81,7 @@ kube-prometheus-stack:
         skipReload: true
     
     envFromSecrets:
-      - name: grafana-github-app
+      - name: grafana-github-oidc
 
     grafana.ini:
       server:
