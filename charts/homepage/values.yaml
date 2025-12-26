@@ -191,7 +191,7 @@ config:
     - Cluster:
         - Argo CD:
             href: https://argo.nserbin.com
-            siteMonitor: http://argocd-server.argocd
+            siteMonitor: http://argocd-server.argocd.svc/api/version
             description: GitOps
             icon: si-argo.svg
 
@@ -227,19 +227,19 @@ config:
         - Uptime Kuma:
             icon: uptime-kuma.png
             href: https://status.nserbin.com/
-            siteMonitor: http://192.168.0.4:3001
+            siteMonitor: http://192.168.0.4:3001/
             description: Status dashboard for all the services
             server: rpi
             widget:
               type: uptimekuma
-              url: http://192.168.0.4:3001
+              url: http://192.168.0.4:3001/
               slug: default
 
     - News:
         - FreshRSS:
             icon: freshrss.svg
             href: http://rss.nserbin.com
-            siteMonitor: http:/192.168.0.4:85
+            siteMonitor: http:/192.168.0.4:85/
             description: Fresh RSS
             server: rpi
             widget:
@@ -264,42 +264,41 @@ config:
         - Traefik:
             icon: traefik.svg
             href: https://traefik.nserbin.com/dashboard/
-            siteMonitor: http://traefik-api.traefik:9000
+            siteMonitor: http://traefik.traefik.svc.cluster.local:80/ping
             description: Traefik
 
     - Management:
         - Portainer:
             icon: portainer.svg
             href: https://portainer.nserbin.com/
-            siteMonitor: http://192.168.0.4:9000
+            siteMonitor: http://192.168.0.4:9000/
             description: Portainer
             server: rpi
 
     - Tools:
         - DocuSeal:
             href: https://docs.nserbin.com/
-            siteMonitor: https://docs.nserbin.com/
+            siteMonitor: http://192.168.0.4:3008/
             description: Sign documents
             server: rpi
 
         - Watchtower:
             icon: watchtower.svg
             href: http://192.168.0.4:8081/
-            siteMonitor: http://192.168.0.4:8081/metrics
+            siteMonitor: http://192.168.0.4:8081/
             description: Service to pull images
             server: rpi
 
         - SSH:
             icon: shell.svg
             href: https://ssh-tunnel.nserbin.com/
-            siteMonitor: https://ssh-tunnel.nserbin.com/
             description: SSH Tunnel to RPi
             server: rpi
 
         - Vault:
             icon: filebrowser.png
             href: https://vault.nserbin.com/
-            siteMonitor: http://192.168.0.4:8082
+            siteMonitor: http://192.168.0.4:8082/
             description: FileBrowser
             server: rpi
 
@@ -307,7 +306,7 @@ config:
         - Bitwarden:
             icon: bitwarden.svg
             href: https://btw.nserbin.com
-            siteMonitor: http://192.168.0.4:8484
+            siteMonitor: http://192.168.0.4:8484/
             description: Bitwarden
             server: rpi
 
