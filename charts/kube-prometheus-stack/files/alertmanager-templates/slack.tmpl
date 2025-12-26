@@ -6,7 +6,7 @@
 
 {{/* ---------- TITLE ---------- */}}
 {{- define "slack.title" -}}
-{{ if eq .Status "firing" }}🔥{{ else }}✅{{ end }} {{ .CommonLabels.alertname }} ({{ if eq .Status "firing" }}{{ .CommonLabels.severity | toUpper }}{{ else }}RESOLVED{{ end }})
+{{ if eq .Status "firing" }}🔥{{ else }}✅{{ end }} {{ .CommonLabels.alertname }} {{ if eq .Status "firing" }}{{ .CommonLabels.severity | toUpper }}{{ else }}RESOLVED{{ end }}
 {{- end -}}
 
 {{/* ---------- BODY ---------- */}}
