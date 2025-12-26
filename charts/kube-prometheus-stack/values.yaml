@@ -126,8 +126,7 @@ kube-prometheus-stack:
 
       log:
         mode: console
-        #level: info
-        level: debug
+        level: info
       date_formats:
         default_timezone: browser
 
