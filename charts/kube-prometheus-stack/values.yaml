@@ -302,7 +302,7 @@ alerting:
       channel: "#ns-alarms-grafana"
       apiURLSecretRef:
         name: alertmanager-secrets
-        key: slack_webhook_url
+        key: SLACK_WEBHOOK_URL
       sendResolved: true
 
     - name: slack-critical
@@ -310,7 +310,7 @@ alerting:
       channel: "#ns-alarms-grafana"
       apiURLSecretRef:
         name: alertmanager-secrets
-        key: slack_webhook_url
+        key: SLACK_WEBHOOK_URL
       sendResolved: true
 
 
