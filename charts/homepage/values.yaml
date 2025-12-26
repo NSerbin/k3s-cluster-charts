@@ -239,20 +239,20 @@ config:
         - FreshRSS:
             icon: freshrss.svg
             href: http://rss.nserbin.com
-            siteMonitor: http://192.168.0.4:85
             description: Fresh RSS
             server: rpi
+            siteMonitor: http://192.168.0.4:85/api/
             widget:
               type: freshrss
               url: http://192.168.0.4:85
-              username: ${FRESHRSS_USERNAME}
-              password: "${FRESHRSS_PASSWORD}"
+              username: "${FRESHRSS_USERNAME}"
+              password: "${FRESHRSS_PASSWORD}"    
 
     - Networking:
         - Pi-hole:
             icon: pi-hole.svg
             href: https://pihole.nserbin.com/admin
-            siteMonitor: http://192.168.0.4:83/admin
+            siteMonitor: http://192.168.0.4:83/api/status
             description: Pi-hole DNS
             server: rpi
             widget:
