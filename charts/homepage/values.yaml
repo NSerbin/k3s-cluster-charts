@@ -263,11 +263,11 @@ config:
         - Traefik:
             icon: traefik.svg
             href: https://traefik.nserbin.com/dashboard/
-            siteMonitor: http://traefik.traefik.svc:9000/ping
+            siteMonitor: http://traefik.traefik:9000/ping
             description: Traefik
             widget:
               type: traefik
-              url: http://traefik.traefik.svc:9000
+              url: http://traefik.traefik:9000
 
     - Management:
         - Portainer:
