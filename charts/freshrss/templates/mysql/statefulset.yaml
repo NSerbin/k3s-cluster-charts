@@ -59,3 +59,10 @@ spec:
         accessModes:
           {{- toYaml .Values.mysql.persistence.accessModes | nindent 10 }}
         resources:
+          requests:
+            storage: {{ .Values.mysql.persistence.size }}
+        {{- if .Values.mysql.persistence.storageClass }}
+        storageClassName: {{ .Values.mysql.persistence.storageClass | quote }}
+        {{- end }}
+  {{- end }}
+{{- end }}
