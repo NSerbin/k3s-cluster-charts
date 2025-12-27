@@ -45,7 +45,7 @@ traefik:
     traefik:
       port: 9000
       expose:
-        default: false
+        default: true
       exposedPort: 9000
       protocol: TCP
 
