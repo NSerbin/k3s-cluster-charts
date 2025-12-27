@@ -1,0 +1,14 @@
+FreshRSS installed.
+
+URL:
+  http://{{ .Values.traefik.ingressRoute.host }}{{ index (.Values.traefik.ingressRoute.pathPrefixes | default (list "/")) 0 }}
+
+Service:
+  {{ include "freshrss.fullname" . }}:{{ .Values.service.port }}
+
+MySQL:
+  Host: {{ include "freshrss.fullname" . }}-mysql
+  Port: {{ .Values.mysql.service.port }}
+
+Secret (required):
+  kubectl -n {{ .Release.Namespace }} get secret {{ required "mysql.existingSecret is required" .Values.mysql.existingSecret }}

@@ -1,0 +1,61 @@
+image:
+  repository: linuxserver/freshrss
+  tag: "1.28.0"
+  pullPolicy: IfNotPresent
+
+replicaCount: 1
+
+puid: 1000
+pgid: 1000
+tz: Europe/Lisbon
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+persistence:
+  enabled: true
+  storageClass: "local-path"
+  size: 5Gi
+  accessModes:
+    - ReadWriteOnce
+
+mysql:
+  enabled: true
+
+  image:
+    repository: mysql
+    tag: "9.5.0"
+    pullPolicy: IfNotPresent
+
+  service:
+    port: 3306
+
+  persistence:
+    enabled: true
+    storageClass: "local-path"
+    size: 3Gi
+    accessModes:
+      - ReadWriteOnce
+
+  existingSecret: "freshrss-mysql-secret"
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - web
+    host: "rss.nserbin.com"
+    pathPrefixes:
+      - "/"
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+
+resources: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
