@@ -373,4 +373,4 @@ dnsConfig:
     - name: ndots
       value: "5"
     - name: single-request-reopen
-    
+      value: ""
