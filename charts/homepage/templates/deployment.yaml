@@ -25,9 +25,25 @@ spec:
       dnsPolicy: {{ .Values.dnsPolicy }}
       {{- end }}
 
-      {{- if .Values.dnsConfig }}
+      {{- with .Values.dnsConfig }}
       dnsConfig:
-{{ toYaml .Values.dnsConfig | nindent 8 }}
+        {{- if .nameservers }}
+        nameservers:
+{{ toYaml .nameservers | nindent 10 }}
+        {{- end }}
+        {{- if .searches }}
+        searches:
+{{ toYaml .searches | nindent 10 }}
+        {{- end }}
+        {{- if .options }}
+        options:
+          {{- range .options }}
+          - name: {{ .name | quote }}
+            {{- if hasKey . "value" }}
+            value: {{ .value | quote }}
+            {{- end }}
+          {{- end }}
+        {{- end }}
       {{- end }}
 
       containers:
@@ -38,9 +54,6 @@ spec:
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
               value: {{ .Values.env.HOMEPAGE_ALLOWED_HOSTS | default "*" | quote }}
-            {{- if .Values.extraEnv }}
-{{ toYaml .Values.extraEnv | nindent 12 }}
-            {{- end }}
 
           {{- if .Values.secrets.existingSecret }}
           envFrom:
@@ -50,13 +63,11 @@ spec:
 
           ports:
             - name: http
-              containerPort: {{ .Values.service.port | default 3000 }}
+              containerPort: 3000
               protocol: TCP
 
-          {{- if .Values.resources }}
           resources:
-{{ toYaml .Values.resources | nindent 12 }}
-          {{- end }}
+{{ toYaml (.Values.resources | default dict) | nindent 12 }}
 
           volumeMounts:
             - name: config
@@ -85,35 +96,25 @@ spec:
               subPath: custom.js
             - name: logs
               mountPath: /app/config/logs
-            {{- if .Values.extraVolumeMounts }}
-{{ toYaml .Values.extraVolumeMounts | nindent 12 }}
-            {{- end }}
 
       volumes:
         - name: config
           configMap:
-            name: {{- if .Values.config.existingConfigMap -}}
-              {{ .Values.config.existingConfigMap | quote }}
-              {{- else -}}
-              {{ printf "%s-config" (include "homepage.fullname" .) | quote }}
-              {{- end }}
+            name: {{ default (printf "%s-config" (include "homepage.fullname" .)) .Values.config.existingConfigMap | quote }}
         - name: logs
           emptyDir: {}
-        {{- if .Values.extraVolumes }}
-{{ toYaml .Values.extraVolumes | nindent 8 }}
-        {{- end }}
 
-      {{- if .Values.nodeSelector }}
+      {{- with .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | nindent 8 }}
+{{ toYaml . | nindent 8 }}
       {{- end }}
 
-      {{- if .Values.tolerations }}
+      {{- with .Values.tolerations }}
       tolerations:
-{{ toYaml .Values.tolerations | nindent 8 }}
+{{ toYaml . | nindent 8 }}
       {{- end }}
 
-      {{- if .Values.affinity }}
+      {{- with .Values.affinity }}
       affinity:
-{{ toYaml .Values.affinity | nindent 8 }}
+{{ toYaml . | nindent 8 }}
       {{- end }}
