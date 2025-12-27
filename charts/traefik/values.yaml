@@ -73,6 +73,7 @@ traefik:
     - "--ping=true"
     - "--entryPoints.web.forwardedHeaders.insecure=true"
     - "--entryPoints.websecure.forwardedHeaders.insecure=true"
+    - "--entrypoints.traefik.address=:9000"
 
   securityContext:
     capabilities:
