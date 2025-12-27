@@ -26,10 +26,8 @@ tolerations: []
 affinity: {}
 
 env:
-  # Ideal: "home.nserbin.com" (y listo). Si te da paja por ahora, "*" funciona.
   HOMEPAGE_ALLOWED_HOSTS: "*"
 
-# Solo referencia a un Secret existente (creado localmente en el cluster)
 secrets:
   existingSecret: homepage-secrets
 
@@ -48,9 +46,9 @@ config:
     language: en
 
     headerStyle: underlined
-    # statusStyle: dot
 
-    # Homepage espera logs en /app/config/logs (vos montás /app/config/logs)
+
+
     logpath: /app/config/logs
 
     base: https://home.nserbin.com/
@@ -241,18 +239,18 @@ config:
             href: http://rss.nserbin.com
             description: Fresh RSS
             server: rpi
-            siteMonitor: http://192.168.0.4:85/api/
+            siteMonitor: http://192.168.0.4:85/
             widget:
               type: freshrss
               url: http://192.168.0.4:85
-              username: "${FRESHRSS_USERNAME}"
-              password: "${FRESHRSS_PASSWORD}"    
+              username: ${FRESHRSS_USERNAME}
+              password: ${FRESHRSS_PASSWORD}
 
     - Networking:
         - Pi-hole:
             icon: pi-hole.svg
             href: https://pihole.nserbin.com/admin
-            siteMonitor: http://192.168.0.4:83
+            siteMonitor: http://192.168.0.4:83/
             description: Pi-hole DNS
             server: rpi
             widget:
@@ -264,8 +262,11 @@ config:
         - Traefik:
             icon: traefik.svg
             href: https://traefik.nserbin.com/dashboard/
-            siteMonitor: http://traefik.traefik.svc.cluster.local/ping
+            siteMonitor: http://traefik-api.traefik.svc.cluster.local:9000/ping
             description: Traefik
+            widget:
+              type: traefik
+              url: http://traefik-api.traefik.svc.cluster.local:9000
 
     - Management:
         - Portainer:
@@ -284,7 +285,7 @@ config:
         - Watchtower:
             icon: watchtower.svg
             href: http://192.168.0.4:8081/
-            siteMonitor: http://192.168.0.4:8081
+            siteMonitor: http://192.168.0.4:8081/
             description: Service to pull images
             server: rpi
 
@@ -366,11 +367,10 @@ traefik:
         httpOnly: true
         sameSite: "none"
 
-
 dnsPolicy: ClusterFirst
 dnsConfig:
-  nameservers:
-    - 10.43.0.10
   options:
     - name: ndots
       value: "5"
+    - name: single-request-reopen
+    

@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   revisionHistoryLimit: 3
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "homepage.name" . }}
@@ -19,23 +19,41 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ include "homepage.serviceAccountName" . }}
-      automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automount | default true }}
+
+      # ✅ DNS fixes (Node.js + Alpine + Kubernetes)
+      dnsPolicy: ClusterFirst
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "5"
+          - name: single-request-reopen
+
       containers:
         - name: homepage
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
+
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
-              value: {{ .Values.env.HOMEPAGE_ALLOWED_HOSTS | quote }}
+              value: {{ .Values.env.HOMEPAGE_ALLOWED_HOSTS | default "*" | quote }}
+
+          {{- if .Values.secrets.existingSecret }}
           envFrom:
             - secretRef:
                 name: {{ .Values.secrets.existingSecret | quote }}
+          {{- end }}
+
           ports:
             - name: http
               containerPort: 3000
               protocol: TCP
+
+          {{- with .Values.resources }}
           resources:
-{{ toYaml .Values.resources | indent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+
           volumeMounts:
             - name: config
               mountPath: /app/config/kubernetes.yaml
@@ -63,19 +81,30 @@ spec:
               subPath: custom.js
             - name: logs
               mountPath: /app/config/logs
+
       volumes:
         - name: config
           configMap:
-            name: {{ if .Values.config.existingConfigMap -}}
-              {{ .Values.config.existingConfigMap }}
+            name: {{- if .Values.config.existingConfigMap -}}
+              {{ .Values.config.existingConfigMap | quote }}
               {{- else -}}
-              {{ include "homepage.fullname" . }}-config
+              {{ printf "%s-config" (include "homepage.fullname" .) | quote }}
               {{- end }}
         - name: logs
           emptyDir: {}
+
+      # ✅ estos 3 bloques NO tienen que renderizar "null"
+      {{- with .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml .Values.nodeSelector | indent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.tolerations }}
       tolerations:
-{{ toYaml .Values.tolerations | indent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+
+      {{- with .Values.affinity }}
       affinity:
-{{ toYaml .Values.affinity | indent 8 }}
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
