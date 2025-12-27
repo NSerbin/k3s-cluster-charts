@@ -265,9 +265,6 @@ config:
             href: https://traefik.nserbin.com/dashboard/
             siteMonitor: http://traefik.traefik:9000/ping
             description: Traefik
-            widget:
-              type: traefik
-              url: http://traefik.traefik:9000
 
     - Management:
         - Portainer:
