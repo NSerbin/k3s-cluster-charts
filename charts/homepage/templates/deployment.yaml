@@ -7,7 +7,7 @@ metadata:
     app.kubernetes.io/instance: {{ .Release.Name }}
 spec:
   revisionHistoryLimit: 3
-  replicas: {{ .Values.replicaCount }}
+  replicas: {{ .Values.replicaCount | default 1 }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "homepage.name" . }}
@@ -19,39 +19,44 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       serviceAccountName: {{ include "homepage.serviceAccountName" . }}
-      automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
+      automountServiceAccountToken: {{ .Values.serviceAccount.automount | default true }}
 
-      {{- with .Values.dnsPolicy }}
-      dnsPolicy: {{ . }}
+      {{- if .Values.dnsPolicy }}
+      dnsPolicy: {{ .Values.dnsPolicy }}
       {{- end }}
 
-      {{- with .Values.dnsConfig }}
+      {{- if .Values.dnsConfig }}
       dnsConfig:
-{{ toYaml . | nindent 8 }}
+{{ toYaml .Values.dnsConfig | nindent 8 }}
       {{- end }}
 
       containers:
         - name: homepage
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          imagePullPolicy: {{ .Values.image.pullPolicy | default "IfNotPresent" }}
 
           env:
             - name: HOMEPAGE_ALLOWED_HOSTS
-              value: {{ .Values.env.HOMEPAGE_ALLOWED_HOSTS | quote }}
+              value: {{ .Values.env.HOMEPAGE_ALLOWED_HOSTS | default "*" | quote }}
+            {{- if .Values.extraEnv }}
+{{ toYaml .Values.extraEnv | nindent 12 }}
+            {{- end }}
 
-          {{- with .Values.secrets.existingSecret }}
+          {{- if .Values.secrets.existingSecret }}
           envFrom:
             - secretRef:
-                name: {{ . | quote }}
+                name: {{ .Values.secrets.existingSecret | quote }}
           {{- end }}
 
           ports:
             - name: http
-              containerPort: 3000
+              containerPort: {{ .Values.service.port | default 3000 }}
               protocol: TCP
 
+          {{- if .Values.resources }}
           resources:
 {{ toYaml .Values.resources | nindent 12 }}
+          {{- end }}
 
           volumeMounts:
             - name: config
@@ -80,29 +85,35 @@ spec:
               subPath: custom.js
             - name: logs
               mountPath: /app/config/logs
+            {{- if .Values.extraVolumeMounts }}
+{{ toYaml .Values.extraVolumeMounts | nindent 12 }}
+            {{- end }}
 
       volumes:
         - name: config
           configMap:
             name: {{- if .Values.config.existingConfigMap -}}
-              {{ .Values.config.existingConfigMap }}
+              {{ .Values.config.existingConfigMap | quote }}
               {{- else -}}
-              {{ include "homepage.fullname" . }}-config
+              {{ printf "%s-config" (include "homepage.fullname" .) | quote }}
               {{- end }}
         - name: logs
           emptyDir: {}
+        {{- if .Values.extraVolumes }}
+{{ toYaml .Values.extraVolumes | nindent 8 }}
+        {{- end }}
 
-      {{- with .Values.nodeSelector }}
+      {{- if .Values.nodeSelector }}
       nodeSelector:
-{{ toYaml . | nindent 8 }}
+{{ toYaml .Values.nodeSelector | nindent 8 }}
       {{- end }}
 
-      {{- with .Values.tolerations }}
+      {{- if .Values.tolerations }}
       tolerations:
-{{ toYaml . | nindent 8 }}
+{{ toYaml .Values.tolerations | nindent 8 }}
       {{- end }}
 
-      {{- with .Values.affinity }}
+      {{- if .Values.affinity }}
       affinity:
-{{ toYaml . | nindent 8 }}
+{{ toYaml .Values.affinity | nindent 8 }}
       {{- end }}
