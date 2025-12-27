@@ -189,7 +189,7 @@ config:
     - Cluster:
         - Argo CD:
             href: https://argo.nserbin.com
-            siteMonitor: http://argocd-server.argocd.svc.cluster.local/api/version
+            siteMonitor: http://argocd-server.argocd/api/version
             description: GitOps
             icon: si-argo.svg
 
@@ -204,22 +204,22 @@ config:
         - Grafana:
             icon: grafana.png
             href: https://monitor.nserbin.com
-            siteMonitor: http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local/api/health
+            siteMonitor: http://kube-prometheus-stack-grafana.monitoring/api/health
             description: Grafana
 
         - Prometheus:
             icon: prometheus.png
             href: https://prometheus.nserbin.com
-            siteMonitor: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090/-/healthy
+            siteMonitor: http://kube-prometheus-stack-prometheus.monitoring:9090/-/healthy
             description: Prometheus
             widget:
               type: prometheus
-              url: http://kube-prometheus-stack-prometheus.monitoring.svc.cluster.local:9090
+              url: http://kube-prometheus-stack-prometheus.monitoring:9090
 
         - Alertmanager:
             icon: alertmanager.png
             href: https://alerts.nserbin.com
-            siteMonitor: http://kube-prometheus-stack-alertmanager.monitoring.svc.cluster.local:9093/-/healthy
+            siteMonitor: http://kube-prometheus-stack-alertmanager.monitoring:9093/-/healthy
             description: Alertmanager
 
         - Uptime Kuma:
