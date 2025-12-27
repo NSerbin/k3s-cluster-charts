@@ -253,11 +253,6 @@ config:
             siteMonitor: http://192.168.0.4:83/
             description: Pi-hole DNS
             server: rpi
-            widget:
-              type: pihole
-              url: http://192.168.0.4:83
-              version: 6
-              key: ${PIHOLE_KEY}
               
 
         - Traefik:
