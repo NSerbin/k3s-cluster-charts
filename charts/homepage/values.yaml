@@ -239,10 +239,10 @@ config:
             href: http://rss.nserbin.com
             description: Fresh RSS
             server: rpi
-            siteMonitor: http://192.168.0.4:85/
+            siteMonitor: http://freshrss-freshrss.tools/
             widget:
               type: freshrss
-              url: http://192.168.0.4:85
+              url: http://freshrss-freshrss.tools/
               username: ${FRESHRSS_USERNAME}
               password: ${FRESHRSS_PASSWORD}
 
