@@ -242,7 +242,8 @@ config:
             siteMonitor: http://freshrss-freshrss.tools/
             widget:
               type: freshrss
-              url: http://freshrss-freshrss.tools/
+              #url: http://freshrss-freshrss.tools/
+              url: http://rss.nserbin.com
               username: ${FRESHRSS_USERNAME}
               password: ${FRESHRSS_PASSWORD}
 
