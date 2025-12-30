@@ -1,0 +1,25 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "freedium.fullname" . }}-config
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "freedium.labels" . | nindent 4 }}
+data:
+  HOST_ADDRESS: {{ .Values.config.HOST_ADDRESS | quote }}
+  LOG_LEVEL_NAME: {{ .Values.config.LOG_LEVEL_NAME | quote }}
+  MORE_LOGS: {{ .Values.config.MORE_LOGS | quote }}
+  DISABLE_EXTERNAL_DOCS: {{ .Values.config.DISABLE_EXTERNAL_DOCS | quote }}
+
+  TIMEOUT: {{ .Values.config.TIMEOUT | quote }}
+  REQUEST_TIMEOUT: {{ .Values.config.REQUEST_TIMEOUT | quote }}
+  WORKER_TIMEOUT: {{ .Values.config.WORKER_TIMEOUT | quote }}
+
+  CACHE_LIFE_TIME: {{ .Values.config.CACHE_LIFE_TIME | quote }}
+  HOME_PAGE_MAX_POSTS: {{ .Values.config.HOME_PAGE_MAX_POSTS | quote }}
+  ENABLE_ADS_BANNER: {{ .Values.config.ENABLE_ADS_BANNER | quote }}
+
+  REDIS_TIMEOUT: {{ .Values.config.REDIS_TIMEOUT | quote }}
+
+  LOGSTASH_HOST: "logstash"
+  LOGSTASH_PORT: "5000"

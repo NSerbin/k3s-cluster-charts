@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "freedium.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "freedium.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "freedium.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "freedium.selectorLabels" . | nindent 8 }}
+        {{- include "freedium.labels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: freedium
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - containerPort: 7080
+              name: http
+          envFrom:
+            - configMapRef:
+                name: {{ include "freedium.fullname" . }}-config
+            - secretRef:
+                name: {{ .Values.existingSecret.name }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
