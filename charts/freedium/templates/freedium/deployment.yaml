@@ -20,13 +20,23 @@ spec:
         - name: freedium
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+
           ports:
             - containerPort: 7080
               name: http
+
           envFrom:
             - configMapRef:
                 name: {{ include "freedium.fullname" . }}-config
             - secretRef:
                 name: {{ .Values.existingSecret.name }}
+
+          # ✅ Opción B: Kubernetes arma la URL (sin URL-encode, sin meter credenciales en URL en el repo)
+          env:
+            - name: DATABASE_URL
+              value: >-
+                postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)
+                @$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}

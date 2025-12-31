@@ -20,6 +20,3 @@ data:
   ENABLE_ADS_BANNER: {{ .Values.config.ENABLE_ADS_BANNER | quote }}
 
   REDIS_TIMEOUT: {{ .Values.config.REDIS_TIMEOUT | quote }}
-
-  LOGSTASH_HOST: "logstash"
-  LOGSTASH_PORT: "5000"

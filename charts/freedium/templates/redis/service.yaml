@@ -8,8 +8,7 @@ metadata:
     {{- include "freedium.labels" . | nindent 4 }}
 spec:
   selector:
-    app.kubernetes.io/name: redis
-    app.kubernetes.io/instance: {{ .Release.Name }}
+    app: redis
   ports:
     - name: redis
       port: {{ .Values.redis.port }}
