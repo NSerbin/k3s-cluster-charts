@@ -14,28 +14,38 @@ spec:
     metadata:
       labels:
         {{- include "freedium.selectorLabels" . | nindent 8 }}
-        {{- include "freedium.labels" . | nindent 8 }}
     spec:
       containers:
+        # ===== CADDY (front) =====
+        {{- if .Values.caddy.enabled }}
+        - name: caddy
+          image: "{{ .Values.caddy.image.repository }}:{{ .Values.caddy.image.tag }}"
+          imagePullPolicy: {{ .Values.caddy.image.pullPolicy }}
+          ports:
+            - containerPort: {{ .Values.caddy.port }}
+              name: http
+          volumeMounts:
+            - name: caddyfile
+              mountPath: /etc/caddy/Caddyfile
+              subPath: Caddyfile
+        {{- end }}
+
+        # ===== APP (back) =====
         - name: freedium
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-
           ports:
             - containerPort: 7080
-              name: http
-
+              name: app
           envFrom:
             - configMapRef:
                 name: {{ include "freedium.fullname" . }}-config
             - secretRef:
                 name: {{ .Values.existingSecret.name }}
-
-          # ✅ Opción B: Kubernetes arma la URL (sin URL-encode, sin meter credenciales en URL en el repo)
-          env:
-            - name: DATABASE_URL
-              value: >-
-                postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)
-
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
+
+      volumes:
+        - name: caddyfile
+          configMap:
+            name: {{ include "freedium.fullname" . }}-caddy

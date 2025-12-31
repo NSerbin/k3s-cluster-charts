@@ -1,13 +1,24 @@
+replicaCount: 1
+
 image:
   repository: ghcr.io/nserbin/freedium-web
   tag: sha-0b85a28
   pullPolicy: IfNotPresent
 
-replicaCount: 1
+caddy:
+  enabled: true
+  image:
+    repository: ghcr.io/nserbin/freedium-caddy
+    tag: sha-0b85a28
+    pullPolicy: IfNotPresent
+  port: 80
+  # si querés ver logs verbosos
+  logLevel: INFO
 
 service:
   type: ClusterIP
-  port: 7080
+  # Service apunta a Caddy
+  port: 80
 
 ingressRoute:
   enabled: true
@@ -23,6 +34,9 @@ ingressRoute:
 existingSecret:
   name: freedium-secret
 
+secret:
+  create: false
+
 resources:
   requests:
     cpu: 100m
@@ -34,18 +48,18 @@ resources:
 config:
   HOST_ADDRESS: https://free.nserbin.com
   LOG_LEVEL_NAME: INFO
-  MORE_LOGS: "false"
-  DISABLE_EXTERNAL_DOCS: "true"
+  MORE_LOGS: false
+  DISABLE_EXTERNAL_DOCS: true
 
-  TIMEOUT: "38"
-  REQUEST_TIMEOUT: "12"
-  WORKER_TIMEOUT: "85"
+  TIMEOUT: 38
+  REQUEST_TIMEOUT: 12
+  WORKER_TIMEOUT: 85
 
-  CACHE_LIFE_TIME: "18000"
-  HOME_PAGE_MAX_POSTS: "45"
-  ENABLE_ADS_BANNER: "false"
+  CACHE_LIFE_TIME: 18000
+  HOME_PAGE_MAX_POSTS: 45
+  ENABLE_ADS_BANNER: false
 
-  REDIS_TIMEOUT: "1.75"
+  REDIS_TIMEOUT: 1.75
 
 postgresql:
   enabled: true

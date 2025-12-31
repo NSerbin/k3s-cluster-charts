@@ -6,13 +6,17 @@ metadata:
   namespace: {{ .Release.Namespace }}
 spec:
   entryPoints:
-{{- range .Values.ingressRoute.entryPoints }}
+    {{- range .Values.ingressRoute.entryPoints }}
     - {{ . }}
-{{- end }}
+    {{- end }}
   routes:
-    - match: Host(`{{ .Values.ingressRoute.host }}`) && ({{- $first := true -}}{{- range .Values.ingressRoute.pathPrefixes -}}{{- if not $first }} || {{- end -}}PathPrefix(`{{ . }}`){{- $first = false -}}{{- end -}})
+    - match: Host({{ .Values.ingressRoute.host }}) && ({{- $first := true -}}{{- range .Values.ingressRoute.pathPrefixes -}}{{- if not $first }} || {{- end -}}PathPrefix({{ . }}){{- $first = false -}}{{- end -}})
       kind: Rule
       services:
         - name: {{ include "freedium.fullname" . }}
           port: {{ .Values.service.port }}
+  {{- if .Values.ingressRoute.tls.enabled }}
+  tls:
+    secretName: {{ .Values.ingressRoute.tls.secretName }}
+  {{- end }}
 {{- end }}

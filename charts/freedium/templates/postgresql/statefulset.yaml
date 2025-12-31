@@ -16,7 +16,6 @@ spec:
     metadata:
       labels:
         app: postgres
-        {{- include "freedium.labels" . | nindent 8 }}
     spec:
       containers:
         - name: postgres
@@ -42,14 +41,14 @@ spec:
                   key: POSTGRES_DB
           readinessProbe:
             exec:
-              command: ["sh", "-c", "pg_isready -U $POSTGRES_USER"]
+              command: ["sh", "-c", "pg_isready -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\""]
             initialDelaySeconds: 10
             periodSeconds: 5
             timeoutSeconds: 5
             failureThreshold: 6
           livenessProbe:
             exec:
-              command: ["sh", "-c", "pg_isready -U $POSTGRES_USER"]
+              command: ["sh", "-c", "pg_isready -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\""]
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5

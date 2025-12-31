@@ -12,4 +12,8 @@ spec:
   ports:
     - name: http
       port: {{ .Values.service.port }}
+      {{- if .Values.caddy.enabled }}
       targetPort: http
+      {{- else }}
+      targetPort: app
+      {{- end }}

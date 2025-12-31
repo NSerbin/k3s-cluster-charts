@@ -16,7 +16,6 @@ spec:
     metadata:
       labels:
         app: redis
-        {{- include "freedium.labels" . | nindent 8 }}
     spec:
       containers:
         - name: redis
@@ -24,6 +23,22 @@ spec:
           ports:
             - containerPort: {{ .Values.redis.port }}
               name: redis
+          args:
+            - "--dir=/data"
+          readinessProbe:
+            exec:
+              command: ["sh", "-lc", "redis-cli -h 127.0.0.1 -p {{ .Values.redis.port }} ping | grep -q PONG"]
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            exec:
+              command: ["sh", "-lc", "redis-cli -h 127.0.0.1 -p {{ .Values.redis.port }} ping | grep -q PONG"]
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
           volumeMounts:
             - name: data
               mountPath: /data

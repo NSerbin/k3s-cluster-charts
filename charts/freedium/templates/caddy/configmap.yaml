@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "freedium.fullname" . }}-caddy
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "freedium.labels" . | nindent 4 }}
+data:
+  Caddyfile: |
+    {
+      auto_https off
+      log {
+        output stdout
+        level {{ .Values.caddy.logLevel | default "INFO" }}
+      }
+    }
+
+    :{{ .Values.caddy.port }} {
+      encode gzip zstd
+
+      # Reverse proxy a la app interna
+      reverse_proxy 127.0.0.1:7080
+
+      # Si más adelante tu imagen de caddy trae /static,
+      # podés habilitar esto y sacar cosas del backend.
+      # handle_path /static/* {
+      #   root * /static
+      #   file_server
+      # }
+    }
