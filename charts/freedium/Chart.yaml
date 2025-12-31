@@ -3,4 +3,4 @@ name: freedium-web
 description: Freedium Web Application
 type: application
 version: 0.1.0
-appVersion: "latest"
+appVersion: "sha-0b85a28"
