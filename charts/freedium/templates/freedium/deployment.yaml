@@ -16,7 +16,6 @@ spec:
         {{- include "freedium.selectorLabels" . | nindent 8 }}
     spec:
       containers:
-        # ===== CADDY (front) =====
         {{- if .Values.caddy.enabled }}
         - name: caddy
           image: "{{ .Values.caddy.image.repository }}:{{ .Values.caddy.image.tag }}"
@@ -30,7 +29,6 @@ spec:
               subPath: Caddyfile
         {{- end }}
 
-        # ===== APP (back) =====
         - name: freedium
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -41,7 +39,7 @@ spec:
             - configMapRef:
                 name: {{ include "freedium.fullname" . }}-config
             - secretRef:
-                name: {{ .Values.existingSecret.name }}
+                name: {{ .Values.secrets.appExistingSecret }}
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 
