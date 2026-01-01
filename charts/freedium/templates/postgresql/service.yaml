@@ -8,7 +8,8 @@ metadata:
     {{- include "freedium.labels" . | nindent 4 }}
 spec:
   selector:
-    app: postgres
+    app.kubernetes.io/component: postgres
+    app.kubernetes.io/instance: {{ .Release.Name }}
   ports:
     - name: postgres
       port: {{ .Values.postgresql.port }}

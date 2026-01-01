@@ -11,11 +11,13 @@ spec:
   replicas: 1
   selector:
     matchLabels:
-      app: postgres
+      app.kubernetes.io/component: postgres
+      app.kubernetes.io/instance: {{ .Release.Name }}
   template:
     metadata:
       labels:
-        app: postgres
+        app.kubernetes.io/component: postgres
+        app.kubernetes.io/instance: {{ .Release.Name }}
     spec:
       containers:
         - name: postgres

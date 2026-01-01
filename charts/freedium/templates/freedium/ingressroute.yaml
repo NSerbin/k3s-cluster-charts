@@ -10,7 +10,7 @@ spec:
     - {{ . }}
     {{- end }}
   routes:
-    - match: Host({{ .Values.ingressRoute.host | quote }}) && ({{- $first := true -}}{{- range .Values.ingressRoute.pathPrefixes -}}{{- if not $first }} || {{- end -}}PathPrefix({{ . | quote }}){{- $first = false -}}{{- end -}})
+    - match: Host(`{{ .Values.ingressRoute.host }}`) && ({{- $first := true -}}{{- range .Values.ingressRoute.pathPrefixes -}}{{- if not $first }} || {{- end -}}PathPrefix(`{{ . }}`){{- $first = false -}}{{- end -}})
       kind: Rule
       services:
         - name: {{ include "freedium.fullname" . }}

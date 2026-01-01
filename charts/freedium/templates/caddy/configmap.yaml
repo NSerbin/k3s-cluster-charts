@@ -18,13 +18,29 @@ data:
     :{{ .Values.caddy.port }} {
       encode gzip zstd
 
-      # Reverse proxy a la app interna
-      reverse_proxy 127.0.0.1:7080
+      # Frontend estático (debe existir en la imagen ghcr.io/nserbin/freedium-caddy)
+      root * /srv
+      file_server
 
-      # Si más adelante tu imagen de caddy trae /static,
-      # podés habilitar esto y sacar cosas del backend.
-      # handle_path /static/* {
-      #   root * /static
-      #   file_server
-      # }
+      # SPA fallback (si tu frontend es single-page)
+      try_files {path} /index.html
+
+      # === Backend/API ===
+      # Ajustá paths según el proyecto real (estos suelen cubrirlo)
+      reverse_proxy /api/* 127.0.0.1:7080 {
+        header_up Host {host}
+        header_up X-Forwarded-Host {host}
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Forwarded-Port {server_port}
+      }
+
+      reverse_proxy /docs* 127.0.0.1:7080 {
+        header_up Host {host}
+        header_up X-Forwarded-Proto {scheme}
+      }
+
+      reverse_proxy /openapi.json 127.0.0.1:7080 {
+        header_up Host {host}
+        header_up X-Forwarded-Proto {scheme}
+      }
     }

@@ -35,11 +35,22 @@ spec:
           ports:
             - containerPort: 7080
               name: app
+
           envFrom:
             - configMapRef:
                 name: {{ include "freedium.fullname" . }}-config
             - secretRef:
                 name: {{ .Values.secrets.appExistingSecret }}
+
+          # FIX CRÍTICO: DATABASE_URL sin espacios (y lo armamos explícito)
+          env:
+            - name: POSTGRES_HOST
+              value: {{ .Values.postgresql.serviceName | quote }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.postgresql.port | quote }}
+            - name: DATABASE_URL
+              value: "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)"
+
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
 
