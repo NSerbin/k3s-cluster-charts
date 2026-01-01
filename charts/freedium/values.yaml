@@ -1,23 +1,19 @@
 replicaCount: 1
-
 image:
   repository: ghcr.io/nserbin/freedium-web
-  tag: sha-0d346bf
+  tag: sha-caf4cd5
   pullPolicy: IfNotPresent
-
 caddy:
   enabled: true
   image:
     repository: ghcr.io/nserbin/freedium-caddy
-    tag: sha-0d346bf
+    tag: sha-caf4cd5
     pullPolicy: IfNotPresent
   port: 80
   logLevel: INFO
-
 service:
   type: ClusterIP
   port: 80
-
 ingressRoute:
   enabled: true
   entryPoints:
@@ -28,12 +24,10 @@ ingressRoute:
   tls:
     enabled: false
     secretName: ""
-
 # Separación REAL de secretos (esto arregla caos y evita pisadas)
 secrets:
   appExistingSecret: freedium-app-secret
   postgresExistingSecret: freedium-postgres-secret
-
 resources:
   requests:
     cpu: 100m
@@ -41,7 +35,6 @@ resources:
   limits:
     cpu: 500m
     memory: 768Mi
-
 config:
   HOST_ADDRESS: "https://free.nserbin.com"
   LOG_LEVEL_NAME: "INFO"
@@ -54,7 +47,6 @@ config:
   HOME_PAGE_MAX_POSTS: "45"
   ENABLE_ADS_BANNER: "false"
   REDIS_TIMEOUT: "1.75"
-
 postgresql:
   enabled: true
   image: "postgres:16.3-alpine3.20"
@@ -62,7 +54,6 @@ postgresql:
   port: 5432
   storage:
     size: 2Gi
-
 redis:
   enabled: true
   image: "docker.dragonflydb.io/dragonflydb/dragonfly"
