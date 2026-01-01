@@ -1,10 +1,8 @@
 replicaCount: 1
-
 image:
   repository: ghcr.io/nserbin/freedium-web
-  tag: sha-0b85a28
+  tag: sha-f4d550b
   pullPolicy: IfNotPresent
-
 caddy:
   enabled: true
   image:
@@ -14,12 +12,10 @@ caddy:
   port: 80
   # si querés ver logs verbosos
   logLevel: INFO
-
 service:
   type: ClusterIP
   # Service apunta a Caddy
   port: 80
-
 ingressRoute:
   enabled: true
   entryPoints:
@@ -30,13 +26,10 @@ ingressRoute:
   tls:
     enabled: false
     secretName: ""
-
 existingSecret:
   name: freedium-secret
-
 secret:
   create: false
-
 resources:
   requests:
     cpu: 100m
@@ -44,23 +37,18 @@ resources:
   limits:
     cpu: 500m
     memory: 768Mi
-
 config:
   HOST_ADDRESS: https://free.nserbin.com
   LOG_LEVEL_NAME: INFO
   MORE_LOGS: false
   DISABLE_EXTERNAL_DOCS: true
-
   TIMEOUT: 38
   REQUEST_TIMEOUT: 12
   WORKER_TIMEOUT: 85
-
   CACHE_LIFE_TIME: 18000
   HOME_PAGE_MAX_POSTS: 45
   ENABLE_ADS_BANNER: false
-
   REDIS_TIMEOUT: 1.75
-
 postgresql:
   enabled: true
   image: postgres:16.3-alpine3.20
@@ -68,7 +56,6 @@ postgresql:
   port: 5432
   storage:
     size: 2Gi
-
 redis:
   enabled: true
   image: docker.dragonflydb.io/dragonflydb/dragonfly
