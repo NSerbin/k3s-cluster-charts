@@ -1,13 +1,13 @@
 replicaCount: 1
 image:
   repository: ghcr.io/nserbin/freedium-web
-  tag: sha-f4d550b
+  tag: sha-75d1433
   pullPolicy: IfNotPresent
 caddy:
   enabled: true
   image:
     repository: ghcr.io/nserbin/freedium-caddy
-    tag: sha-0b85a28
+    tag: sha-75d1433
     pullPolicy: IfNotPresent
   port: 80
   # si querés ver logs verbosos
