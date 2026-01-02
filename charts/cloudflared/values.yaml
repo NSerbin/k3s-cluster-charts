@@ -60,9 +60,9 @@ ingress:
     service: "http://traefik.traefik.svc.cluster.local:80"
 
   - hostname: "auth.nserbin.com"
-    service: "http://authentik-authentik-server.tools.svc.cluster.local:9000"
+    service: "http://traefik.traefik.svc.cluster.local:80"
     originRequest:
-      httpHostHeader: auth.nserbin.com
+      httpHostHeader: "auth.nserbin.com"
 
 
   - service: "http_status:404"
