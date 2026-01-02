@@ -18,29 +18,24 @@ data:
     :{{ .Values.caddy.port }} {
       encode gzip zstd
 
-      # ✅ Static assets
+      # 1) Si el path corresponde a un archivo que existe en /static, lo servimos.
+      @static file {
+        root /static
+        try_files {path}
+      }
+      handle @static {
+        root * /static
+        file_server
+      }
+
+      # 2) También soportar /static/* por si alguna vez el HTML lo usa
       handle_path /static/* {
         root * /static
         file_server
       }
 
-      # ✅ (Opcional) servir estáticos que están en raíz (si tu HTML los pide así)
-      handle /favicon.ico {
-        root * /static
-        file_server
-      }
-      handle /robots.txt {
-        root * /static
-        file_server
-      }
-      handle /site.webmanifest {
-        root * /static
-        file_server
-      }
-
-      # Todo lo demás al backend
+      # 3) Todo lo demás al backend
       handle {
         reverse_proxy 127.0.0.1:7080
       }
     }
-
