@@ -191,6 +191,7 @@ config:
             href: https://argo.nserbin.com
             siteMonitor: http://argocd-server.argocd/api/version
             description: GitOps
+            server: k3s
             icon: si-argo.svg
 
     - Monitoring:
@@ -206,12 +207,14 @@ config:
             href: https://monitor.nserbin.com
             siteMonitor: http://kube-prometheus-stack-grafana.monitoring/api/health
             description: Grafana
+            server: k3s
 
         - Prometheus:
             icon: prometheus.png
             href: https://prometheus.nserbin.com
             siteMonitor: http://kube-prometheus-stack-prometheus.monitoring:9090/-/healthy
             description: Prometheus
+            server: k3s
             widget:
               type: prometheus
               url: http://kube-prometheus-stack-prometheus.monitoring:9090
@@ -221,6 +224,7 @@ config:
             href: https://alerts.nserbin.com
             siteMonitor: http://kube-prometheus-stack-alertmanager.monitoring:9093/-/healthy
             description: Alertmanager
+            server: k3s
 
         - Uptime Kuma:
             icon: uptime-kuma.png
@@ -238,7 +242,7 @@ config:
             icon: freshrss.svg
             href: http://rss.nserbin.com
             description: Fresh RSS
-            server: rpi
+            server: k3s
             siteMonitor: http://freshrss-freshrss.tools/
             widget:
               type: freshrss
@@ -250,7 +254,7 @@ config:
             icon: 
             href: http://free.nserbin.com
             description: Freedium Web Fork
-            server: rpi
+            server: k3s
             #siteMonitor: http://freedium-web
 
     - Networking:
@@ -267,6 +271,7 @@ config:
             href: https://traefik.nserbin.com/dashboard/
             siteMonitor: http://traefik.traefik:9000/ping
             description: Traefik
+            server: k3s
 
     - Management:
         - Portainer:
@@ -277,6 +282,14 @@ config:
             server: rpi
 
     - Tools:
+
+        - Grimoire:
+            icon: 
+            href: https://bookmarks.nserbin.com/
+            #siteMonitor: http://192.168.0.4:8082
+            description: Bookmarks
+            server: k3s
+    
         - DocuSeal:
             href: https://docs.nserbin.com/
             description: Sign documents
