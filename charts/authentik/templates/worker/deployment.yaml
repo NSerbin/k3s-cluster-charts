@@ -1,0 +1,56 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "authentik.fullname" . }}-worker
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "authentik.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.worker.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: worker
+      {{- include "authentik.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: worker
+        {{- include "authentik.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: authentik
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          args: ["worker"]
+          env:
+            - name: AUTHENTIK_LOG_LEVEL
+              value: {{ .Values.authentik.logLevel | quote }}
+
+            - name: AUTHENTIK_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: AUTHENTIK_SECRET_KEY
+
+            - name: AUTHENTIK_POSTGRESQL__HOST
+              value: {{ .Values.postgresql.serviceName | quote }}
+            - name: AUTHENTIK_POSTGRESQL__PORT
+              value: {{ .Values.postgresql.port | quote }}
+            - name: AUTHENTIK_POSTGRESQL__NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: {{ .Values.postgresql.dbNameKey }}
+            - name: AUTHENTIK_POSTGRESQL__USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: {{ .Values.postgresql.userKey }}
+            - name: AUTHENTIK_POSTGRESQL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: {{ .Values.postgresql.passwordKey }}
+
+          resources:
+            {{- toYaml .Values.resources.worker | nindent 12 }}

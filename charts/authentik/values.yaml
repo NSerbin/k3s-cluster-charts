@@ -1,0 +1,73 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/goauthentik/server
+  tag: "2025.10.3"
+  pullPolicy: IfNotPresent
+
+worker:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/goauthentik/server
+    tag: "2025.10.3"
+    pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 9000
+
+ingressRoute:
+  enabled: true
+  entryPoints:
+    - websecure
+  host: "auth.nserbin.com"
+  pathPrefixes:
+    - /
+  tls:
+    enabled: true
+    secretName: "" # opcional, si Traefik gestiona certs, dejalo vacío
+
+# Preferido: secret pre-creado (ExternalSecrets/SOPS/manual)
+secrets:
+  existingSecret: "authentik-secrets"
+  # Si no existe y querés que el chart lo cree, poné create: true
+  create: false
+
+# Solo si secrets.create=true
+bootstrap:
+  secretKey: ""          # si vacío, falla (mejor no auto-generar en GitOps)
+  adminPassword: ""      # idem
+
+authentik:
+  logLevel: "info"
+  # extraEnv: []  # lista de env vars adicionales (opcional)
+
+postgresql:
+  enabled: true
+  image: "postgres:16.3-alpine3.20"
+  serviceName: "authentik-postgres"
+  port: 5432
+  storage:
+    size: 5Gi
+
+  # si usas secrets.existingSecret, estas keys deben existir en ese secret
+  # POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD
+  dbNameKey: POSTGRES_DB
+  userKey: POSTGRES_USER
+  passwordKey: POSTGRES_PASSWORD
+
+resources:
+  server:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 1
+      memory: 1Gi
+  worker:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1
+      memory: 1Gi

@@ -1,0 +1,64 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "authentik.fullname" . }}-server
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "authentik.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/component: server
+      {{- include "authentik.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/component: server
+        {{- include "authentik.selectorLabels" . | nindent 8 }}
+    spec:
+      containers:
+        - name: authentik
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          args: ["server"]
+          ports:
+            - containerPort: 9000
+              name: http
+          env:
+            - name: AUTHENTIK_LOG_LEVEL
+              value: {{ .Values.authentik.logLevel | quote }}
+
+            - name: AUTHENTIK_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: AUTHENTIK_SECRET_KEY
+            - name: AUTHENTIK_BOOTSTRAP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: AUTHENTIK_BOOTSTRAP_PASSWORD
+
+            - name: AUTHENTIK_POSTGRESQL__HOST
+              value: {{ .Values.postgresql.serviceName | quote }}
+            - name: AUTHENTIK_POSTGRESQL__PORT
+              value: {{ .Values.postgresql.port | quote }}
+            - name: AUTHENTIK_POSTGRESQL__NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: {{ .Values.postgresql.dbNameKey }}
+            - name: AUTHENTIK_POSTGRESQL__USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: {{ .Values.postgresql.userKey }}
+            - name: AUTHENTIK_POSTGRESQL__PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: {{ .Values.postgresql.passwordKey }}
+
+          resources:
+            {{- toYaml .Values.resources.server | nindent 12 }}
