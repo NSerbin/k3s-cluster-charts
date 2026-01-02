@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres
+  name: {{ include "authentik.fullname" . }}-postgres
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "authentik.labels" . | nindent 4 }}
