@@ -296,13 +296,13 @@ config:
 
         - Authentik:
             icon: authentik.svg
-            href: http://auth.nserbin.com
+            href: https://auth.nserbin.com
             description: Authentik
             server: k3s
-            siteMonitor: http://authentik.authentik.tools/
+            siteMonitor: http://authentik-authentik-server.tools:9000/
             widget:
               type: authentik
-              url: http://authentik.authentik.tools/
+              url: http://authentik-authentik-server.tools/
               key: ${AUTHENTIK_KEY}
               version: 2 
 
