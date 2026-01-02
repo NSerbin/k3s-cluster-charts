@@ -246,6 +246,13 @@ config:
               username: ${FRESHRSS_USERNAME}
               password: ${FRESHRSS_PASSWORD}
 
+        - Freedium:
+            icon: 
+            href: http://free.nserbin.com
+            description: Freedium Web Fork
+            server: rpi
+            #siteMonitor: http://freedium-web
+
     - Networking:
         - Pi-hole:
             icon: pi-hole.svg
