@@ -272,6 +272,16 @@ config:
             siteMonitor: http://traefik.traefik:9000/ping
             description: Traefik
             server: k3s
+        
+        - Cloudflare Tunnels:
+            icon: cloudflare.svg
+            href: https://cloudflare.com
+            description: Cloudflare
+            widget:
+              type: cloudflared
+              accountid: ${CLOUDFLARE_ACCOUNT}
+              tunnelid: ${CLOUDFLARE_RPI_TUNNEL_ID}
+              key: ${CLOUDFLARE_TOKEN}           
 
     - Management:
         - Portainer:
