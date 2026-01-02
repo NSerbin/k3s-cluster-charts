@@ -18,10 +18,10 @@ data:
     :{{ .Values.caddy.port }} {
       encode gzip zstd
 
-      # ✅ FIX Medium sin redirect loop:
-      # Solo reescribe cuando viene /https:/... (1 slash), NO cuando ya es /https://...
+      # ✅ FIX Medium SIN loops:
+      # Reescritura interna (no 302), /https:/... -> /https://...
       @bad_scheme path_regexp bad ^/(https?):/([^/].*)$
-      redir @bad_scheme /{re.bad.1}://{re.bad.2} 302
+      rewrite @bad_scheme /{re.bad.1}://{re.bad.2}
 
       # 1) Si el path corresponde a un archivo que existe en /static, lo servimos.
       @static file {
