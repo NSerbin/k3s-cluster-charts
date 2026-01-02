@@ -315,6 +315,11 @@ config:
             siteMonitor: http://192.168.0.4:8082
             description: FileBrowser
             server: rpi
+            widget:
+              type: filebrowser
+              url: http://192.168.0.4:8082
+              username: ${FILEBROWSER_USERNAME}
+              password: ${FILEBROWSER_PASSWORD}
 
     - Security:
         - Bitwarden:
