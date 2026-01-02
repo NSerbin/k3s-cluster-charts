@@ -24,7 +24,7 @@ ingressRoute:
   pathPrefixes:
     - /
   tls:
-    enabled: true
+    enabled: false
     secretName: "" # opcional, si Traefik gestiona certs, dejalo vacío
 
 # Preferido: secret pre-creado (ExternalSecrets/SOPS/manual)
