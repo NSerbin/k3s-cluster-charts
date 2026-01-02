@@ -294,6 +294,18 @@ config:
 
     - Tools:
 
+        - Authentik:
+            icon: authentik.svg
+            href: http://auth.nserbin.com
+            description: Authentik
+            server: k3s
+            siteMonitor: http://authentik.authentik.tools/
+            widget:
+              type: authentik
+              url: http://authentik.authentik.tools/
+              key: ${AUTHENTIK_KEY}
+              version: 2 
+
         - Grimoire:
             icon: grimoire.png
             href: https://bookmarks.nserbin.com/
