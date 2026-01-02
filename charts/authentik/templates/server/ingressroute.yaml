@@ -16,10 +16,8 @@ spec:
         - name: {{ include "authentik.fullname" . }}-server
           port: {{ .Values.service.port }}
 
-  {{- if .Values.ingressRoute.tls.enabled }}
+  {{- if and .Values.ingressRoute.tls.enabled .Values.ingressRoute.tls.secretName }}
   tls:
-    {{- if .Values.ingressRoute.tls.secretName }}
     secretName: {{ .Values.ingressRoute.tls.secretName | quote }}
-    {{- end }}
   {{- end }}
 {{- end }}
