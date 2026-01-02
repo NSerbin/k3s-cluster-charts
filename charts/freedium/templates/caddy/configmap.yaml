@@ -18,29 +18,29 @@ data:
     :{{ .Values.caddy.port }} {
       encode gzip zstd
 
-      # Frontend estático (debe existir en la imagen ghcr.io/nserbin/freedium-caddy)
-      root * /srv
-      file_server
-
-      # SPA fallback (si tu frontend es single-page)
-      try_files {path} /index.html
-
-      # === Backend/API ===
-      # Ajustá paths según el proyecto real (estos suelen cubrirlo)
-      reverse_proxy /api/* 127.0.0.1:7080 {
-        header_up Host {host}
-        header_up X-Forwarded-Host {host}
-        header_up X-Forwarded-Proto {scheme}
-        header_up X-Forwarded-Port {server_port}
+      # ✅ Static assets
+      handle_path /static/* {
+        root * /static
+        file_server
       }
 
-      reverse_proxy /docs* 127.0.0.1:7080 {
-        header_up Host {host}
-        header_up X-Forwarded-Proto {scheme}
+      # ✅ (Opcional) servir estáticos que están en raíz (si tu HTML los pide así)
+      handle /favicon.ico {
+        root * /static
+        file_server
+      }
+      handle /robots.txt {
+        root * /static
+        file_server
+      }
+      handle /site.webmanifest {
+        root * /static
+        file_server
       }
 
-      reverse_proxy /openapi.json 127.0.0.1:7080 {
-        header_up Host {host}
-        header_up X-Forwarded-Proto {scheme}
+      # Todo lo demás al backend
+      handle {
+        reverse_proxy 127.0.0.1:7080
       }
     }
+
