@@ -317,7 +317,8 @@ config:
             server: rpi
             widget:
               type: filebrowser
-              url: http://192.168.0.4:8082
+              #url: http://192.168.0.4:8082
+              url: https://vault.nserbin.com
               username: ${FILEBROWSER_USERNAME}
               password: ${FILEBROWSER_PASSWORD}
 
