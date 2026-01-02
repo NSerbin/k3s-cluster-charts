@@ -7,7 +7,7 @@ metadata:
 spec:
   entryPoints:
     {{- range .Values.ingressRoute.entryPoints }}
-    - {{ . }}
+    - {{ . | quote }}
     {{- end }}
   routes:
     - match: Host(`{{ .Values.ingressRoute.host }}`) && ({{- $first := true -}}{{- range .Values.ingressRoute.pathPrefixes -}}{{- if not $first }} || {{- end -}}PathPrefix(`{{ . }}`){{- $first = false -}}{{- end -}})
@@ -15,12 +15,11 @@ spec:
       services:
         - name: {{ include "authentik.fullname" . }}-server
           port: {{ .Values.service.port }}
+
   {{- if .Values.ingressRoute.tls.enabled }}
   tls:
     {{- if .Values.ingressRoute.tls.secretName }}
     secretName: {{ .Values.ingressRoute.tls.secretName | quote }}
-    {{- else }}
-    {}
     {{- end }}
   {{- end }}
 {{- end }}
