@@ -59,6 +59,9 @@ ingress:
   - hostname: "free.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
 
+  - hostname: "auth.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+
   - service: "http_status:404"
 
 resources:
