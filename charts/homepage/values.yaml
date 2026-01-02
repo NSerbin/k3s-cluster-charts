@@ -27,6 +27,7 @@ affinity: {}
 
 env:
   HOMEPAGE_ALLOWED_HOSTS: "*"
+  NODE_OPTIONS: "--dns-result-order=ipv4first"
 
 secrets:
   existingSecret: homepage-secrets
@@ -281,7 +282,7 @@ config:
               type: cloudflared
               accountid: ${CLOUDFLARE_ACCOUNT}
               tunnelid: ${CLOUDFLARE_RPI_TUNNEL_ID}
-              key: ${CLOUDFLARE_TOKEN}           
+              key: ${CLOUDFLARE_TOKEN}
 
     - Management:
         - Portainer:
