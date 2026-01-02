@@ -18,6 +18,11 @@ data:
     :{{ .Values.caddy.port }} {
       encode gzip zstd
 
+      # ✅ FIX Medium: normaliza URLs mal armadas que llegan como /https:/medium.com/...
+      # -> /https://medium.com/...
+      @bad_scheme path_regexp bad ^/(https?):/(.*)$
+      redir @bad_scheme /{re.bad.1}://{re.bad.2} 302
+
       # 1) Si el path corresponde a un archivo que existe en /static, lo servimos.
       @static file {
         root /static
