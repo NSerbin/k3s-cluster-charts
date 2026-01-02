@@ -19,7 +19,7 @@ service:
 ingressRoute:
   enabled: true
   entryPoints:
-    - websecure
+    - web
   host: "auth.nserbin.com"
   pathPrefixes:
     - /
