@@ -262,7 +262,7 @@ config:
         - Pi-hole:
             icon: pi-hole.svg
             href: https://pihole.nserbin.com/admin
-            siteMonitor: http://192.168.0.4:83/admin/api.php?status
+            siteMonitor: http://192.168.0.4:83
             description: Pi-hole DNS
             server: rpi
               
@@ -274,15 +274,15 @@ config:
             description: Traefik
             server: k3s
         
-        - Cloudflare Tunnels:
-            icon: cloudflare.svg
-            href: https://cloudflare.com
-            description: Cloudflare
-            widget:
-              type: cloudflared
-              accountid: ${CLOUDFLARE_ACCOUNT}
-              tunnelid: ${CLOUDFLARE_RPI_TUNNEL_ID}
-              key: ${CLOUDFLARE_TOKEN}
+        # - Cloudflare Tunnels:
+        #     icon: cloudflare.svg
+        #     href: https://cloudflare.com
+        #     description: Cloudflare
+        #     widget:
+        #       type: cloudflared
+        #       accountid: ${CLOUDFLARE_ACCOUNT}
+        #       tunnelid: ${CLOUDFLARE_RPI_TUNNEL_ID}
+        #       key: ${CLOUDFLARE_TOKEN}
 
     - Management:
         - Portainer:
