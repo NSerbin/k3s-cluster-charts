@@ -244,11 +244,11 @@ config:
             description: Fresh RSS
             server: k3s
             siteMonitor: http://freshrss-freshrss.tools/
-            widget:
-              type: freshrss
-              url: http://freshrss-freshrss.tools/
-              username: ${FRESHRSS_USERNAME}
-              password: ${FRESHRSS_PASSWORD}
+            # widget:
+            #   type: freshrss
+            #   url: http://freshrss-freshrss.tools/
+            #   username: ${FRESHRSS_USERNAME}
+            #   password: ${FRESHRSS_PASSWORD}
 
         - Freedium:
             icon: mdi-web-sync
