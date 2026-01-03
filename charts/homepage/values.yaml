@@ -302,7 +302,7 @@ config:
             siteMonitor: http://authentik-authentik-server.tools:9000/
             widget:
               type: authentik
-              url: http://authentik-authentik-server.tools/
+              url: http://authentik-authentik-server.tools:9000/
               key: ${AUTHENTIK_KEY}
               version: 2 
 
