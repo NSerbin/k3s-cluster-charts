@@ -82,6 +82,7 @@ kube-prometheus-stack:
     
     envFromSecrets:
       - name: grafana-github-oidc
+      - name: grafana-authentik-oidc
 
     grafana.ini:
       server:
@@ -102,9 +103,24 @@ kube-prometheus-stack:
         auto_assign_org: true
         auto_assign_org_role: Viewer
 
+
+      auth.generic_oauth:
+          name: authentik
+          enabled: true
+          client_id: $__env{AUTHENTIK_CLIENT_ID}
+          client_secret: $__env{AUTHENTIK_CLIENT_SECRET}
+          scopes: "openid profile email"
+          auth_url: $__env{AUTHENTIK_AUTH_URL}
+          token_url: $__env{AUTHENTIK_TOKEN_URL}
+          api_url: $__env{AUTHENTIK_API_URL}
+          # Optionally map user groups to Grafana roles
+          role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+
       auth:
         disable_login_form: false
-        oauth_auto_login: false
+        #oauth_auto_login: false
+        signout_redirect_url: $__env{AUTHENTIK_SIGNOUT_REDIRECT_URL}
+        oauth_auto_login: true        
 
       auth.basic:
         enabled: false
