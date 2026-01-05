@@ -34,12 +34,9 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           env:
-            # IMPORTANT: for official image, do NOT use /config (linuxserver).
-            # This controls proxy trust for forwarded headers.
             - name: TRUSTED_PROXY
-              value: {{ .Values.trustedProxy | quote }}
+              value: {{ .Values.env.TRUSTED_PROXY | quote }}
 
-            # OIDC fixed vars (always set when oidc.enabled=true)
             {{- if .Values.oidc.enabled }}
             - name: OIDC_ENABLED
               value: "1"
