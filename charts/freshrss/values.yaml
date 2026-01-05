@@ -25,18 +25,22 @@ persistence:
 
 mysql:
   enabled: true
+
   image:
     repository: mysql
     tag: "9.5.0"
     pullPolicy: IfNotPresent
+
   service:
     port: 3306
+
   persistence:
     enabled: true
     storageClass: "local-path"
     size: 3Gi
     accessModes:
       - ReadWriteOnce
+
   existingSecret: "freshrss-mysql-secret"
 
 oidc:

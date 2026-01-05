@@ -33,24 +33,21 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
+          {{- if .Values.oidc.enabled }}
+          envFrom:
+            - secretRef:
+                name: {{ required "oidc.existingSecret is required when oidc.enabled=true" .Values.oidc.existingSecret }}
           env:
-            - name: TRUSTED_PROXY
-              value: {{ .Values.env.TRUSTED_PROXY | quote }}
-
-            {{- if .Values.oidc.enabled }}
             - name: OIDC_ENABLED
               value: "1"
             - name: OIDC_SCOPES
               value: "openid email profile"
             - name: OIDC_X_FORWARDED_HEADERS
               value: "X-Forwarded-Port X-Forwarded-Proto X-Forwarded-Host"
-            {{- end }}
-
-          envFrom:
-            {{- if .Values.oidc.enabled }}
-            - secretRef:
-                name: {{ required "oidc.existingSecret is required when oidc.enabled=true" .Values.oidc.existingSecret }}
-            {{- end }}
+            # RECOMENDADO para que Apache/mod_remoteip confíe en los headers
+            - name: TRUSTED_PROXY
+              value: {{ .Values.trustedProxy | quote }}
+          {{- end }}
 
           ports:
             - name: http
