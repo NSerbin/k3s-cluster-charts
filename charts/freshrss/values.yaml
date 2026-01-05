@@ -10,11 +10,14 @@ service:
   port: 80
   targetPort: 80
 
-# For k3s defaults:
+# k3s defaults:
 # pods: 10.42.0.0/16
 # services: 10.43.0.0/16
 env:
   TRUSTED_PROXY: "10.42.0.0/16 10.43.0.0/16 127.0.0.1/32 ::1/128"
+
+freshrss:
+  baseUrl: "https://rss.nserbin.com"
 
 persistence:
   enabled: true
@@ -59,9 +62,6 @@ traefik:
     tls:
       enabled: false
       secretName: ""
-
-  forwardedHeadersMiddleware:
-    enabled: true
 
 resources: {}
 nodeSelector: {}
