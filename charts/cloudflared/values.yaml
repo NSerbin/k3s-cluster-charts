@@ -54,7 +54,8 @@ ingress:
   - hostname: "rss.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
     originRequest:
-      httpHostHeader: rss.nserbin.com
+      httpHostHeader: "rss.nserbin.com"
+      originServerName: "rss.nserbin.com"
 
   - hostname: "free.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
