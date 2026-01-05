@@ -118,7 +118,6 @@ kube-prometheus-stack:
 
       auth:
         disable_login_form: false
-        #oauth_auto_login: false
         signout_redirect_url: $__env{AUTHENTIK_SIGNOUT_REDIRECT_URL}
         oauth_auto_login: true        
 
@@ -126,8 +125,8 @@ kube-prometheus-stack:
         enabled: false
 
       auth.github:
-        enabled: true
-        allow_sign_up: true
+        enabled: false
+        allow_sign_up: false
         client_id: $__env{GF_AUTH_GITHUB_CLIENT_ID}
         client_secret: $__env{GF_AUTH_GITHUB_CLIENT_SECRET}
         scopes: user:email,read:org
