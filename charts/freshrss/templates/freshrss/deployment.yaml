@@ -32,6 +32,7 @@ spec:
         - name: freshrss
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+
           env:
             - name: PUID
               value: {{ .Values.puid | quote }}
@@ -40,53 +41,32 @@ spec:
             - name: TZ
               value: {{ .Values.tz | quote }}
 
-            {{- if .Values.oidc.enabled }}
-            # ✅ fixed OIDC flags
-            - name: OIDC_ENABLED
-              value: "1"
-            - name: OIDC_SCOPES
-              value: "openid email profile"
-            - name: OIDC_X_FORWARDED_HEADERS
-              value: "X-Forwarded-Port X-Forwarded-Proto X-Forwarded-Host"
-
-            # ✅ sensitive/variable values from Secret
-            - name: OIDC_PROVIDER_METADATA_URL
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.oidc.existingSecret | quote }}
-                  key: {{ .Values.oidc.providerMetadataUrlKey | quote }}
-            - name: OIDC_CLIENT_ID
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.oidc.existingSecret | quote }}
-                  key: {{ .Values.oidc.clientIdKey | quote }}
-            - name: OIDC_CLIENT_SECRET
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.oidc.existingSecret | quote }}
-                  key: {{ .Values.oidc.clientSecretKey | quote }}
-            {{- end }}
+          {{- if .Values.oidc.enabled }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "freshrss.fullname" . }}-oidc
+            - secretRef:
+                name: {{ required "oidc.existingSecret is required when oidc.enabled=true" .Values.oidc.existingSecret }}
+          {{- end }}
 
           ports:
             - name: http
               containerPort: 80
 
           readinessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 80
-            initialDelaySeconds: 10
+            initialDelaySeconds: 5
             periodSeconds: 10
-            timeoutSeconds: 2
+            timeoutSeconds: 1
             failureThreshold: 6
 
           livenessProbe:
-            httpGet:
-              path: /
+            tcpSocket:
               port: 80
-            initialDelaySeconds: 30
+            initialDelaySeconds: 20
             periodSeconds: 20
-            timeoutSeconds: 2
+            timeoutSeconds: 1
             failureThreshold: 6
 
           volumeMounts:

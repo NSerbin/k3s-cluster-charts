@@ -54,15 +54,10 @@ traefik:
       enabled: false
       secretName: ""
 
-# ✅ OIDC (Authentik) — secrets are referenced, fixed vars live in Deployment
 oidc:
   enabled: true
   existingSecret: "freshrss-authentik-oidc"
-
-  # keys inside the Secret
-  providerMetadataUrlKey: "OIDC_PROVIDER_METADATA_URL"
-  clientIdKey: "OIDC_CLIENT_ID"
-  clientSecretKey: "OIDC_CLIENT_SECRET"
+  remoteUserClaim: "preferred_username"
 
 resources: {}
 nodeSelector: {}
