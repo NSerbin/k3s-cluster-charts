@@ -31,7 +31,8 @@ spec:
               echo "MySQL is up."
 
         - name: bootstrap-config
-          image: busybox:1.36
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
           command:
             - sh
             - -lc
@@ -48,54 +49,49 @@ spec:
 
               echo "Creating config.php to avoid wizard ✅"
 
-              : "${BASE_URL:?missing}"
-              : "${DB_HOST:?missing}"
-              : "${DB_PORT:?missing}"
-              : "${DB_NAME:?missing}"
-              : "${DB_USER:?missing}"
-              : "${DB_PASSWORD:?missing}"
+              php -r '
+                $base_url = getenv("BASE_URL");
+                $db_host  = getenv("DB_HOST");
+                $db_port  = (int)getenv("DB_PORT");
+                $db_name  = getenv("DB_NAME");
+                $db_user  = getenv("DB_USER");
+                $db_pass  = getenv("DB_PASSWORD");
 
-              mkdir -p "$DATA_DIR"
+                if (!$base_url || !$db_host || !$db_port || !$db_name || !$db_user || !$db_pass) {
+                  fwrite(STDERR, "Missing required envs for bootstrap-config\n");
+                  exit(1);
+                }
 
-              # Escribimos con un prefijo fijo "XX" y después lo removemos -> config.php limpio
-              cat <<'EOF' | sed 's/^XX//' > "$CFG"
-XX<?php
-XXreturn array(
-XX  'environment' => 'production',
-XX  'base_url' => '__BASE_URL__',
-XX
-XX  // Auth: OIDC lo maneja Apache module, FreshRSS queda en http_auth
-XX  'auth_type' => 'http_auth',
-XX  'http_auth_auto_register' => true,
-XX
-XX  'api_enabled' => true,
-XX
-XX  'db' => array(
-XX    'type' => 'mysql',
-XX    'host' => '__DB_HOST__',
-XX    'port' => (int) '__DB_PORT__',
-XX    'user' => '__DB_USER__',
-XX    'password' => '__DB_PASSWORD__',
-XX    'base' => '__DB_NAME__',
-XX    'prefix' => '',
-XX    'connection_uri_params' => '',
-XX    'pdo_options' => array(),
-XX  ),
-XX);
-EOF
+                @mkdir("/var/www/FreshRSS/data", 0775, true);
 
-              # Reemplazo de placeholders (sin romper comillas)
-              sed -i \
-                -e "s|__BASE_URL__|${BASE_URL}|g" \
-                -e "s|__DB_HOST__|${DB_HOST}|g" \
-                -e "s|__DB_PORT__|${DB_PORT}|g" \
-                -e "s|__DB_NAME__|${DB_NAME}|g" \
-                -e "s|__DB_USER__|${DB_USER}|g" \
-                -e "s|__DB_PASSWORD__|${DB_PASSWORD}|g" \
-                "$CFG"
+                $cfg = [
+                  "environment" => "production",
+                  "base_url" => $base_url,
 
-              chmod 0644 "$CFG"
-              echo "config.php created ✅"
+                  // OIDC via Apache module => FreshRSS uses http_auth
+                  "auth_type" => "http_auth",
+                  "http_auth_auto_register" => true,
+
+                  "api_enabled" => true,
+
+                  "db" => [
+                    "type" => "mysql",
+                    "host" => $db_host,
+                    "port" => $db_port,
+                    "user" => $db_user,
+                    "password" => $db_pass,
+                    "base" => $db_name,
+                    "prefix" => "",
+                    "connection_uri_params" => "",
+                    "pdo_options" => [],
+                  ],
+                ];
+
+                $out = "<?php\nreturn " . var_export($cfg, true) . ";\n";
+                file_put_contents("/var/www/FreshRSS/data/config.php", $out);
+                chmod("/var/www/FreshRSS/data/config.php", 0644);
+                echo "config.php created ✅\n";
+              '
 
           env:
             - name: BASE_URL
@@ -132,7 +128,6 @@ EOF
           env:
             - name: TRUSTED_PROXY
               value: {{ .Values.env.TRUSTED_PROXY | quote }}
-
             {{- if .Values.oidc.enabled }}
             - name: OIDC_ENABLED
               value: "1"
