@@ -5,14 +5,15 @@ image:
 
 replicaCount: 1
 
-puid: 1000
-pgid: 1000
-tz: Europe/Lisbon
-
 service:
   type: ClusterIP
   port: 80
   targetPort: 80
+
+# For k3s defaults:
+# pods: 10.42.0.0/16
+# services: 10.43.0.0/16
+trustedProxy: "10.42.0.0/16,10.43.0.0/16,127.0.0.1/32,::1/128"
 
 persistence:
   enabled: true
@@ -23,23 +24,23 @@ persistence:
 
 mysql:
   enabled: true
-
   image:
     repository: mysql
     tag: "9.5.0"
     pullPolicy: IfNotPresent
-
   service:
     port: 3306
-
   persistence:
     enabled: true
     storageClass: "local-path"
     size: 3Gi
     accessModes:
       - ReadWriteOnce
-
   existingSecret: "freshrss-mysql-secret"
+
+oidc:
+  enabled: true
+  existingSecret: "freshrss-authentik-oidc"
 
 traefik:
   ingressRoute:
@@ -54,10 +55,8 @@ traefik:
       enabled: false
       secretName: ""
 
-oidc:
-  enabled: true
-  existingSecret: "freshrss-authentik-oidc"
-  remoteUserClaim: "preferred_username"
+  forwardedHeadersMiddleware:
+    enabled: true
 
 resources: {}
 nodeSelector: {}

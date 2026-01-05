@@ -14,15 +14,22 @@ spec:
   routes:
     - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && ({{- $first := true -}}{{- range .Values.traefik.ingressRoute.pathPrefixes -}}{{- if not $first }} || {{- end -}}PathPrefix(`{{ . }}`){{- $first = false -}}{{- end -}})
       kind: Rule
-{{- if .Values.traefik.ingressRoute.middlewares }}
+
       middlewares:
+        # Force correct forwarded headers (https/443) for OIDC redirects
+        {{- if .Values.traefik.forwardedHeadersMiddleware.enabled }}
+        - name: {{ include "freshrss.fullname" . }}-forwarded-https
+        {{- end }}
+
+        {{- if .Values.traefik.ingressRoute.middlewares }}
 {{- range .Values.traefik.ingressRoute.middlewares }}
         - name: {{ .name }}
 {{- if .namespace }}
           namespace: {{ .namespace }}
 {{- end }}
 {{- end }}
-{{- end }}
+        {{- end }}
+
       services:
         - name: {{ include "freshrss.fullname" . }}
           port: {{ .Values.service.port }}

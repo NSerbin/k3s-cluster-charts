@@ -34,46 +34,56 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
 
           env:
-            - name: PUID
-              value: {{ .Values.puid | quote }}
-            - name: PGID
-              value: {{ .Values.pgid | quote }}
-            - name: TZ
-              value: {{ .Values.tz | quote }}
+            # IMPORTANT: for official image, do NOT use /config (linuxserver).
+            # This controls proxy trust for forwarded headers.
+            - name: TRUSTED_PROXY
+              value: {{ .Values.trustedProxy | quote }}
 
-          {{- if .Values.oidc.enabled }}
+            # OIDC fixed vars (always set when oidc.enabled=true)
+            {{- if .Values.oidc.enabled }}
+            - name: OIDC_ENABLED
+              value: "1"
+            - name: OIDC_SCOPES
+              value: "openid email profile"
+            - name: OIDC_X_FORWARDED_HEADERS
+              value: "X-Forwarded-Port X-Forwarded-Proto X-Forwarded-Host"
+            {{- end }}
+
           envFrom:
-            - configMapRef:
-                name: {{ include "freshrss.fullname" . }}-oidc
+            {{- if .Values.oidc.enabled }}
             - secretRef:
                 name: {{ required "oidc.existingSecret is required when oidc.enabled=true" .Values.oidc.existingSecret }}
-          {{- end }}
+            {{- end }}
 
           ports:
             - name: http
               containerPort: 80
 
+          # FreshRSS often redirects / -> /i/ depending on config.
+          # Using /i/ reduces noisy 302 on probes.
           readinessProbe:
-            tcpSocket:
+            httpGet:
+              path: /i/
               port: 80
-            initialDelaySeconds: 5
+            initialDelaySeconds: 10
             periodSeconds: 10
-            timeoutSeconds: 1
+            timeoutSeconds: 2
             failureThreshold: 6
 
           livenessProbe:
-            tcpSocket:
+            httpGet:
+              path: /i/
               port: 80
-            initialDelaySeconds: 20
+            initialDelaySeconds: 30
             periodSeconds: 20
-            timeoutSeconds: 1
+            timeoutSeconds: 2
             failureThreshold: 6
 
           volumeMounts:
-            - name: config
-              mountPath: /config
+            - name: freshrss-data
+              mountPath: /var/www/FreshRSS/data
 
       volumes:
-        - name: config
+        - name: freshrss-data
           persistentVolumeClaim:
-            claimName: {{ include "freshrss.fullname" . }}-config
+            claimName: {{ include "freshrss.fullname" . }}-data
