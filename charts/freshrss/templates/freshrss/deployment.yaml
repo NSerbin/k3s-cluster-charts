@@ -39,6 +39,34 @@ spec:
               value: {{ .Values.pgid | quote }}
             - name: TZ
               value: {{ .Values.tz | quote }}
+
+            {{- if .Values.oidc.enabled }}
+            # ✅ fixed OIDC flags
+            - name: OIDC_ENABLED
+              value: "1"
+            - name: OIDC_SCOPES
+              value: "openid email profile"
+            - name: OIDC_X_FORWARDED_HEADERS
+              value: "X-Forwarded-Port X-Forwarded-Proto X-Forwarded-Host"
+
+            # ✅ sensitive/variable values from Secret
+            - name: OIDC_PROVIDER_METADATA_URL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.oidc.existingSecret | quote }}
+                  key: {{ .Values.oidc.providerMetadataUrlKey | quote }}
+            - name: OIDC_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.oidc.existingSecret | quote }}
+                  key: {{ .Values.oidc.clientIdKey | quote }}
+            - name: OIDC_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.oidc.existingSecret | quote }}
+                  key: {{ .Values.oidc.clientSecretKey | quote }}
+            {{- end }}
+
           ports:
             - name: http
               containerPort: 80
