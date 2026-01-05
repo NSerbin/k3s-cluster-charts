@@ -1,12 +1,3 @@
-{{- /*
-Safe base URL resolution WITHOUT dig().
-If .Values.freshrss or .Values.freshrss.baseUrl is missing, fallback to https://<traefik host>
-*/ -}}
-{{- $freshrssVals := (index .Values "freshrss") | default (dict) -}}
-{{- $baseUrlFromValues := (index $freshrssVals "baseUrl") | default "" -}}
-{{- $baseUrlDefault := printf "https://%s" .Values.traefik.ingressRoute.host -}}
-{{- $baseUrl := default $baseUrlDefault $baseUrlFromValues -}}
-
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -66,39 +57,49 @@ spec:
 
               mkdir -p "$DATA_DIR"
 
-              # IMPORTANT: heredoc sin indentación para que PHP quede limpio
-              cat > "$CFG" <<EOF
-<?php
-return array(
-  'environment' => 'production',
-  'base_url' => '${BASE_URL}',
-
-  // Auth: OIDC lo maneja Apache module, FreshRSS queda en http_auth
-  'auth_type' => 'http_auth',
-  'http_auth_auto_register' => true,
-
-  'api_enabled' => true,
-
-  'db' => array(
-    'type' => 'mysql',
-    'host' => '${DB_HOST}',
-    'port' => (int) '${DB_PORT}',
-    'user' => '${DB_USER}',
-    'password' => '${DB_PASSWORD}',
-    'base' => '${DB_NAME}',
-    'prefix' => '',
-    'connection_uri_params' => '',
-    'pdo_options' => array(),
-  ),
-);
+              # Escribimos con un prefijo fijo "XX" y después lo removemos -> config.php limpio
+              cat <<'EOF' | sed 's/^XX//' > "$CFG"
+XX<?php
+XXreturn array(
+XX  'environment' => 'production',
+XX  'base_url' => '__BASE_URL__',
+XX
+XX  // Auth: OIDC lo maneja Apache module, FreshRSS queda en http_auth
+XX  'auth_type' => 'http_auth',
+XX  'http_auth_auto_register' => true,
+XX
+XX  'api_enabled' => true,
+XX
+XX  'db' => array(
+XX    'type' => 'mysql',
+XX    'host' => '__DB_HOST__',
+XX    'port' => (int) '__DB_PORT__',
+XX    'user' => '__DB_USER__',
+XX    'password' => '__DB_PASSWORD__',
+XX    'base' => '__DB_NAME__',
+XX    'prefix' => '',
+XX    'connection_uri_params' => '',
+XX    'pdo_options' => array(),
+XX  ),
+XX);
 EOF
+
+              # Reemplazo de placeholders (sin romper comillas)
+              sed -i \
+                -e "s|__BASE_URL__|${BASE_URL}|g" \
+                -e "s|__DB_HOST__|${DB_HOST}|g" \
+                -e "s|__DB_PORT__|${DB_PORT}|g" \
+                -e "s|__DB_NAME__|${DB_NAME}|g" \
+                -e "s|__DB_USER__|${DB_USER}|g" \
+                -e "s|__DB_PASSWORD__|${DB_PASSWORD}|g" \
+                "$CFG"
 
               chmod 0644 "$CFG"
               echo "config.php created ✅"
 
           env:
             - name: BASE_URL
-              value: {{ $baseUrl | quote }}
+              value: {{ required "freshrss.baseUrl is required" .Values.freshrss.baseUrl | quote }}
             - name: DB_HOST
               value: {{ printf "%s-mysql" (include "freshrss.fullname" .) | quote }}
             - name: DB_PORT
