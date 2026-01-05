@@ -30,96 +30,6 @@ spec:
               done
               echo "MySQL is up."
 
-        - name: bootstrap-config
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command:
-            - sh
-            - -lc
-            - |
-              set -eu
-
-              DATA_DIR="/var/www/FreshRSS/data"
-              CFG="${DATA_DIR}/config.php"
-
-              if [ -f "$CFG" ]; then
-                echo "config.php already exists ✅"
-                exit 0
-              fi
-
-              echo "Creating config.php to avoid wizard ✅"
-
-              php -r '
-                $base_url = getenv("BASE_URL");
-                $db_host  = getenv("DB_HOST");
-                $db_port  = (int)getenv("DB_PORT");
-                $db_name  = getenv("DB_NAME");
-                $db_user  = getenv("DB_USER");
-                $db_pass  = getenv("DB_PASSWORD");
-
-                if (!$base_url || !$db_host || !$db_port || !$db_name || !$db_user || !$db_pass) {
-                  fwrite(STDERR, "Missing required envs for bootstrap-config\n");
-                  exit(1);
-                }
-
-                @mkdir("/var/www/FreshRSS/data", 0775, true);
-
-                $cfg = [
-                  "environment" => "production",
-                  "base_url" => $base_url,
-
-                  // OIDC via Apache module => FreshRSS uses http_auth
-                  "auth_type" => "http_auth",
-                  "http_auth_auto_register" => true,
-
-                  "api_enabled" => true,
-
-                  "db" => [
-                    "type" => "mysql",
-                    "host" => $db_host,
-                    "port" => $db_port,
-                    "user" => $db_user,
-                    "password" => $db_pass,
-                    "base" => $db_name,
-                    "prefix" => "",
-                    "connection_uri_params" => "",
-                    "pdo_options" => [],
-                  ],
-                ];
-
-                $out = "<?php\nreturn " . var_export($cfg, true) . ";\n";
-                file_put_contents("/var/www/FreshRSS/data/config.php", $out);
-                chmod("/var/www/FreshRSS/data/config.php", 0644);
-                echo "config.php created ✅\n";
-              '
-
-          env:
-            - name: BASE_URL
-              value: {{ required "freshrss.baseUrl is required" .Values.freshrss.baseUrl | quote }}
-            - name: DB_HOST
-              value: {{ printf "%s-mysql" (include "freshrss.fullname" .) | quote }}
-            - name: DB_PORT
-              value: {{ .Values.mysql.service.port | quote }}
-            - name: DB_NAME
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.existingSecret | quote }}
-                  key: MYSQL_DATABASE
-            - name: DB_USER
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.existingSecret | quote }}
-                  key: MYSQL_USER
-            - name: DB_PASSWORD
-              valueFrom:
-                secretKeyRef:
-                  name: {{ .Values.mysql.existingSecret | quote }}
-                  key: MYSQL_PASSWORD
-
-          volumeMounts:
-            - name: freshrss-data
-              mountPath: /var/www/FreshRSS/data
-
       containers:
         - name: freshrss
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
@@ -128,6 +38,7 @@ spec:
           env:
             - name: TRUSTED_PROXY
               value: {{ .Values.env.TRUSTED_PROXY | quote }}
+
             {{- if .Values.oidc.enabled }}
             - name: OIDC_ENABLED
               value: "1"
