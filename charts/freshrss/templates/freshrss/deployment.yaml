@@ -16,7 +16,11 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/component: freshrss
     spec:
-      {{- $baseUrl := default (printf "https://%s" .Values.traefik.ingressRoute.host) (dig "freshrss" "baseUrl" "" .Values) -}}
+      {{- /* Safe access to .Values.freshrss.baseUrl without dig */ -}}
+      {{- $freshrssVals := (index .Values "freshrss") | default (dict) -}}
+      {{- $baseUrlFromValues := (index $freshrssVals "baseUrl") | default "" -}}
+      {{- $baseUrlDefault := printf "https://%s" .Values.traefik.ingressRoute.host -}}
+      {{- $baseUrl := default $baseUrlDefault $baseUrlFromValues -}}
 
       initContainers:
         - name: wait-mysql
