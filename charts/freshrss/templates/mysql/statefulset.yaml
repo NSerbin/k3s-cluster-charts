@@ -25,7 +25,7 @@ spec:
 
           envFrom:
             - secretRef:
-                name: {{ required "mysql.existingSecret is required (you manage it locally)" .Values.mysql.existingSecret }}
+                name: {{ required "mysql.existingSecret is required" .Values.mysql.existingSecret }}
 
           ports:
             - name: mysql
