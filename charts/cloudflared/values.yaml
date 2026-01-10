@@ -15,9 +15,15 @@ ingress:
     service: "http://traefik.traefik.svc.cluster.local:80"
 
   - hostname: "argo.nserbin.com"
-    service: "http://argocd-server.argocd.svc.cluster.local:80"
+    service: "http://traefik.traefik.svc.cluster.local:80"
     originRequest:
       httpHostHeader: "argo.nserbin.com"
+
+
+  # - hostname: "argo.nserbin.com"
+  #   service: "http://argocd-server.argocd.svc.cluster.local:80"
+  #   originRequest:
+  #     httpHostHeader: "argo.nserbin.com"
 
   - hostname: "bookmarks.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
