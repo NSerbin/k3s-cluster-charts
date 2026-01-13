@@ -1,0 +1,24 @@
+{{- if .Values.traefik.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ .Values.traefik.ingressRoute.name }}
+spec:
+  entryPoints:
+{{- range .Values.traefik.ingressRoute.entryPoints }}
+    - {{ . }}
+{{- end }}
+  routes:
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`{{ .Values.traefik.ingressRoute.pathPrefix }}`)
+      kind: Rule
+      services:
+        - name: {{ .Values.traefik.ingressRoute.service.name }}
+          port: {{ .Values.traefik.ingressRoute.service.port }}
+          scheme: {{ .Values.traefik.ingressRoute.service.scheme }}
+{{- if and .Values.traefik.ingressRoute.middlewares.enabled (gt (len .Values.traefik.ingressRoute.middlewares.chain) 0) }}
+      middlewares:
+{{- range .Values.traefik.ingressRoute.middlewares.chain }}
+        - name: {{ . }}
+{{- end }}
+{{- end }}
+{{- end }}

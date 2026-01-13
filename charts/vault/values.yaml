@@ -1,0 +1,71 @@
+vault:
+  ui:
+    enabled: true
+    serviceType: ClusterIP
+
+  server:
+    standalone:
+      enabled: true
+
+    ha:
+      enabled: false
+
+    dataStorage:
+      enabled: true
+      size: 8Gi
+      mountPath: /vault/data
+
+traefik:
+  enabled: true
+
+  ingressRoute:
+    name: vault
+    entryPoints:
+      - web
+    host: secrets.nserbin.com
+    pathPrefix: /
+    service:
+      name: vault-ui        # lo ajustás al service real que crea el chart
+      port: 8200
+      scheme: http
+
+    middlewares:
+      enabled: true
+      chain:
+        - vault-default-chain
+
+  middlewares:
+    # Estándar: headers de seguridad + rate limit + (opcional) IP allowlist
+    securityHeaders:
+      enabled: true
+      stsSeconds: 31536000
+      stsIncludeSubdomains: true
+      stsPreload: true
+      contentTypeNosniff: true
+      browserXssFilter: true
+      frameDeny: true
+      referrerPolicy: "no-referrer"
+
+    rateLimit:
+      enabled: true
+      average: 50
+      burst: 100
+
+    ipAllowList:
+      enabled: false
+
+monitoring:
+  enabled: true
+  serviceMonitor:
+    name: vault
+    interval: 30s
+    scrapeTimeout: 10s
+    scheme: http
+    portName: http
+    path: /v1/sys/metrics
+
+    selectorLabels:
+      app.kubernetes.io/name: vault
+
+    labels:
+      release: kube-prometheus-stack
