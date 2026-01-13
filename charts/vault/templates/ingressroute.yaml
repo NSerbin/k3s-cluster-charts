@@ -2,19 +2,20 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ .Values.traefik.ingressRoute.name }}
+  name: {{ .Values.traefik.ingressRoute.name | default "vault" }}
+  namespace: {{ .Release.Namespace }}
 spec:
   entryPoints:
 {{- range .Values.traefik.ingressRoute.entryPoints }}
     - {{ . }}
 {{- end }}
   routes:
-    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`{{ .Values.traefik.ingressRoute.pathPrefix }}`)
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`{{ .Values.traefik.ingressRoute.pathPrefix | default "/" }}`)
       kind: Rule
       services:
         - name: {{ .Values.traefik.ingressRoute.service.name }}
           port: {{ .Values.traefik.ingressRoute.service.port }}
-          scheme: {{ .Values.traefik.ingressRoute.service.scheme }}
+          scheme: {{ .Values.traefik.ingressRoute.service.scheme | default "http" }}
 {{- if and .Values.traefik.ingressRoute.middlewares.enabled (gt (len .Values.traefik.ingressRoute.middlewares.chain) 0) }}
       middlewares:
 {{- range .Values.traefik.ingressRoute.middlewares.chain }}

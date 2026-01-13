@@ -22,7 +22,10 @@ ingress:
   - hostname: "secrets.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
     originRequest:
+      noTLSVerify: true
       httpHostHeader: "secrets.nserbin.com"
+
+
 
   - hostname: "bookmarks.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
