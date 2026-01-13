@@ -1,19 +1,37 @@
 vault:
-  ui:
-    enabled: true
-    serviceType: ClusterIP
-
   server:
     standalone:
-      enabled: true
+      enabled: false
 
     ha:
-      enabled: false
+      enabled: true
+      replicas: 1
+
+      raft:
+        enabled: true
+        setNodeId: true
+        config: |
+          ui = true
+
+          listener "tcp" {
+            address     = "0.0.0.0:8200"
+            tls_disable = 1
+          }
+
+          storage "raft" {
+            path = "/vault/data"
+          }
+
+          service_registration "kubernetes" {}
 
     dataStorage:
       enabled: true
       size: 8Gi
       mountPath: /vault/data
+
+    ui:
+      enabled: true
+      serviceType: ClusterIP
 
 traefik:
   enabled: true
