@@ -3,6 +3,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: vault-security-headers
+  namespace: {{ .Release.Namespace }}
 spec:
   headers:
     stsSeconds: {{ .Values.traefik.middlewares.securityHeaders.stsSeconds }}
@@ -20,6 +21,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: vault-rate-limit
+  namespace: {{ .Release.Namespace }}
 spec:
   rateLimit:
     average: {{ .Values.traefik.middlewares.rateLimit.average }}
@@ -32,6 +34,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: vault-ip-allowlist
+  namespace: {{ .Release.Namespace }}
 spec:
   ipAllowList:
     sourceRange:
@@ -46,6 +49,7 @@ apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
   name: vault-default-chain
+  namespace: {{ .Release.Namespace }}
 spec:
   chain:
     middlewares:

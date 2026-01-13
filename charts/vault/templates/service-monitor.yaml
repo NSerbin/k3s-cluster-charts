@@ -3,6 +3,7 @@ apiVersion: monitoring.coreos.com/v1
 kind: ServiceMonitor
 metadata:
   name: {{ .Values.monitoring.serviceMonitor.name | default "vault" }}
+  namespace: {{ .Release.Namespace }}
   labels:
 {{- toYaml .Values.monitoring.serviceMonitor.labels | nindent 4 }}
 spec:

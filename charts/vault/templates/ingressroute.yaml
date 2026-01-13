@@ -20,6 +20,7 @@ spec:
       middlewares:
 {{- range .Values.traefik.ingressRoute.middlewares.chain }}
         - name: {{ . }}
+          namespace: {{ $.Release.Namespace }}
 {{- end }}
 {{- end }}
 {{- end }}

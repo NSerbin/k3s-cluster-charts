@@ -1,4 +1,12 @@
 vault:
+
+  global:
+    enabled: true
+
+  ui:
+    enabled: true
+    serviceType: ClusterIP
+
   server:
     standalone:
       enabled: false
@@ -29,9 +37,11 @@ vault:
       size: 8Gi
       mountPath: /vault/data
 
-    ui:
-      enabled: true
-      serviceType: ClusterIP
+  injector:
+    enabled: true
+
+  csi:
+    enabled: false
 
 traefik:
   enabled: true
@@ -43,7 +53,7 @@ traefik:
     host: secrets.nserbin.com
     pathPrefix: /
     service:
-      name: vault-ui        # lo ajustás al service real que crea el chart
+      name: vault-ui
       port: 8200
       scheme: http
 
@@ -53,7 +63,6 @@ traefik:
         - vault-default-chain
 
   middlewares:
-    # Estándar: headers de seguridad + rate limit + (opcional) IP allowlist
     securityHeaders:
       enabled: true
       stsSeconds: 31536000
@@ -71,6 +80,8 @@ traefik:
 
     ipAllowList:
       enabled: false
+      sourceRange:
+        - 1.2.3.4/32
 
 monitoring:
   enabled: true
