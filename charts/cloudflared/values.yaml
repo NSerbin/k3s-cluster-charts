@@ -7,7 +7,8 @@ image:
 
 tunnel:
   id: "694bff59-1973-4b16-9f24-9e76c67fad04"
-  credentialsSecretName: "cloudflared-secrets"
+  #credentialsSecretName: "cloudflared-secrets"
+  credentialsSecretName: "cloudflared-credentials"
 
 # Cloudflare Tunnel ingress rules (host -> upstream)
 ingress:
