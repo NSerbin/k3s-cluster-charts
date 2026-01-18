@@ -27,13 +27,13 @@ externalSecrets:
   refreshInterval: 1h
   items:
 
-    - name: cloudflare-secrets
+    - name: cloudflared-secrets
       namespace: traefik
       secretStoreRef:
         name: vault-tools
         kind: SecretStore
       target:
-        name: cloudflare-secrets
+        name: cloudflared-secrets
         creationPolicy: Owner
         deletionPolicy: Retain
       data:
