@@ -1,0 +1,15 @@
+{{- if and .Values.traefik.ingressRoute.enabled .Values.traefik.forwardedHeaders.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "freshrss.fullname" . }}-forwarded
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "freshrss.labels" . | nindent 4 }}
+spec:
+  headers:
+    customRequestHeaders:
+      X-Forwarded-Host: {{ .Values.traefik.ingressRoute.host | quote }}
+      X-Forwarded-Proto: {{ .Values.traefik.forwardedHeaders.proto | default "https" | quote }}
+      X-Forwarded-Port: {{ .Values.traefik.forwardedHeaders.port | default "443" | quote }}
+{{- end }}

@@ -47,6 +47,12 @@ oidc:
   existingSecret: "freshrss-secrets-oidc"
 
 traefik:
+
+  forwardedHeaders:
+    enabled: true
+    proto: "https"
+    port: "443"
+
   ingressRoute:
     enabled: true
     entryPoints:

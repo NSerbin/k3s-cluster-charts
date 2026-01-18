@@ -1,4 +1,7 @@
-{{- if and .Values.traefik.ingressRoute.enabled }}
+{{- if .Values.traefik.ingressRoute.enabled }}
+{{- $hasUserMiddlewares := gt (len (.Values.traefik.ingressRoute.middlewares | default (list))) 0 -}}
+{{- $hasMiddlewares := or $hasUserMiddlewares (.Values.traefik.forwardedHeaders.enabled | default false) -}}
+
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -14,9 +17,12 @@ spec:
   routes:
     - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && ({{- $first := true -}}{{- range .Values.traefik.ingressRoute.pathPrefixes -}}{{- if not $first }} || {{- end -}}PathPrefix(`{{ . }}`){{- $first = false -}}{{- end -}})
       kind: Rule
-{{- if .Values.traefik.ingressRoute.middlewares }}
+{{- if $hasMiddlewares }}
       middlewares:
-{{- range .Values.traefik.ingressRoute.middlewares }}
+{{- if (.Values.traefik.forwardedHeaders.enabled | default false) }}
+        - name: {{ include "freshrss.fullname" . }}-forwarded
+{{- end }}
+{{- range (.Values.traefik.ingressRoute.middlewares | default (list)) }}
         - name: {{ .name }}
 {{- if .namespace }}
           namespace: {{ .namespace }}
@@ -26,6 +32,7 @@ spec:
       services:
         - name: {{ include "freshrss.fullname" . }}
           port: {{ .Values.service.port }}
+
 {{- if .Values.traefik.ingressRoute.tls.enabled }}
   tls:
 {{- if .Values.traefik.ingressRoute.tls.secretName }}
