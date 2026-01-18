@@ -67,3 +67,7 @@ externalSecrets:
           remoteRef:
             key: k8s/core/security/authentik
             property: POSTGRES_PASSWORD
+        - secretKey: AUTHENTIK_SECRET_KEY
+          remoteRef:
+            key: k8s/core/security/authentik
+            property: AUTHENTIK_SECRET_KEY

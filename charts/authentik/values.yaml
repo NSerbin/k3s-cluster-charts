@@ -36,7 +36,7 @@ secrets:
 # Solo si secrets.create=true
 bootstrap:
   enabled: false
-  secretKey: AUTHENTIK_SECRET_KEY
+  secretKey: AUTHENTIK_BOOTSTRAP_SECRET_KEY
   adminPassword: AUTHENTIK_BOOTSTRAP_PASSWORD
 
 authentik:

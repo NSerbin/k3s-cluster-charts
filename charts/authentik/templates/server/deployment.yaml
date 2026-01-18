@@ -29,19 +29,18 @@ spec:
             - name: AUTHENTIK_LOG_LEVEL
               value: {{ .Values.authentik.logLevel | quote }}
 
-            {{- if .Values.bootstrap.enabled }}
             - name: AUTHENTIK_SECRET_KEY
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secrets.existingSecret | quote }}
-                  key: {{ .Values.bootstrap.secretKeyKey | quote }}
+                  name: {{ .Values.secrets.existingSecret }}
+                  key: AUTHENTIK_SECRET_KEY
+            {{- if .Values.bootstrap.enabled }}
             - name: AUTHENTIK_BOOTSTRAP_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secrets.existingSecret | quote }}
                   key: {{ .Values.bootstrap.adminPasswordKey | quote }}
             {{- end }}
-
             - name: AUTHENTIK_POSTGRESQL__HOST
               value: {{ .Values.postgresql.serviceName | quote }}
             - name: AUTHENTIK_POSTGRESQL__PORT
