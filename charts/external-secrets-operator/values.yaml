@@ -28,7 +28,7 @@ externalSecrets:
   items:
 
     - name: cloudflare-secrets
-      namespace: tools
+      namespace: traefik
       secretStoreRef:
         name: vault-tools
         kind: SecretStore
