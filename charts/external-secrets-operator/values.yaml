@@ -21,6 +21,20 @@ stores:
               role: "eso-tools"
               serviceAccountRef:
                 name: external-secrets
+    - name: vault-traefik
+      namespace: traefik
+      provider:
+        vault:
+          server: "http://vault.tools.svc.cluster.local:8200"
+          path: "kv"
+          version: "v2"
+          auth:
+            kubernetes:
+              mountPath: "kubernetes"
+              role: "eso-tools"
+              serviceAccountRef:
+                name: external-secrets
+
 
 externalSecrets:
   enabled: true
@@ -30,7 +44,7 @@ externalSecrets:
     - name: cloudflared-secrets
       namespace: traefik
       secretStoreRef:
-        name: vault-tools
+        name: vault-traefik
         kind: SecretStore
       target:
         name: cloudflared-secrets
