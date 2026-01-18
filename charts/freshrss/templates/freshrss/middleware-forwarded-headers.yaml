@@ -1,4 +1,4 @@
-{{- if and .Values.traefik.ingressRoute.enabled .Values.traefik.forwardedHeaders.enabled }}
+{{- if and (.Values.traefik.ingressRoute.enabled) (.Values.traefik.forwardedHeaders.enabled | default false) -}}
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:

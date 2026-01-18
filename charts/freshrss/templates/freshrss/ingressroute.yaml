@@ -1,6 +1,8 @@
-{{- if .Values.traefik.ingressRoute.enabled }}
-{{- $hasUserMiddlewares := gt (len (.Values.traefik.ingressRoute.middlewares | default (list))) 0 -}}
-{{- $hasMiddlewares := or $hasUserMiddlewares (.Values.traefik.forwardedHeaders.enabled | default false) -}}
+{{- if .Values.traefik.ingressRoute.enabled -}}
+{{- $userMw := .Values.traefik.ingressRoute.middlewares | default (list) -}}
+{{- $hasUserMw := gt (len $userMw) 0 -}}
+{{- $hasFwd := (.Values.traefik.forwardedHeaders.enabled | default false) -}}
+{{- $hasMw := or $hasUserMw $hasFwd -}}
 
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
@@ -12,17 +14,17 @@ metadata:
 spec:
   entryPoints:
 {{- range .Values.traefik.ingressRoute.entryPoints }}
-    - {{ . }}
+    - {{ . | quote }}
 {{- end }}
   routes:
     - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && ({{- $first := true -}}{{- range .Values.traefik.ingressRoute.pathPrefixes -}}{{- if not $first }} || {{- end -}}PathPrefix(`{{ . }}`){{- $first = false -}}{{- end -}})
       kind: Rule
-{{- if $hasMiddlewares }}
+{{- if $hasMw }}
       middlewares:
-{{- if (.Values.traefik.forwardedHeaders.enabled | default false) }}
+{{- if $hasFwd }}
         - name: {{ include "freshrss.fullname" . }}-forwarded
 {{- end }}
-{{- range (.Values.traefik.ingressRoute.middlewares | default (list)) }}
+{{- range $userMw }}
         - name: {{ .name }}
 {{- if .namespace }}
           namespace: {{ .namespace }}
