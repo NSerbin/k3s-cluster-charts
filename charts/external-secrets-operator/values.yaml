@@ -7,9 +7,11 @@ external-secrets:
 
 stores:
   enabled: true
-  secretStores:
-    - name: vault-tools
-      namespace: tools
+  secretStores: []
+
+  clusterSecretStores:
+    - name: vault
+      syncWave: 1
       provider:
         vault:
           server: "http://vault.tools.svc.cluster.local:8200"
@@ -18,22 +20,10 @@ stores:
           auth:
             kubernetes:
               mountPath: "kubernetes"
-              role: "eso-tools"
+              role: "eso-k8s"
               serviceAccountRef:
                 name: external-secrets
-    - name: vault-traefik
-      namespace: traefik
-      provider:
-        vault:
-          server: "http://vault.tools.svc.cluster.local:8200"
-          path: "kv"
-          version: "v2"
-          auth:
-            kubernetes:
-              mountPath: "kubernetes"
-              role: "eso-tools"
-              serviceAccountRef:
-                name: external-secrets
+                namespace: tools
 
 
 externalSecrets:
@@ -43,9 +33,10 @@ externalSecrets:
 
     - name: cloudflared-secrets
       namespace: traefik
+      syncWave: 2
       secretStoreRef:
-        name: vault-traefik
-        kind: SecretStore
+        name: vault
+        kind: ClusterSecretStore
       target:
         name: cloudflared-secrets
         creationPolicy: Owner
