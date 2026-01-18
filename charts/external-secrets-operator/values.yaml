@@ -42,14 +42,14 @@ externalSecrets:
   refreshInterval: 1h
   items:
 
-    - name: cloudflared-secrets
+    - name: cloudflare-secrets
       namespace: tools
       secretStoreRef:
         name: vault-tools
         kind: SecretStore
       target:
-        name: cloudflared-secrets
+        name: cloudflare-secrets
         creationPolicy: Owner
       dataFrom:
         - extract:
-            key: k8s/cloudflared/tunnel
+            key: k8s/cloudflare/tunnel
