@@ -266,7 +266,6 @@ config:
             description: Pi-hole DNS
             server: rpi
               
-
         - Traefik:
             icon: traefik.svg
             href: https://traefik.nserbin.com/dashboard/
@@ -293,18 +292,6 @@ config:
             server: rpi
 
     - Tools:
-
-        - Authentik:
-            icon: authentik.svg
-            href: https://auth.nserbin.com
-            description: Authentik
-            server: k3s
-            siteMonitor: http://authentik-authentik-server.tools:9000/
-            widget:
-              type: authentik
-              url: http://authentik-authentik-server.tools
-              key: ${AUTHENTIK_KEY}
-              version: 2 
 
         - Grimoire:
             icon: grimoire.png
@@ -346,6 +333,18 @@ config:
             #   password: ${FILEBROWSER_PASSWORD}
 
     - Security:
+        - Authentik:
+            icon: authentik.svg
+            href: https://auth.nserbin.com
+            description: Authentik
+            server: k3s
+            siteMonitor: http://authentik-authentik-server.tools:9000/
+            widget:
+              type: authentik
+              url: http://authentik-authentik-server.tools:9000
+              key: ${AUTHENTIK_KEY}
+              version: 2 
+
         - Bitwarden:
             icon: bitwarden.svg
             href: https://btw.nserbin.com

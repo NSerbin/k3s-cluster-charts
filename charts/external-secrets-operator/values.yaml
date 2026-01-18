@@ -1,0 +1,55 @@
+external-secrets:
+  installCRDs: true
+
+  serviceAccount:
+    create: true
+    name: external-secrets
+
+stores:
+  enabled: true
+  secretStores:
+    - name: vault-tools
+      namespace: tools
+      provider:
+        vault:
+          server: "http://vault.tools.svc.cluster.local:8200"
+          path: "kv"
+          version: "v2"
+          auth:
+            kubernetes:
+              mountPath: "kubernetes"
+              role: "eso-tools"
+              serviceAccountRef:
+                name: external-secrets
+
+    # ✅ Ejemplo: otro store (otro role/policy, otro namespace, etc.)
+    # - name: vault-monitoring
+    #   namespace: tools
+    #   provider:
+    #     vault:
+    #       server: "http://vault.tools.svc.cluster.local:8200"
+    #       path: "kv"
+    #       version: "v2"
+    #       auth:
+    #         kubernetes:
+    #           mountPath: "kubernetes"
+    #           role: "eso-monitoring"
+    #           serviceAccountRef:
+    #             name: external-secrets
+
+externalSecrets:
+  enabled: true
+  refreshInterval: 1h
+  items:
+
+    - name: cloudflared-secrets
+      namespace: tools
+      secretStoreRef:
+        name: vault-tools
+        kind: SecretStore
+      target:
+        name: cloudflared-secrets
+        creationPolicy: Owner
+      dataFrom:
+        - extract:
+            key: k8s/cloudflared/tunnel

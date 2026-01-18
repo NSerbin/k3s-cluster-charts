@@ -38,7 +38,7 @@ vault:
       mountPath: /vault/data
 
   injector:
-    enabled: true
+    enabled: false
 
   csi:
     enabled: false
@@ -98,3 +98,8 @@ monitoring:
 
     labels:
       release: kube-prometheus-stack
+
+
+vaultAuth:
+  serviceAccountName: vault-auth
+  clusterRoleBindingName: vault-auth-tokenreview
