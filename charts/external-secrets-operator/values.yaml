@@ -22,21 +22,6 @@ stores:
               serviceAccountRef:
                 name: external-secrets
 
-    # ✅ Ejemplo: otro store (otro role/policy, otro namespace, etc.)
-    # - name: vault-monitoring
-    #   namespace: tools
-    #   provider:
-    #     vault:
-    #       server: "http://vault.tools.svc.cluster.local:8200"
-    #       path: "kv"
-    #       version: "v2"
-    #       auth:
-    #         kubernetes:
-    #           mountPath: "kubernetes"
-    #           role: "eso-monitoring"
-    #           serviceAccountRef:
-    #             name: external-secrets
-
 externalSecrets:
   enabled: true
   refreshInterval: 1h
@@ -50,6 +35,8 @@ externalSecrets:
       target:
         name: cloudflare-secrets
         creationPolicy: Owner
-      dataFrom:
-        - extract:
+        deletionPolicy: Retain
+      data:
+        - secretKey: credentials.json
+          remoteRef:
             key: k8s/core/networking/cloudflare/credentials
