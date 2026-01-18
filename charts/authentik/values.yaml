@@ -35,8 +35,9 @@ secrets:
 
 # Solo si secrets.create=true
 bootstrap:
-  secretKey: ""          # si vacío, falla (mejor no auto-generar en GitOps)
-  adminPassword: ""      # idem
+  enabled: false
+  secretKey: AUTHENTIK_SECRET_KEY
+  adminPassword: AUTHENTIK_BOOTSTRAP_PASSWORD
 
 authentik:
   logLevel: "info"
