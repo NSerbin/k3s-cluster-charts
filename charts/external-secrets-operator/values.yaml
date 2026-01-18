@@ -71,3 +71,29 @@ externalSecrets:
           remoteRef:
             key: k8s/core/security/authentik
             property: AUTHENTIK_SECRET_KEY
+
+    - name: freshrss-secrets-db
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: freshrss-secrets-db
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      dataFrom:
+        - extract:
+            key: k8s/tools/rss/freshrss/db
+
+    - name: freshrss-secrets-oidc
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: freshrss-secrets-oidc
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      dataFrom:
+        - extract:
+            key: k8s/tools/rss/freshrss/oidc

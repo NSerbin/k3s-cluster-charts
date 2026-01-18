@@ -40,11 +40,11 @@ mysql:
     accessModes:
       - ReadWriteOnce
 
-  existingSecret: "freshrss-mysql-secret"
+  existingSecret: "freshrss-secrets-db"
 
 oidc:
   enabled: true
-  existingSecret: "freshrss-authentik-oidc"
+  existingSecret: "freshrss-secrets-oidc"
 
 traefik:
   ingressRoute:
