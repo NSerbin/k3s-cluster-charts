@@ -52,4 +52,4 @@ externalSecrets:
         creationPolicy: Owner
       dataFrom:
         - extract:
-            key: k8s/core/networking/cloudflare
+            key: k8s/core/networking/cloudflare/credentials
