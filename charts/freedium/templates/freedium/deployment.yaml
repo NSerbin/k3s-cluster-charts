@@ -42,7 +42,6 @@ spec:
             - secretRef:
                 name: {{ .Values.secrets.appExistingSecret }}
 
-          # FIX CRÍTICO: DATABASE_URL sin espacios (y lo armamos explícito)
           env:
             - name: POSTGRES_HOST
               value: {{ .Values.postgresql.serviceName | quote }}
