@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "freshrss.fullname" . }}-apache-health-bypass
+  labels:
+    {{- include "freshrss.labels" . | nindent 4 }}
+data:
+  zzz-health-bypass.conf: |
+    # Healthcheck bypass for Kubernetes probes
+    <LocationMatch "^/i/?$">
+      AuthType None
+      Require all granted
+    </LocationMatch>
