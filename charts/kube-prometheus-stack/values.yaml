@@ -52,7 +52,7 @@ kube-prometheus-stack:
       tag: "12.4.0-20977568970"
       pullPolicy: IfNotPresent
 
-    existingSecret: grafana-admin-credentials
+    existingSecret: grafana-secrets-admin
 
     defaultDashboardsEnabled: true
     defaultDashboardsTimezone: "browser"
@@ -81,8 +81,8 @@ kube-prometheus-stack:
         skipReload: true
     
     envFromSecrets:
-      - name: grafana-github-oidc
-      - name: grafana-authentik-oidc
+      - name: grafana-secrets-oidc
+      - name: grafana-secrets-github-oidc
 
     grafana.ini:
       server:
@@ -175,17 +175,17 @@ kube-prometheus-stack:
     envValueFrom:
       GITHUB_APP_PRIVATE_KEY:
         secretKeyRef:
-          name: grafana-github-app
+          name: grafana-secrets-github-app
           key: GITHUB_APP_PRIVATE_KEY
 
       GITHUB_APP_ID:
         secretKeyRef:
-          name: grafana-github-app
+          name: grafana-secrets-github-app
           key: GITHUB_APP_ID
 
       GITHUB_APP_INSTALLATION_ID:
         secretKeyRef:
-          name: grafana-github-app
+          name: grafana-secrets-github-app
           key: GITHUB_APP_INSTALLATION_ID
 
   # =========================
@@ -365,7 +365,7 @@ alerting:
       type: slack
       channel: "#ns-alarms-grafana"
       apiURLSecretRef:
-        name: alertmanager-secrets
+        name: alertmanager-secrets-notifications
         key: SLACK_WEBHOOK_URL
       sendResolved: true
       titleTemplate: "slack.title"
@@ -375,7 +375,7 @@ alerting:
       type: slack
       channel: "#ns-alarms-grafana"
       apiURLSecretRef:
-        name: alertmanager-secrets
+        name: alertmanager-secrets-notifications
         key: SLACK_WEBHOOK_URL
       sendResolved: true
       titleTemplate: "slack.title"

@@ -97,3 +97,151 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/tools/rss/freshrss/oidc
+
+    - name: grafana-secrets-admin
+      namespace: monitoring
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: grafana-secrets-admin
+        creationPolicy: Owner
+      data:
+        - secretKey: admin-password
+          remoteRef:
+            key: k8s/core/monitoring/grafana/admin
+            property: admin-password
+        - secretKey: admin-user
+          remoteRef:
+            key: k8s/core/monitoring/grafana/admin
+            property: admin-user
+
+    - name: grafana-secrets-github-app
+      namespace: monitoring
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: grafana-secrets-github-app
+        creationPolicy: Owner
+      data:
+        - secretKey: GITHUB_APP_ID
+          remoteRef:
+            key: k8s/core/monitoring/grafana/github-app
+            property: GITHUB_APP_ID
+        - secretKey: GITHUB_APP_INSTALLATION_ID
+          remoteRef:
+            key: k8s/core/monitoring/grafana/github-app
+            property: GITHUB_APP_INSTALLATION_ID
+        - secretKey: GITHUB_APP_PRIVATE_KEY
+          remoteRef:
+            key: k8s/core/monitoring/grafana/github-app
+            property: GITHUB_APP_PRIVATE_KEY
+
+    - name: grafana-secrets-github-oidc
+      namespace: monitoring
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: grafana-secrets-github-oidc
+        creationPolicy: Owner
+      data:
+        - secretKey: GF_AUTH_GITHUB_CLIENT_ID
+          remoteRef:
+            key: k8s/core/monitoring/grafana/github-oidc
+            property: GF_AUTH_GITHUB_CLIENT_ID
+        - secretKey: GF_AUTH_GITHUB_CLIENT_SECRET
+          remoteRef:
+            key: k8s/core/monitoring/grafana/github-oidc
+            property: GF_AUTH_GITHUB_CLIENT_SECRET
+
+
+    - name: grafana-secrets-oidc
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: grafana-secrets-oidc
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      data:
+        - secretKey: AUTHENTIK_API_URL
+          remoteRef:
+            key: k8s/core/monitoring/grafana/oidc
+            property: AUTHENTIK_API_URL
+        - secretKey: AUTHENTIK_AUTH_URL
+          remoteRef:
+            key: k8s/core/monitoring/grafana/oidc
+            property: AUTHENTIK_AUTH_URL
+        - secretKey: AUTHENTIK_TOKEN_URL
+          remoteRef:
+            key: k8s/core/monitoring/grafana/oidc
+            property: AUTHENTIK_TOKEN_URL
+        - secretKey: AUTHENTIK_CLIENT_ID
+          remoteRef:
+            key: k8s/core/monitoring/grafana/oidc
+            property: AUTHENTIK_CLIENT_ID
+        - secretKey: AUTHENTIK_CLIENT_SECRET
+          remoteRef:
+            key: k8s/core/monitoring/grafana/oidc
+            property: AUTHENTIK_CLIENT_SECRET
+        - secretKey: AUTHENTIK_SIGNOUT_REDIRECT_URL
+          remoteRef:
+            key: k8s/core/monitoring/grafana/oidc
+            property: AUTHENTIK_SIGNOUT_REDIRECT_URL
+
+    - name: alertmanager-secrets-notifications
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: alertmanager-secrets-notifications
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      data:
+        - secretKey: SLACK_WEBHOOK_URL
+          remoteRef:
+            key: k8s/core/monitoring/alertmanager/notifications
+            property: SLACK_WEBHOOK_URL
+        - secretKey: SLACK_CHANNEL
+          remoteRef:
+            key: k8s/core/monitoring/alertmanager/notifications
+            property: SLACK_CHANNEL
+
+    - name: monitoring-secrets-shared
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: monitoring-secrets-shared
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      data:
+        - secretKey: GRAFANA_HTTP
+          remoteRef:
+            key: k8s/core/monitoring/shared
+            property: GRAFANA_HTTP
+        - secretKey: GRAFANA_HTTPS
+          remoteRef:
+            key: k8s/core/monitoring/shared
+            property: GRAFANA_HTTPS
+        - secretKey: PROMETHEUS_HTTP
+          remoteRef:
+            key: k8s/core/monitoring/shared
+            property: PROMETHEUS_HTTP
+        - secretKey: PROMETHEUS_HTTPS
+          remoteRef:
+            key: k8s/core/monitoring/shared
+            property: PROMETHEUS_HTTPS
+        - secretKey: ALERTMANAGER_HTTP
+          remoteRef:
+            key: k8s/core/monitoring/shared
+            property: ALERTMANAGER_HTTP
+        - secretKey: ALERTMANAGER_HTTPS
+          remoteRef:
+            key: k8s/core/monitoring/shared
+            property: ALERTMANAGER_HTTPS
