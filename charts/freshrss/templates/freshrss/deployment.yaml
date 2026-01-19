@@ -60,7 +60,7 @@ spec:
 
           readinessProbe:
             httpGet:
-              path: /i/
+              path: /
               port: 80
             initialDelaySeconds: 10
             periodSeconds: 10
@@ -69,7 +69,7 @@ spec:
 
           livenessProbe:
             httpGet:
-              path: /i/
+              path: /
               port: 80
             initialDelaySeconds: 30
             periodSeconds: 20
