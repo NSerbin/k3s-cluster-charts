@@ -185,7 +185,7 @@ externalSecrets:
             key: k8s/core/monitoring/shared
 
     - name: freedium-secrets-app
-      namespace: monitoring
+      namespace: tools
       secretStoreRef:
         name: vault
         kind: ClusterSecretStore
@@ -198,7 +198,7 @@ externalSecrets:
             key: k8s/tools/web/freedium/app
 
     - name: freedium-secrets-db
-      namespace: monitoring
+      namespace: tools
       secretStoreRef:
         name: vault
         kind: ClusterSecretStore
