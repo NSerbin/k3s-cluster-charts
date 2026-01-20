@@ -209,3 +209,16 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/tools/web/freedium/db
+
+    - name: homepage-secrets-app
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: homepage-secrets-app
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      dataFrom:
+        - extract:
+            key: k8s/tools/dashboards/homepage

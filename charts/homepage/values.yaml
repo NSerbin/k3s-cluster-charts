@@ -30,7 +30,7 @@ env:
   NODE_OPTIONS: "--dns-result-order=ipv4first"
 
 secrets:
-  existingSecret: homepage-secrets
+  existingSecret: homepage-secrets-app
 
 config:
   existingConfigMap: ""
