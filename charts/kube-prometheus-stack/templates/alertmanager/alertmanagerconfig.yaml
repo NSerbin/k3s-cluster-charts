@@ -15,9 +15,9 @@ spec:
 {{- range .Values.alerting.routes.groupBy }}
       - {{ . | quote }}
 {{- end }}
-    groupWait: {{ .Values.alerting.routes.groupWait | default "30s" }}
-    groupInterval: {{ .Values.alerting.routes.groupInterval | default "5m" }}
-    repeatInterval: {{ .Values.alerting.routes.repeatInterval | default "12h" }}
+    groupWait: {{ .Values.alerting.routes.groupWait | default "30s" | quote }}
+    groupInterval: {{ .Values.alerting.routes.groupInterval | default "5m" | quote }}
+    repeatInterval: {{ .Values.alerting.routes.repeatInterval | default "12h" | quote }}
 
     routes:
 {{- range .Values.alerting.routes.rules }}
@@ -32,25 +32,23 @@ spec:
 
   receivers:
     - name: "null"
-
 {{- range .Values.alerting.receivers }}
     - name: {{ .name | quote }}
 {{- if eq .type "slack" }}
       slackConfigs:
-        - {{- /* channel optional */}}
-          {{- if .channel }}
-          channel: {{ .channel | quote }}
-          {{- else }}
-          {{- $ch := (include "alerting.slackChannel" $) -}}
-          {{- if $ch }}
-          channel: {{ $ch | quote }}
-          {{- end }}
-          {{- end }}
-
-          sendResolved: {{ .sendResolved | default true }}
+        - sendResolved: {{ .sendResolved | default true }}
           apiURL:
             name: {{ .apiURLSecretRef.name | quote }}
             key: {{ .apiURLSecretRef.key | quote }}
+{{- /* channel optional: prefer receiver.channel; else global helper; else omit */}}
+{{- if .channel }}
+          channel: {{ .channel | quote }}
+{{- else }}
+{{- $ch := (include "alerting.slackChannel" $) -}}
+{{- if $ch }}
+          channel: {{ $ch | quote }}
+{{- end }}
+{{- end }}
 {{- if .titleTemplate }}
           title: '{{`{{ template "`}}{{ .titleTemplate }}{{`" . }}`}}'
 {{- end }}
@@ -61,4 +59,4 @@ spec:
       # receiver type not implemented: {{ .type }}
 {{- end }}
 {{- end }}
-
+{{- end }}
