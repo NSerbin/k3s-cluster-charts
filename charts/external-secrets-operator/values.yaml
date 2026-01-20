@@ -183,3 +183,29 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/core/monitoring/shared
+
+    - name: freedium-secrets-app
+      namespace: monitoring
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: freedium-secrets-app
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      dataFrom:
+        - extract:
+            key: k8s/tools/web/freedium/app
+
+    - name: freedium-secrets-db
+      namespace: monitoring
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: freedium-secrets-db
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      dataFrom:
+        - extract:
+            key: k8s/tools/web/freedium/db

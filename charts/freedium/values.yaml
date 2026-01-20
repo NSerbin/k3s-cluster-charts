@@ -26,8 +26,8 @@ ingressRoute:
     secretName: ""
 # Separación REAL de secretos (esto arregla caos y evita pisadas)
 secrets:
-  appExistingSecret: freedium-app-secret
-  postgresExistingSecret: freedium-postgres-secret
+  appExistingSecret: freedium-secrets-app
+  postgresExistingSecret: freedium-secrets-db
 resources:
   requests:
     cpu: 100m
