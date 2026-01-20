@@ -361,9 +361,7 @@ alerting:
     alertmanagerconfig: "enabled"
 
   slack:
-    channelSecret:
-      name: alertmanager-secrets-notifications
-      key: SLACK_CHANNEL
+    channel: "#ns-alarms-grafana"
 
   receivers:
     - name: slack-warnings

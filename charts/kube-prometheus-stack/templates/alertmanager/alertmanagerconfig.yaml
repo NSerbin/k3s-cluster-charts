@@ -40,20 +40,17 @@ spec:
           apiURL:
             name: {{ .apiURLSecretRef.name | quote }}
             key: {{ .apiURLSecretRef.key | quote }}
-{{- /* channel optional: prefer receiver.channel; else global helper; else omit */}}
 {{- if .channel }}
           channel: {{ .channel | quote }}
-{{- else }}
-{{- $ch := (include "alerting.slackChannel" $) -}}
-{{- if $ch }}
-          channel: {{ $ch | quote }}
-{{- end }}
+{{- else if $.Values.alerting.slack.channel }}
+          channel: {{ $.Values.alerting.slack.channel | quote }}
 {{- end }}
 {{- if .titleTemplate }}
           title: '{{`{{ template "`}}{{ .titleTemplate }}{{`" . }}`}}'
 {{- end }}
 {{- if .textTemplate }}
           text: '{{`{{ template "`}}{{ .textTemplate }}{{`" . }}`}}'
+{{- end }}
 {{- end }}
 {{- else }}
       # receiver type not implemented: {{ .type }}
