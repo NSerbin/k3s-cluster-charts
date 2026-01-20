@@ -360,10 +360,14 @@ alerting:
   selectorLabels:
     alertmanagerconfig: "enabled"
 
+  slack:
+    channelSecret:
+      name: alertmanager-secrets-notifications
+      key: SLACK_CHANNEL
+
   receivers:
     - name: slack-warnings
       type: slack
-      channel: "#ns-alarms-grafana"
       apiURLSecretRef:
         name: alertmanager-secrets-notifications
         key: SLACK_WEBHOOK_URL
@@ -373,7 +377,6 @@ alerting:
 
     - name: slack-critical
       type: slack
-      channel: "#ns-alarms-grafana"
       apiURLSecretRef:
         name: alertmanager-secrets-notifications
         key: SLACK_WEBHOOK_URL

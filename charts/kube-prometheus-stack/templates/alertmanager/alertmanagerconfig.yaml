@@ -37,7 +37,16 @@ spec:
     - name: {{ .name | quote }}
 {{- if eq .type "slack" }}
       slackConfigs:
-        - channel: {{ .channel | quote }}
+        - {{- /* channel optional */}}
+          {{- if .channel }}
+          channel: {{ .channel | quote }}
+          {{- else }}
+          {{- $ch := (include "alerting.slackChannel" $) -}}
+          {{- if $ch }}
+          channel: {{ $ch | quote }}
+          {{- end }}
+          {{- end }}
+
           sendResolved: {{ .sendResolved | default true }}
           apiURL:
             name: {{ .apiURLSecretRef.name | quote }}
@@ -52,4 +61,4 @@ spec:
       # receiver type not implemented: {{ .type }}
 {{- end }}
 {{- end }}
-{{- end }}
+

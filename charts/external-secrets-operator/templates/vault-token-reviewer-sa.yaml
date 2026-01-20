@@ -1,0 +1,7 @@
+{{- if and .Values.vault.enabled .Values.vault.kubernetesAuth.enabled .Values.vault.kubernetesAuth.reviewerServiceAccount.create }}
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: {{ .Values.vault.kubernetesAuth.reviewerServiceAccount.name | quote }}
+  namespace: {{ .Values.vault.namespace | quote }}
+{{- end }}
