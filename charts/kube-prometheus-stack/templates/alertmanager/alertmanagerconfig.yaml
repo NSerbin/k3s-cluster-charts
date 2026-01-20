@@ -51,7 +51,6 @@ spec:
 {{- if .textTemplate }}
           text: '{{`{{ template "`}}{{ .textTemplate }}{{`" . }}`}}'
 {{- end }}
-{{- end }}
 {{- else }}
       # receiver type not implemented: {{ .type }}
 {{- end }}
