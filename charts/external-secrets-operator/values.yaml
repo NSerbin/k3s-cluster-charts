@@ -55,6 +55,9 @@ externalSecrets:
         - secretKey: credentials.json
           remoteRef:
             key: k8s/core/networking/cloudflare/credentials
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: authentik-secrets
       namespace: tools
@@ -95,6 +98,9 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/tools/rss/freshrss/db
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: freshrss-secrets-oidc
       namespace: tools
@@ -108,6 +114,10 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/tools/rss/freshrss/oidc
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
 
     - name: grafana-secrets-admin
       namespace: monitoring
@@ -120,6 +130,10 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/core/monitoring/grafana/admin
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
 
     - name: grafana-secrets-github-app
       namespace: monitoring
@@ -132,6 +146,9 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/core/monitoring/grafana/github-app        
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: grafana-secrets-github-oidc
       namespace: monitoring
@@ -144,6 +161,9 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/core/monitoring/grafana/github-oidc
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: grafana-secrets-oidc
       namespace: monitoring
@@ -157,6 +177,9 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/core/monitoring/grafana/oidc
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: alertmanager-secrets-notifications
       namespace: monitoring
@@ -170,6 +193,9 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/core/monitoring/alertmanager/notifications
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: monitoring-secrets-shared
       namespace: monitoring
@@ -183,6 +209,9 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/core/monitoring/shared
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: freedium-secrets-app
       namespace: tools
@@ -196,6 +225,9 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/tools/web/freedium/app
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: freedium-secrets-db
       namespace: tools
@@ -209,6 +241,9 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/tools/web/freedium/db
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: homepage-secrets-app
       namespace: tools
@@ -222,3 +257,6 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/tools/dashboards/homepage
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
