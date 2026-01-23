@@ -74,7 +74,7 @@ ingressRoute:
   entryPoints:
     - web
 
-  host: "bookmarks.nserbin.com"
+  host: "bookmark.nserbin.com"
   pathPrefix: "/"
 
   middlewares: []
