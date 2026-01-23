@@ -1,0 +1,16 @@
+{{- if and .Values.meilisearch.enabled .Values.meilisearch.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "linkwarden.fullname" . }}-meilisearch
+  labels:
+    {{- include "linkwarden.labels" . | nindent 4 }}
+spec:
+  selector:
+    app.kubernetes.io/component: meilisearch
+    app.kubernetes.io/instance: {{ .Release.Name }}
+  ports:
+    - name: http
+      port: {{ .Values.meilisearch.service.port }}
+      targetPort: 7700
+{{- end }}

@@ -1,0 +1,75 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/linkwarden/linkwarden
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  enabled: true
+  type: ClusterIP
+  port: 3000
+
+ingressRoute:
+  enabled: true
+  entryPoints: [web]
+  host: linkwarden.example.com
+  pathPrefix: /
+  tls:
+    enabled: false
+    secretName: ""
+  middlewares: []
+
+
+config:
+  nextauthUrl: ""  # If Empty => https://<host>/api/v1/auth
+  extraEnv: {}
+
+secrets:
+  appSecretName: linkwarden-secrets-app
+  dbSecretName: linkwarden-secrets-db
+
+
+authentik:
+  enabled: true
+  customName: "Authentik"
+
+persistence:
+  enabled: true
+  storageClassName: ""
+  accessModes: ["ReadWriteOnce"]
+  size: 5Gi
+
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "16-alpine"
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: true
+    storageClassName: ""
+    accessModes: ["ReadWriteOnce"]
+    size: 2Gi
+  service:
+    enabled: true
+    port: 5432
+
+meilisearch:
+  enabled: true
+  image:
+    repository: getmeili/meilisearch
+    tag: v1.33.1
+    pullPolicy: IfNotPresent
+  persistence:
+    enabled: true
+    storageClassName: ""
+    accessModes: ["ReadWriteOnce"]
+    size: 5Gi
+  service:
+    enabled: true
+    port: 7700
+
+externalDatabase:
+  enabled: false
+
