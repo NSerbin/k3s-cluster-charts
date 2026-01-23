@@ -35,11 +35,11 @@ spec:
           env:
             - name: DATABASE_URL
               {{- if .Values.postgres.enabled }}
-              value: {{ printf "postgresql://%s:$(POSTGRES_PASSWORD)@%s-postgres:%d/%s" .Values.postgres.db.user (include "linkwarden.fullname" .) (.Values.postgres.service.port | int) .Values.postgres.db.name | quote }}
+              value: {{ printf "postgresql://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@%s-postgres:%d/$(POSTGRES_DB)" (include "linkwarden.fullname" .) (.Values.postgres.service.port | int) | quote }}
               {{- else if .Values.externalDatabase.enabled }}
               valueFrom:
                 secretKeyRef:
-                  name: {{ .Values.secrets.existingSecretName }}
+                  name: {{ .Values.secrets.appSecretName }}
                   key: DATABASE_URL
               {{- else }}
               value: ""
