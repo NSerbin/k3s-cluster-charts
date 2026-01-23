@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/linkwarden/linkwarden
-  tag: latest
+  tag: 2.13.5
   pullPolicy: IfNotPresent
 
 service:

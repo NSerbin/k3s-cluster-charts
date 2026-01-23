@@ -4,17 +4,20 @@ metadata:
   name: {{ include "linkwarden.fullname" . }}
   labels:
     {{- include "linkwarden.labels" . | nindent 4 }}
+    app.kubernetes.io/component: linkwarden
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
       app.kubernetes.io/name: {{ include "linkwarden.name" . }}
       app.kubernetes.io/instance: {{ .Release.Name }}
+      app.kubernetes.io/component: linkwarden
   template:
     metadata:
       labels:
         app.kubernetes.io/name: {{ include "linkwarden.name" . }}
         app.kubernetes.io/instance: {{ .Release.Name }}
+        app.kubernetes.io/component: linkwarden
     spec:
       containers:
         - name: linkwarden
