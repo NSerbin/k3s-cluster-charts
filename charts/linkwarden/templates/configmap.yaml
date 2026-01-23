@@ -5,11 +5,7 @@ metadata:
   labels:
     {{- include "linkwarden.labels" . | nindent 4 }}
 data:
-  NEXTAUTH_URL: {{- if .Values.config.nextauthUrl -}}
-    {{ .Values.config.nextauthUrl | quote }}
-  {{- else -}}
-    {{ printf "https://%s/api/v1/auth" .Values.ingressRoute.host | quote }}
-  {{- end }}
+  NEXTAUTH_URL: {{- if .Values.config.nextauthUrl -}}{{ .Values.config.nextauthUrl | quote }}{{- else -}}{{ printf "https://%s/api/v1/auth" .Values.ingressRoute.host | quote }}{{- end }}
 
   {{- if .Values.authentik.enabled }}
   NEXT_PUBLIC_AUTHENTIK_ENABLED: "true"
