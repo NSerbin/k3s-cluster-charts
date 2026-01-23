@@ -13,7 +13,7 @@ service:
 ingressRoute:
   enabled: true
   entryPoints: [web]
-  host: linkwarden.example.com
+  host: bookmarks.nserbin.com
   pathPrefix: /
   tls:
     enabled: false
