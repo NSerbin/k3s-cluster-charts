@@ -5,13 +5,16 @@ metadata:
   labels:
     {{- include "linkwarden.labels" . | nindent 4 }}
 data:
-  NEXTAUTH_URL: {{- if .Values.config.nextauthUrl -}}{{ .Values.config.nextauthUrl | quote }}{{- else -}}{{ printf "https://%s/api/v1/auth" .Values.ingressRoute.host | quote }}{{- end }}
+{{- $nextauth := default (printf "https://%s/api/v1/auth" .Values.ingressRoute.host) .Values.config.nextauthUrl -}}
+{{- $data := dict "NEXTAUTH_URL" $nextauth -}}
 
-  {{- if .Values.authentik.enabled }}
-  NEXT_PUBLIC_AUTHENTIK_ENABLED: "true"
-  AUTHENTIK_CUSTOM_NAME: {{ .Values.authentik.customName | quote }}
-  {{- end }}
+{{- if .Values.authentik.enabled -}}
+{{- $_ := set $data "NEXT_PUBLIC_AUTHENTIK_ENABLED" "true" -}}
+{{- $_ := set $data "AUTHENTIK_CUSTOM_NAME" (.Values.authentik.customName | default "Authentik") -}}
+{{- end -}}
 
-  {{- range $k, $v := .Values.config.extraEnv }}
-  {{ $k }}: {{ $v | quote }}
-  {{- end }}
+{{- range $k, $v := .Values.config.extraEnv -}}
+{{- $_ := set $data $k (printf "%v" $v) -}}
+{{- end -}}
+
+{{- toYaml $data | nindent 2 }}
