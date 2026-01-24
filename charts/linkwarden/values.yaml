@@ -23,7 +23,9 @@ ingressRoute:
 
 config:
   nextauthUrl: ""  # If Empty => https://<host>/api/v1/auth
-  extraEnv: {}
+  extraEnv:
+    CUSTOM_OPENAI_BASE_URL: "https://generativelanguage.googleapis.com/v1beta/openai/"
+    OPENAI_MODEL: "gemini-1.5-flash"
 
 secrets:
   appSecretName: linkwarden-secrets-app
