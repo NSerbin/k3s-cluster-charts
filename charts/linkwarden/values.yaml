@@ -76,7 +76,7 @@ externalDatabase:
   enabled: false
 
 ollama:
-  enabled: true
+  enabled: false
 
   image:
     repository: ollama/ollama
@@ -89,7 +89,7 @@ ollama:
     port: 11434
 
   persistence:
-    enabled: true
+    enabled: false
     storageClassName: ""
     accessModes: ["ReadWriteOnce"]
     size: 15Gi   # bajar a 10Gi
