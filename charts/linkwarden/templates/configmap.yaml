@@ -13,6 +13,11 @@ data:
 {{- $_ := set $data "AUTHENTIK_CUSTOM_NAME" (.Values.authentik.customName | default "Authentik") -}}
 {{- end -}}
 
+{{- if .Values.ollama.enabled -}}
+{{- $_ := set $data "NEXT_PUBLIC_OLLAMA_ENDPOINT_URL" (printf "http://%s-ollama:%d" (include "linkwarden.fullname" .) (.Values.ollama.service.port | int)) -}}
+{{- $_ := set $data "OLLAMA_MODEL" (.Values.ollama.model | default "phi3:mini-4k") -}}
+{{- end -}}
+
 {{- range $k, $v := .Values.config.extraEnv -}}
 {{- $_ := set $data $k (printf "%v" $v) -}}
 {{- end -}}

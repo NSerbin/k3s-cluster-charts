@@ -75,3 +75,39 @@ meilisearch:
 externalDatabase:
   enabled: false
 
+ollama:
+  enabled: true
+
+  image:
+    repository: ollama/ollama
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  service:
+    enabled: true
+    type: ClusterIP
+    port: 11434
+
+  persistence:
+    enabled: true
+    storageClassName: ""
+    accessModes: ["ReadWriteOnce"]
+    size: 10Gi   # bajar a 10Gi
+
+  # IMPORTANTÍSIMO: sin auto-pull
+  modelPull:
+    enabled: false
+    model: "phi3:mini-4k"
+
+  # Límites LOW-RAM
+  resources:
+    requests:
+      cpu: "100m"
+      memory: 512Mi
+    limits:
+      cpu: "1000m"
+      memory: 2Gi
+
+  extraEnv:
+    OLLAMA_NUM_PARALLEL: "1"
+    OLLAMA_MAX_LOADED_MODELS: "1"
