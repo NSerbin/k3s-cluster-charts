@@ -20,6 +20,8 @@ spec:
         app.kubernetes.io/instance: {{ .Release.Name }}
         app.kubernetes.io/component: ollama
     spec:
+      terminationGracePeriodSeconds: 20
+
       {{- if .Values.ollama.modelPull.enabled }}
       initContainers:
         - name: pull-model
@@ -49,6 +51,10 @@ spec:
             - name: data
               mountPath: /root/.ollama
           {{- end }}
+          {{- if .Values.ollama.resources }}
+          resources:
+            {{- toYaml .Values.ollama.resources | nindent 12 }}
+          {{- end }}
       {{- end }}
 
       containers:
@@ -77,8 +83,8 @@ spec:
             httpGet:
               path: /
               port: 11434
-            initialDelaySeconds: 20
-            periodSeconds: 10
+            initialDelaySeconds: 30
+            periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 6
 
@@ -86,13 +92,15 @@ spec:
             httpGet:
               path: /
               port: 11434
-            initialDelaySeconds: 10
-            periodSeconds: 10
+            initialDelaySeconds: 15
+            periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 6
 
+          {{- if .Values.ollama.resources }}
           resources:
             {{- toYaml .Values.ollama.resources | nindent 12 }}
+          {{- end }}
 
       {{- if .Values.ollama.persistence.enabled }}
       volumes:
