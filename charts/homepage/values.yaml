@@ -302,7 +302,7 @@ config:
             widget:
               type: linkwarden
               url: http://linkwarden-linkwarden:3000
-              key: ${LINKWARDEN_KEY}
+              key: {{LINKWARDEN_KEY}}
     
         - DocuSeal:
             icon: docuseal.png
