@@ -284,15 +284,19 @@ config:
             description: Traefik
             server: k3s
         
-        - Cloudflare Tunnels:
+        - Cloudflare Tunnel:
             icon: cloudflare.svg
             href: https://cloudflare.com
             description: Cloudflare
             widget:
-              type: cloudflared
-              accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT}}
-              tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_RPI_TUNNEL_ID}}
-              key: {{HOMEPAGE_VAR_CLOUDFLARE_TOKEN}}
+              - type: cloudflared
+                accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT}}
+                tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_RPI_TUNNEL_ID}}
+                key: {{HOMEPAGE_VAR_CLOUDFLARE_TOKEN}}
+              - type: cloudflared
+                accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT}}
+                tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_K3S_TUNNEL_ID}}
+                key: {{HOMEPAGE_VAR_CLOUDFLARE_TOKEN}}
 
     - Management:
         - Portainer:
