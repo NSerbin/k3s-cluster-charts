@@ -194,6 +194,10 @@ config:
             description: GitOps
             server: k3s
             icon: si-argo.svg
+            widget:
+              type: argocd
+              url: http://argocd-server.argocd/
+              key: {{HOMEPAGE_VAR_ARGOCD_KEY}}
 
     - Monitoring:
         - cAdvisor:
@@ -209,6 +213,13 @@ config:
             siteMonitor: http://kube-prometheus-stack-grafana.monitoring/api/health
             description: Grafana
             server: k3s
+            widget:
+              type: grafana
+              version: 2
+              alerts: alertmanager
+              url: http://kube-prometheus-stack-grafana.monitoring
+              username: {{HOMEPAGE_VAR_GRAFANA_USERNAME}}
+              password: {{HOMEPAGE_VAR_GRAFANA_PASSWORD}}
 
         - Prometheus:
             icon: prometheus.png
@@ -245,11 +256,11 @@ config:
             description: Fresh RSS
             server: k3s
             siteMonitor: http://freshrss-freshrss.tools/
-            # widget:
-            #   type: freshrss
-            #   url: http://freshrss-freshrss.tools/
-            #   username: ${FRESHRSS_USERNAME}
-            #   password: ${FRESHRSS_PASSWORD}
+            widget:
+              type: freshrss
+              url: http://freshrss-freshrss.tools/
+              username: {{HOMEPAGE_VAR_FRESHRSS_USERNAME}}
+              password: {{HOMEPAGE_VAR_FRESHRSS_PASSWORD}}
 
         - Freedium:
             icon: mdi-web-sync
@@ -273,15 +284,15 @@ config:
             description: Traefik
             server: k3s
         
-        # - Cloudflare Tunnels:
-        #     icon: cloudflare.svg
-        #     href: https://cloudflare.com
-        #     description: Cloudflare
-        #     widget:
-        #       type: cloudflared
-        #       accountid: ${CLOUDFLARE_ACCOUNT}
-        #       tunnelid: ${CLOUDFLARE_RPI_TUNNEL_ID}
-        #       key: ${CLOUDFLARE_TOKEN}
+        - Cloudflare Tunnels:
+            icon: cloudflare.svg
+            href: https://cloudflare.com
+            description: Cloudflare
+            widget:
+              type: cloudflared
+              accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT}}
+              tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_RPI_TUNNEL_ID}}
+              key: {{HOMEPAGE_VAR_CLOUDFLARE_TOKEN}}
 
     - Management:
         - Portainer:
@@ -290,6 +301,12 @@ config:
             siteMonitor: http://192.168.0.4:9000/
             description: Portainer
             server: rpi
+            widget:
+              type: portainer
+              url: http://192.168.0.4:9000/
+              env: 1
+              kubernetes: false
+              key: {{HOMEPAGE_VAR_PORTAINER_KEY}}
 
     - Tools:
 
@@ -302,7 +319,7 @@ config:
             widget:
               type: linkwarden
               url: http://linkwarden-linkwarden:3000
-              key: {{LINKWARDEN_KEY}}
+              key: {{HOMEPAGE_VAR_LINKWARDEN_KEY}}
     
         - DocuSeal:
             icon: docuseal.png
@@ -316,6 +333,10 @@ config:
             siteMonitor: http://192.168.0.4:8081/
             description: Service to pull images
             server: rpi
+            widget:
+              type: watchtower
+              url: http://192.168.0.4:8081/
+              key: {{HOMEPAGE_VAR_WATCHTOWER_KEY}}
 
         - SSH:
             icon: shell.svg
@@ -329,12 +350,12 @@ config:
             siteMonitor: http://192.168.0.4:8082
             description: FileBrowser
             server: rpi
-            # widget:
-            #   type: filebrowser
-            #   #url: http://192.168.0.4:8082
-            #   url: https://vault.nserbin.com
-            #   username: ${FILEBROWSER_USERNAME}
-            #   password: ${FILEBROWSER_PASSWORD}
+            widget:
+              type: filebrowser
+              #url: http://192.168.0.4:8082
+              url: https://vault.nserbin.com
+              username: {{HOMEPAGE_VAR_FILEBROWSER_USERNAME}}
+              password: {{HOMEPAGE_VAR_FILEBROWSER_PASSWORD}}
 
     - Security:
         - Authentik:
@@ -346,7 +367,7 @@ config:
             widget:
               type: authentik
               url: http://authentik-authentik-server.tools
-              key: {{AUTHENTIK_KEY}}
+              key: {{HOMEPAGE_VAR_AUTHENTIK_KEY}}
               version: 2 
 
         - Bitwarden:
