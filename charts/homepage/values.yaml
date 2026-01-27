@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/gethomepage/homepage
-  tag: "v1.8.0"
+  tag: "v1.9.0"
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -333,10 +333,10 @@ config:
             siteMonitor: http://192.168.0.4:8081/
             description: Service to pull images
             server: rpi
-            widget:
-              type: watchtower
-              url: http://192.168.0.4:8081/
-              key: {{HOMEPAGE_VAR_WATCHTOWER_KEY}}
+            # widget:
+            #   type: watchtower
+            #   url: http://192.168.0.4:8081/
+            #   key: {{HOMEPAGE_VAR_WATCHTOWER_KEY}}
 
         - SSH:
             icon: shell.svg
