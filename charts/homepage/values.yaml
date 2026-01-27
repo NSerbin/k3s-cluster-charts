@@ -293,12 +293,16 @@ config:
 
     - Tools:
 
-        - Grimoire:
-            icon: grimoire.png
+        - Linkwarden:
+            icon: linkwarden.png
             href: https://bookmarks.nserbin.com/
-            #siteMonitor: http://192.168.0.4:8082
+            siteMonitor: http://linkwarden-linkwarden.tools
             description: Bookmarks
             server: k3s
+            widget:
+              type: linkwarden
+              url: http://linkwarden-linkwarden.tools
+              key: ${LINKWARDEN_KEY}
     
         - DocuSeal:
             icon: docuseal.png
