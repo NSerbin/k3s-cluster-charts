@@ -296,12 +296,12 @@ config:
         - Linkwarden:
             icon: linkwarden.png
             href: https://bookmarks.nserbin.com/
-            siteMonitor: http://linkwarden-linkwarden.tools:3000/
+            siteMonitor: http://linkwarden-linkwarden:3000
             description: Bookmarks
             server: k3s
             widget:
               type: linkwarden
-              url: http://linkwarden-linkwarden.tools:3000/
+              url: http://linkwarden-linkwarden:3000
               key: ${LINKWARDEN_KEY}
     
         - DocuSeal:
