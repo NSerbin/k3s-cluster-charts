@@ -301,7 +301,7 @@ config:
             server: k3s
             widget:
               type: linkwarden
-              url: http://linkwarden-linkwarden.tools
+              url: http://linkwarden-linkwarden.tools:3000/
               key: ${LINKWARDEN_KEY}
     
         - DocuSeal:
