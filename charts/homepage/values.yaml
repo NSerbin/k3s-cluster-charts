@@ -346,7 +346,7 @@ config:
             widget:
               type: authentik
               url: http://authentik-authentik-server.tools
-              key: ${AUTHENTIK_KEY}
+              key: {{AUTHENTIK_KEY}}
               version: 2 
 
         - Bitwarden:
