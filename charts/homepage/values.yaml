@@ -296,7 +296,7 @@ config:
         - Linkwarden:
             icon: linkwarden.png
             href: https://bookmarks.nserbin.com/
-            siteMonitor: http://linkwarden-linkwarden.tools
+            siteMonitor: http://linkwarden-linkwarden.tools:3000/
             description: Bookmarks
             server: k3s
             widget:
