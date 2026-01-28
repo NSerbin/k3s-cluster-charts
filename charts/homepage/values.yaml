@@ -281,9 +281,9 @@ config:
             siteMonitor: http://traefik.traefik:9000/ping
             description: Traefik
             server: k3s
-            # widget:
-            #   type: traefik
-            #   url: http://traefik.traefik/
+            widget:
+              type: traefik
+              url: http://traefik.traefik:9000/
             #   username: username # optional
             #   password: password # optional
         
@@ -366,7 +366,6 @@ config:
             widget:
               type: filebrowser
               url: http://192.168.0.4:8082
-              #url: https://vault.nserbin.com
               username: {{HOMEPAGE_VAR_FILEBROWSER_USERNAME}}
               password: {{HOMEPAGE_VAR_FILEBROWSER_PASSWORD}}
 
