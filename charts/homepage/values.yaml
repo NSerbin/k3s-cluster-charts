@@ -290,7 +290,7 @@ config:
             server: k3s
             widget:
               type: traefik
-              url: http://traefik.traefik:9000/
+              url: http://traefik.traefik/
               #username: username # optional
               #password: password # optional
         
