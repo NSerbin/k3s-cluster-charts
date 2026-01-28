@@ -122,7 +122,7 @@ kube-prometheus-stack:
         oauth_auto_login: true        
 
       auth.basic:
-        enabled: false
+        enabled: true
 
       auth.github:
         enabled: false
