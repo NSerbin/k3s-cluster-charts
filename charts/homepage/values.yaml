@@ -213,13 +213,6 @@ config:
             siteMonitor: http://kube-prometheus-stack-grafana.monitoring/api/health
             description: Grafana
             server: k3s
-            widget:
-              type: grafana
-              version: 2
-              alerts: alertmanager
-              url: http://kube-prometheus-stack-grafana.monitoring
-              username: {{HOMEPAGE_VAR_GRAFANA_USERNAME}}
-              password: {{HOMEPAGE_VAR_GRAFANA_PASSWORD}}
 
         - Prometheus:
             icon: prometheus.png
