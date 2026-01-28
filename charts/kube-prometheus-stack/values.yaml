@@ -138,6 +138,8 @@ kube-prometheus-stack:
         allow_assign_grafana_admin: true
         skip_org_role_sync: true
         
+      api:
+        enabled: true        
 
       log:
         mode: console
