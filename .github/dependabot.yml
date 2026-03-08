@@ -1,0 +1,19 @@
+version: 2
+
+updates:
+  # -------------------------------------------------
+  # Helm Charts (Chart.yaml dependencies)
+  # -------------------------------------------------
+  - package-ecosystem: "helm"
+    directory: "/charts"
+    schedule:
+      interval: "daily"
+      time: "07:00"      
+    open-pull-requests-limit: 10
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
