@@ -27,7 +27,7 @@ mysql:
   enabled: true
   image:
     repository: mysql
-    tag: "9.5.0"
+    tag: "9.6.0"
     pullPolicy: IfNotPresent
 
   service:
