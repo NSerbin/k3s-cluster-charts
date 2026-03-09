@@ -6,5 +6,5 @@ version: 0.1.0
 
 dependencies:
   - name: vault
-    version: "0.31.0" # ejemplo; fijalo a una versión concreta
+    version: "0.32.0" # ejemplo; fijalo a una versión concreta
     repository: "https://helm.releases.hashicorp.com"
