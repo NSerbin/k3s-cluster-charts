@@ -2,14 +2,14 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/goauthentik/server
-  tag: "2025.12.4"
+  tag: "2025.12.0"
   pullPolicy: IfNotPresent
 
 worker:
   replicaCount: 1
   image:
     repository: ghcr.io/goauthentik/server
-    tag: "2025.12.4"
+    tag: "2025.12.0"
     pullPolicy: IfNotPresent
 
 service:
