@@ -5,11 +5,163 @@ updates:
   # Helm Charts (Chart.yaml dependencies)
   # -------------------------------------------------
   - package-ecosystem: "helm"
-    directory: "/charts"
+    directory: "/charts/authentik"
+    schedule:
+      interval: "daily"     
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/cloudflared"
     schedule:
       interval: "daily"
-      time: "07:00"      
-    open-pull-requests-limit: 10
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/external-secrets-operator"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/freedium"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/freshrss"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/grimoire"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/homepage"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/it-tools"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/kube-prometheus-stack"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/linkwarden"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/metallb"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/metrics-server"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/traefik"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/vault"
+    schedule:
+      interval: "daily"
+    labels:
+      - "kubernetes"    
+    commit-message:
+      prefix: "deps"
+      include: "scope"
+    reviewers:
+      - "Nserbin"
+  - package-ecosystem: "helm"
+    directory: "/charts/yopass"
+    schedule:
+      interval: "daily"
     labels:
       - "kubernetes"    
     commit-message:
