@@ -47,7 +47,7 @@ postgres:
   enabled: true
   image:
     repository: postgres
-    tag: "18"
+    tag: "16-alpine"
     pullPolicy: IfNotPresent
   persistence:
     enabled: true
