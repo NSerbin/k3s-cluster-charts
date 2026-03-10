@@ -2,7 +2,7 @@ replicaCount: 2
 
 image:
   repository: cloudflare/cloudflared
-  tag: "2025.11.1"
+  tag: "2026.3.0"
   pullPolicy: IfNotPresent
 
 tunnel:
