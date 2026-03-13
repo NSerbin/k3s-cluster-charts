@@ -38,17 +38,19 @@ spec:
           env:
             - name: TRUSTED_PROXY
               value: {{ .Values.env.TRUSTED_PROXY | quote }}
-
-            {{- if .Values.oidc.enabled }}
+          {{- if .Values.oidc.enabled }}
             - name: OIDC_ENABLED
               value: "1"
+
+            - name: OIDC_REMOTE_USER_CLAIM
+              value: {{ .Values.oidc.remoteUserClaim | default "preferred_username" | quote }}
+
+            - name: OIDC_SCOPES
+              value: {{ .Values.oidc.scopes | default "openid email profile" | quote }}
+
             - name: OIDC_X_FORWARDED_HEADERS
               value: "X-Forwarded-Port X-Forwarded-Proto X-Forwarded-Host"
-            - name: OIDC_SCOPES
-              value: "openid email profile"
-            {{- end }}
 
-          {{- if .Values.oidc.enabled }}
           envFrom:
             - secretRef:
                 name: {{ .Values.oidc.existingSecret | quote }}
@@ -60,7 +62,7 @@ spec:
 
           readinessProbe:
             httpGet:
-              path: /
+              path: /i/
               port: 80
             initialDelaySeconds: 10
             periodSeconds: 10
@@ -69,7 +71,7 @@ spec:
 
           livenessProbe:
             httpGet:
-              path: /
+              path: /i/
               port: 80
             initialDelaySeconds: 30
             periodSeconds: 20
