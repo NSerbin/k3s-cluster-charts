@@ -61,46 +61,37 @@ spec:
               containerPort: 80
 
           readinessProbe:
-            httpGet:
-              path: /healthz
-              port: 80
+            exec:
+              command:
+                - sh
+                - -lc
+                - >
+                  test -f /var/www/FreshRSS/data/config.php &&
+                  test -f /var/www/FreshRSS/data/users.php &&
+                  test -f /var/www/FreshRSS/data/users/koopernic/config.php &&
+                  pgrep -x apache2 >/dev/null
             initialDelaySeconds: 10
             periodSeconds: 10
-            timeoutSeconds: 2
+            timeoutSeconds: 3
             failureThreshold: 6
 
           livenessProbe:
-            httpGet:
-              path: /healthz
-              port: 80
+            exec:
+              command:
+                - sh
+                - -lc
+                - >
+                  pgrep -x apache2 >/dev/null
             initialDelaySeconds: 30
             periodSeconds: 20
-            timeoutSeconds: 2
+            timeoutSeconds: 3
             failureThreshold: 6
 
           volumeMounts:
             - name: freshrss-data
               mountPath: /var/www/FreshRSS/data
 
-            - name: healthz-file
-              mountPath: /var/www/FreshRSS/healthz
-              subPath: healthz
-              readOnly: true              
-
-            - name: apache-health-bypass
-              mountPath: /etc/apache2/conf-enabled/zzz-health-bypass.conf
-              subPath: zzz-health-bypass.conf
-              readOnly: true
-
       volumes:
         - name: freshrss-data
           persistentVolumeClaim:
             claimName: {{ include "freshrss.fullname" . }}-data
-
-        - name: healthz-file
-          configMap:
-            name: {{ include "freshrss.fullname" . }}-healthz
-
-        - name: apache-health-bypass
-          configMap:
-            name: {{ include "freshrss.fullname" . }}-apache-health-bypass
