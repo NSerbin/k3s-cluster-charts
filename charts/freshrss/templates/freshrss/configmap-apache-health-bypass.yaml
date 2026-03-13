@@ -6,14 +6,7 @@ metadata:
     {{- include "freshrss.labels" . | nindent 4 }}
 data:
   zzz-health-bypass.conf: |
-    Alias /healthz /var/www/FreshRSS/healthz
-
-    <Location /healthz>
+    <Location "/healthz">
         AuthType none
         Require all granted
-        Satisfy any
     </Location>
-
-    <Files "healthz">
-        Require all granted
-    </Files>
