@@ -6,8 +6,14 @@ metadata:
     {{- include "freshrss.labels" . | nindent 4 }}
 data:
   zzz-health-bypass.conf: |
-    # Healthcheck bypass for Kubernetes probes
-    <LocationMatch "^/i/?$">
-      AuthType None
-      Require all granted
-    </LocationMatch>
+    Alias /healthz /var/www/FreshRSS/healthz
+
+    <Location /healthz>
+        AuthType none
+        Require all granted
+        Satisfy any
+    </Location>
+
+    <Files "healthz">
+        Require all granted
+    </Files>

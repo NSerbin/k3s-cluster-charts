@@ -82,6 +82,11 @@ spec:
             - name: freshrss-data
               mountPath: /var/www/FreshRSS/data
 
+            - name: healthz-file
+              mountPath: /var/www/FreshRSS/healthz
+              subPath: healthz
+              readOnly: true              
+
             - name: apache-health-bypass
               mountPath: /etc/apache2/conf-enabled/zzz-health-bypass.conf
               subPath: zzz-health-bypass.conf
@@ -91,6 +96,10 @@ spec:
         - name: freshrss-data
           persistentVolumeClaim:
             claimName: {{ include "freshrss.fullname" . }}-data
+
+        - name: healthz-file
+          configMap:
+            name: {{ include "freshrss.fullname" . }}-healthz
 
         - name: apache-health-bypass
           configMap:
