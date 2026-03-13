@@ -7,7 +7,10 @@ metadata:
     {{- include "freshrss.labels" . | nindent 4 }}
 data:
   OIDC_ENABLED: "1"
+  OIDC_PROVIDER_METADATA_URL: {{ .Values.oidc.OIDC_PROVIDER_METADATA_URL }}
+  OIDC_CLIENT_ID: {{ .Values.oidc.OIDC_CLIENT_ID }}
+  OIDC_CLIENT_SECRET: {{ .Values.oidc.OIDC_CLIENT_SECRET }}
   OIDC_SCOPES: "openid email profile"
   OIDC_X_FORWARDED_HEADERS: "X-Forwarded-Port X-Forwarded-Proto X-Forwarded-Host"
-  OIDC_REMOTE_USER_CLAIM: {{ .Values.oidc.remoteUserClaim | default "preferred_username" | quote }}
+  OIDC_REMOTE_USER_CLAIM: {{ .Values.oidc.OIDC_REMOTE_USER_CLAIM | default "preferred_username" | quote }}
 {{- end }}
