@@ -62,7 +62,7 @@ meilisearch:
   enabled: true
   image:
     repository: getmeili/meilisearch
-    tag: v1.33.1
+    tag: 1.39.0
     pullPolicy: IfNotPresent
   persistence:
     enabled: true
