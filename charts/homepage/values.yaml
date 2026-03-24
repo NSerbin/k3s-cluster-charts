@@ -339,6 +339,12 @@ config:
             href: https://docs.nserbin.com/
             description: Sign documents
             server: rpi
+        
+        - IT Tools:
+            icon: 
+            href: https://tools.nserbin.com/
+            description: Multiple Tools
+            server: k3s
 
         - Watchtower:
             icon: watchtower.svg
