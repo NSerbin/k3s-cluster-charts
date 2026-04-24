@@ -17,9 +17,11 @@ spec:
           port: {{ .Values.ingressRoute.servicePort }}
 
   {{- if .Values.ingressRoute.tls.enabled }}
-  tls:
     {{- if .Values.ingressRoute.tls.secretName }}
+  tls:
     secretName: {{ .Values.ingressRoute.tls.secretName | quote }}
+    {{- else }}
+  tls: {}
     {{- end }}
   {{- end }}
 {{- end }}
