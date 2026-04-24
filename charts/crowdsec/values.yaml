@@ -7,13 +7,15 @@ ingressRoute:
   enabled: true
   entryPoints:
     - web
+    - websecure
   host: crowdsec.nserbin.com
   pathPrefixes:
     - /
-  serviceName: crowdsec-lapi
+  # Service publicado por el chart oficial crowdsec/crowdsec
+  serviceName: crowdsec-service
   servicePort: 8080
   tls:
-    enabled: false
+    enabled: true
     secretName: ""
 
 postgresql:

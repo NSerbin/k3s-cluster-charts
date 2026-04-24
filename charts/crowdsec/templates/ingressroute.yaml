@@ -16,8 +16,10 @@ spec:
         - name: {{ .Values.ingressRoute.serviceName }}
           port: {{ .Values.ingressRoute.servicePort }}
 
-  {{- if and .Values.ingressRoute.tls.enabled .Values.ingressRoute.tls.secretName }}
+  {{- if .Values.ingressRoute.tls.enabled }}
   tls:
+    {{- if .Values.ingressRoute.tls.secretName }}
     secretName: {{ .Values.ingressRoute.tls.secretName | quote }}
+    {{- end }}
   {{- end }}
 {{- end }}
