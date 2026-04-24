@@ -1,0 +1,23 @@
+{{- if .Values.ingressRoute.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: crowdsec-lapi
+  namespace: {{ .Release.Namespace }}
+spec:
+  entryPoints:
+    {{- range .Values.ingressRoute.entryPoints }}
+    - {{ . | quote }}
+    {{- end }}
+  routes:
+    - match: Host(`{{ .Values.ingressRoute.host }}`) && ({{- $first := true -}}{{- range .Values.ingressRoute.pathPrefixes -}}{{- if not $first }} || {{- end -}}PathPrefix(`{{ . }}`){{- $first = false -}}{{- end -}})
+      kind: Rule
+      services:
+        - name: {{ .Values.ingressRoute.serviceName }}
+          port: {{ .Values.ingressRoute.servicePort }}
+
+  {{- if and .Values.ingressRoute.tls.enabled .Values.ingressRoute.tls.secretName }}
+  tls:
+    secretName: {{ .Values.ingressRoute.tls.secretName | quote }}
+  {{- end }}
+{{- end }}
