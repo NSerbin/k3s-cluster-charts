@@ -54,6 +54,7 @@ crowdsec:
 
   lapi:
     replicas: 1
+    storeCAPICredentialsInSecret: false
     metrics:
       enabled: true
       serviceMonitor:
@@ -91,6 +92,9 @@ crowdsec:
           secretKeyRef:
             name: crowdsec-secrets
             key: ENROLL_KEY
+      - name: ENROLL_INSTANCE_NAME
+        value: "k3s-cluster"
+      
 
   config:
     config.yaml.local: |
