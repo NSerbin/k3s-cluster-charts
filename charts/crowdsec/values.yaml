@@ -31,10 +31,6 @@ postgresql:
 # Valores para el chart oficial crowdsec/crowdsec
 crowdsec:
   container_runtime: containerd
-  # Habilitar enrolamiento con CrowdSec Console (web oficial):
-  # 1) Guardar ENROLL_KEY en Vault (y sincronizar a crowdsec-secrets con ESO)
-  # 2) Descomentar el env ENROLL_KEY en lapi.env
-  # 3) Luego aceptar el Security Engine en la Console
 
   agent:
     metrics:
@@ -90,11 +86,11 @@ crowdsec:
           secretKeyRef:
             name: crowdsec-secrets
             key: BOUNCER_KEY_traefik
-      # - name: ENROLL_KEY
-      #   valueFrom:
-      #     secretKeyRef:
-      #       name: crowdsec-secrets
-      #       key: ENROLL_KEY
+      - name: ENROLL_KEY
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-secrets
+            key: ENROLL_KEY
 
   config:
     config.yaml.local: |
