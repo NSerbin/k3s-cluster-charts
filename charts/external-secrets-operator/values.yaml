@@ -136,6 +136,13 @@ externalSecrets:
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
+        - secretKey: ENROLL_KEY
+          remoteRef:
+            key: k8s/core/security/crowdsec/console
+            property: ENROLL_KEY
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: freshrss-secrets-db
       namespace: tools

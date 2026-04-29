@@ -33,6 +33,12 @@ crowdsec:
   container_runtime: containerd
 
   agent:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: kube-prometheus-stack
     acquisition:
       - namespace: traefik
         podName: traefik-*
@@ -48,6 +54,12 @@ crowdsec:
 
   lapi:
     replicas: 1
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: kube-prometheus-stack
     persistentVolume:
       data:
         enabled: false
@@ -74,6 +86,11 @@ crowdsec:
           secretKeyRef:
             name: crowdsec-secrets
             key: BOUNCER_KEY_traefik
+      - name: ENROLL_KEY
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-secrets
+            key: ENROLL_KEY
 
   config:
     config.yaml.local: |
