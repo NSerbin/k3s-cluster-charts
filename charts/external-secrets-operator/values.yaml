@@ -98,6 +98,52 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None            
 
+    - name: crowdsec-secrets
+      namespace: security
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: crowdsec-secrets
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      data:
+        - secretKey: POSTGRES_DB
+          remoteRef:
+            key: k8s/core/security/crowdsec/db
+            property: POSTGRES_DB
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: POSTGRES_USER
+          remoteRef:
+            key: k8s/core/security/crowdsec/db
+            property: POSTGRES_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: POSTGRES_PASSWORD
+          remoteRef:
+            key: k8s/core/security/crowdsec/db
+            property: POSTGRES_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: BOUNCER_KEY_traefik
+          remoteRef:
+            key: k8s/core/security/crowdsec/traefik
+            property: BOUNCER_KEY_traefik
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: ENROLL_KEY
+          remoteRef:
+            key: k8s/core/security/crowdsec/console
+            property: ENROLL_KEY
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
     - name: freshrss-secrets-db
       namespace: tools
       secretStoreRef:
