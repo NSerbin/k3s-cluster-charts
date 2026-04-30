@@ -63,9 +63,9 @@ crowdsec:
           release: kube-prometheus-stack
     persistentVolume:
       data:
-        enabled: false
+        enabled: true
       config:
-        enabled: false
+        enabled: true
     env:
       - name: POSTGRES_DB
         valueFrom:
@@ -94,7 +94,8 @@ crowdsec:
             key: ENROLL_KEY
       - name: ENROLL_INSTANCE_NAME
         value: "k3s-cluster"
-      
+      - name: ENROLL_TAGS
+        value: "k8s linux traefik"      
 
   config:
     config.yaml.local: |
