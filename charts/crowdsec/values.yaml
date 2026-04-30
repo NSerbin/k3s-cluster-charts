@@ -3,7 +3,14 @@ secrets:
 
 # Safety default to avoid nil-pointer if older postgresql templates are still present.
 postgresql:
-  enabled: false
+  enabled: true
+  image: postgres:17-alpine
+  serviceName: crowdsec-postgres
+  port: 5432
+  storage:
+    size: 10Gi
+    accessModes: ["ReadWriteOnce"]
+    storageClassName: ""
 
 ingressRoute:
   enabled: false
