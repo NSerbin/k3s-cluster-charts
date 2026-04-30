@@ -1,8 +1,13 @@
 secrets:
   existingSecret: crowdsec-secrets
 
+# Safety default to avoid nil-pointer if older postgresql templates are still present.
+postgresql:
+  enabled: false
+
 ingressRoute:
   enabled: false
+
 
 # Minimal wrapper: all runtime behavior delegated to official chart.
 crowdsec:
