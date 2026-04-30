@@ -137,10 +137,6 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None
 
-
-
-
-
     - name: crowdsec-bouncer-secrets
       namespace: traefik
       secretStoreRef:
