@@ -100,7 +100,7 @@ crowdsecBouncer:
   replicaCount: 1
   image:
     repository: fbonalair/traefik-crowdsec-bouncer
-    tag: v0.6.5
+    tag: latest
     pullPolicy: IfNotPresent
   logLevel: INFO
   crowdsecLapiUrl: http://crowdsec-service.security.svc.cluster.local:8080
