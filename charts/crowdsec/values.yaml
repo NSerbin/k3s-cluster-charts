@@ -1,0 +1,127 @@
+# Secret consumido por CrowdSec y PostgreSQL.
+# Debe contener: POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD, BOUNCER_KEY_traefik
+secrets:
+  existingSecret: crowdsec-secrets
+
+ingressRoute:
+  enabled: true
+  entryPoints:
+    - web
+    - websecure
+  host: crowdsec.nserbin.com
+  pathPrefixes:
+    - /
+  # Service publicado por el chart oficial crowdsec/crowdsec
+  serviceName: crowdsec-service
+  servicePort: 8080
+  tls:
+    enabled: true
+    secretName: ""
+
+postgresql:
+  enabled: true
+  image: postgres:17-alpine
+  serviceName: crowdsec-postgres
+  port: 5432
+  storage:
+    size: 10Gi
+    accessModes: ["ReadWriteOnce"]
+    storageClassName: ""
+
+# Valores para el chart oficial crowdsec/crowdsec
+crowdsec:
+  container_runtime: containerd
+  # Habilitar enrolamiento con CrowdSec Console (web oficial):
+  # 1) Guardar ENROLL_KEY en Vault (y sincronizar a crowdsec-secrets con ESO)
+  # 2) Descomentar el env ENROLL_KEY en lapi.env
+  # 3) Luego aceptar el Security Engine en la Console
+
+  agent:
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: kube-prometheus-stack
+    acquisition:
+      - namespace: traefik
+        podName: traefik-*
+        program: traefik
+        poll_without_inotify: true
+    env:
+      - name: COLLECTIONS
+        value: "crowdsecurity/traefik"
+      - name: GID
+        value: "0"
+      - name: PARSERS
+        value: "crowdsecurity/cri-logs"
+
+  lapi:
+    replicas: 1
+    storeCAPICredentialsInSecret: false
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+        additionalLabels:
+          release: kube-prometheus-stack
+    persistentVolume:
+      data:
+        enabled: false
+      config:
+        enabled: false
+    env:
+      - name: POSTGRES_DB
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-secrets
+            key: POSTGRES_DB
+      - name: POSTGRES_USER
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-secrets
+            key: POSTGRES_USER
+      - name: POSTGRES_PASSWORD
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-secrets
+            key: POSTGRES_PASSWORD
+      - name: ENROLL_KEY
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-secrets
+            key: ENROLL_KEY
+      - name: ENROLL_INSTANCE_NAME
+        value: "k3s-cluster"
+      - name: ENROLL_TAGS
+        value: "k8s linux traefik"
+
+  config:
+    config.yaml.local: |
+      api:
+        client:
+          unregister_on_exit: true
+        server:
+          auto_registration:
+            enabled: true
+            token: "${REGISTRATION_TOKEN}"
+            allowed_ranges:
+              - "127.0.0.1/32"
+              - "10.0.0.0/8"
+              - "172.16.0.0/12"
+              - "192.168.0.0/16"
+      db_config:
+        type: postgresql
+        user: ${POSTGRES_USER}
+        password: ${POSTGRES_PASSWORD}
+        db_name: ${POSTGRES_DB}
+        host: crowdsec-postgres
+        port: 5432
+        flush:
+          max_items: 5000
+          max_age: 7d
+          bouncers_autodelete:
+            cert: 24h
+            api_key: 168h
+          agents_autodelete:
+            login_password: 168h
