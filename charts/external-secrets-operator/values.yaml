@@ -141,24 +141,6 @@ externalSecrets:
 
 
 
-    - name: crowdsec-capi-credentials
-      namespace: security
-      secretStoreRef:
-        name: vault
-        kind: ClusterSecretStore
-      target:
-        name: crowdsec-capi-credentials
-        creationPolicy: Owner
-        deletionPolicy: Retain
-      data:
-        - secretKey: online_api_credentials.yaml
-          remoteRef:
-            key: k8s/core/security/crowdsec/capi
-            property: online_api_credentials.yaml
-            conversionStrategy: Default
-            decodingStrategy: None
-            metadataPolicy: None
-
     - name: crowdsec-bouncer-secrets
       namespace: traefik
       secretStoreRef:
