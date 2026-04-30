@@ -1,5 +1,6 @@
 {{- if .Values.dashboard.enabled }}
 {{- $ba := (.Values.dashboard.basicAuth | default dict) -}}
+{{- $csb := (.Values.crowdsecBouncer | default dict) -}}
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
@@ -11,9 +12,14 @@ spec:
   routes:
     - match: Host(`{{ .Values.dashboard.host }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
-      {{- if ($ba.enabled | default false) }}
+      {{- if or ($ba.enabled | default false) (and ($csb.enabled | default false) ($csb.middleware.enabled | default false)) }}
       middlewares:
+        {{- if ($ba.enabled | default false) }}
         - name: traefik-dashboard-auth
+        {{- end }}
+        {{- if and ($csb.enabled | default false) ($csb.middleware.enabled | default false) }}
+        - name: {{ $csb.middleware.name | default "crowdsec-bouncer" }}
+        {{- end }}
       {{- end }}
       services:
         - name: api@internal
