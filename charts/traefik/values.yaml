@@ -96,8 +96,7 @@ dashboard:
 
 
 crowdsecBouncer:
-  # Disabled by default to avoid crashing Traefik rollout when image/tag or secret are not ready.
-  enabled: false
+  enabled: true
   replicaCount: 1
   image:
     repository: fbonalair/traefik-crowdsec-bouncer

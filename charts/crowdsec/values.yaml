@@ -86,9 +86,15 @@ crowdsec:
           secretKeyRef:
             name: crowdsec-secrets
             key: POSTGRES_PASSWORD
-      # Console enrollment se realiza una sola vez.
-      # Si la instancia ya está registrada, mantener estas vars deshabilitadas para evitar
-      # ejecución del job de registro CAPI en entornos sin kubectl dentro del contenedor.
+      - name: ENROLL_KEY
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-secrets
+            key: ENROLL_KEY
+      - name: ENROLL_INSTANCE_NAME
+        value: "k3s-cluster"
+      - name: ENROLL_TAGS
+        value: "k8s linux traefik"
 
   config:
     config.yaml.local: |
