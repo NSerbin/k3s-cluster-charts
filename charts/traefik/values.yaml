@@ -93,3 +93,23 @@ dashboard:
   #entryPoint: "websecure"
   entryPoint: "web"
 
+
+
+crowdsecBouncer:
+  enabled: true
+  replicaCount: 1
+  image:
+    repository: fbonalair/traefik-crowdsec-bouncer
+    tag: v0.6.5
+    pullPolicy: IfNotPresent
+  logLevel: INFO
+  crowdsecLapiUrl: http://crowdsec-service.security.svc.cluster.local:8080
+  crowdsecMode: live
+  updateIntervalSeconds: 60
+  redisCacheEnabled: false
+  secrets:
+    existingSecret: crowdsec-bouncer-secrets
+    keyField: BOUNCER_KEY_traefik
+  middleware:
+    enabled: true
+    name: crowdsec-bouncer
