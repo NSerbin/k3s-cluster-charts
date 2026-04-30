@@ -92,4 +92,3 @@ dashboard:
   host: "traefik.nserbin.com"
   #entryPoint: "websecure"
   entryPoint: "web"
-
