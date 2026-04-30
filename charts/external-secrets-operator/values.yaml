@@ -141,23 +141,7 @@ externalSecrets:
 
 
 
-    - name: crowdsec-bouncer-secrets
-      namespace: traefik
-      secretStoreRef:
-        name: vault
-        kind: ClusterSecretStore
-      target:
-        name: crowdsec-bouncer-secrets
-        creationPolicy: Owner
-        deletionPolicy: Retain
-      data:
-        - secretKey: BOUNCER_KEY_traefik
-          remoteRef:
-            key: k8s/core/security/crowdsec/traefik
-            property: BOUNCER_KEY_traefik
-            conversionStrategy: Default
-            decodingStrategy: None
-            metadataPolicy: None
+
 
     - name: freshrss-secrets-db
       namespace: tools

@@ -92,27 +92,3 @@ dashboard:
   host: "traefik.nserbin.com"
   #entryPoint: "websecure"
   entryPoint: "web"
-
-
-
-crowdsecBouncer:
-  # Disabled by default to avoid crashing Traefik rollout when image/tag or secret are not ready.
-  enabled: false
-  replicaCount: 1
-  image:
-    repository: fbonalair/traefik-crowdsec-bouncer
-    tag: latest
-    pullPolicy: IfNotPresent
-  logLevel: INFO
-  crowdsecLapiUrl: http://crowdsec-service.security.svc.cluster.local:8080
-  crowdsecMode: live
-  updateIntervalSeconds: 60
-  redisCacheEnabled: false
-  secrets:
-    existingSecret: crowdsec-bouncer-secrets
-    keyField: BOUNCER_KEY_traefik
-  middleware:
-    enabled: true
-    name: crowdsec-bouncer
-    # Avoid attaching automatically to dashboard until bouncer is validated in-cluster.
-    attachToDashboard: false
