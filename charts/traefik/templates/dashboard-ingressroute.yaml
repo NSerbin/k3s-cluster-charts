@@ -12,7 +12,7 @@ spec:
   routes:
     - match: Host(`{{ .Values.dashboard.host }}`) && (PathPrefix(`/dashboard`) || PathPrefix(`/api`))
       kind: Rule
-      {{- if or ($ba.enabled | default false) (and ($csb.enabled | default false) ($csb.middleware.enabled | default false)) }}
+      {{- if or ($ba.enabled | default false) (and ($csb.enabled | default false) ($csb.middleware.enabled | default false) ($csb.middleware.attachToDashboard | default false)) }}
       middlewares:
         {{- if ($ba.enabled | default false) }}
         - name: traefik-dashboard-auth

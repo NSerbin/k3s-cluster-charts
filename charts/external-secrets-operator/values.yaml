@@ -139,6 +139,8 @@ externalSecrets:
 
 
 
+
+
     - name: crowdsec-bouncer-secrets
       namespace: traefik
       secretStoreRef:
