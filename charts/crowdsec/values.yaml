@@ -31,10 +31,6 @@ postgresql:
 # Valores para el chart oficial crowdsec/crowdsec
 crowdsec:
   container_runtime: containerd
-  # Habilitar enrolamiento con CrowdSec Console (web oficial):
-  # 1) Guardar ENROLL_KEY en Vault (y sincronizar a crowdsec-secrets con ESO)
-  # 2) Descomentar el env ENROLL_KEY en lapi.env
-  # 3) Luego aceptar el Security Engine en la Console
 
   agent:
     metrics:
@@ -67,9 +63,9 @@ crowdsec:
           release: kube-prometheus-stack
     persistentVolume:
       data:
-        enabled: false
+        enabled: true
       config:
-        enabled: false
+        enabled: true
     env:
       - name: POSTGRES_DB
         valueFrom:
@@ -99,7 +95,7 @@ crowdsec:
       - name: ENROLL_INSTANCE_NAME
         value: "k3s-cluster"
       - name: ENROLL_TAGS
-        value: "k8s linux traefik"
+        value: "k8s linux traefik"      
 
   config:
     config.yaml.local: |
