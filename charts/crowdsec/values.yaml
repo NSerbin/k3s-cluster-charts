@@ -1,24 +1,45 @@
 secrets:
   existingSecret: crowdsec-secrets
 
-# Safety default to avoid nil-pointer if older postgresql templates are still present.
 postgresql:
   enabled: true
   image: postgres:17-alpine
+  imagePullPolicy: IfNotPresent
   serviceName: crowdsec-postgres
   port: 5432
+  pgData: /var/lib/postgresql/data/pgdata
   storage:
     size: 10Gi
     accessModes: ["ReadWriteOnce"]
     storageClassName: ""
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      memory: 512Mi
 
 ingressRoute:
   enabled: false
-
+  entryPoints:
+    - websecure
+  host: crowdsec.example.com
+  pathPrefixes:
+    - /
+  serviceName: crowdsec-service
+  servicePort: 8080
+  tls:
+    enabled: true
+    secretName: ""
 
 # Minimal wrapper: all runtime behavior delegated to official chart.
 crowdsec:
   container_runtime: containerd
+
+  image:
+    repository: crowdsecurity/crowdsec
+    tag: v1.7.7
+    pullPolicy: IfNotPresent
 
   agent:
     metrics:
@@ -50,6 +71,17 @@ crowdsec:
         additionalLabels:
           release: kube-prometheus-stack
     env:
+      - name: ENROLL_KEY
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-secrets
+            key: ENROLL_KEY
+      - name: ENROLL_INSTANCE_NAME
+        value: "k3s-cluster"
+      - name: ENROLL_TAGS
+        value: "k3s linux traefik self-hosted"
+      - name: ENABLE_CONSOLE_MANAGEMENT
+        value: "true"
       - name: POSTGRES_DB
         valueFrom:
           secretKeyRef:
@@ -67,7 +99,22 @@ crowdsec:
             key: POSTGRES_PASSWORD
 
   config:
+    console.yaml: |
+      share_manual_decisions: true
+      share_tainted: true
+      share_custom: true
+
     config.yaml.local: |
+      api:
+        server:
+          auto_registration:
+            enabled: true
+            token: "${REGISTRATION_TOKEN}"
+            allowed_ranges:
+              - "127.0.0.1/32"
+              - "10.0.0.0/8"
+              - "172.16.0.0/12"
+              - "192.168.0.0/16"
       db_config:
         type: postgresql
         user: ${POSTGRES_USER}
