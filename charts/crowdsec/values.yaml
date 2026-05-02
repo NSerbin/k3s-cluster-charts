@@ -71,8 +71,6 @@ crowdsec:
         additionalLabels:
           release: kube-prometheus-stack
     env:
-      - name: CUSTOM_HOSTNAME
-        value: "k3s-crowdsec-lapi"
       - name: BOUNCER_KEY_traefik
         valueFrom:
           secretKeyRef:
