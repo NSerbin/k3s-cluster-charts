@@ -1,8 +1,10 @@
-{{- if and .Values.crowdsecBouncer.enabled .Values.crowdsecBouncer.middleware.enabled }}
+{{- $csb := (.Values.crowdsecBouncer | default dict) -}}
+{{- $middleware := ($csb.middleware | default dict) -}}
+{{- if and ($csb.enabled | default false) ($middleware.enabled | default false) }}
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: {{ .Values.crowdsecBouncer.middleware.name }}
+  name: {{ $middleware.name | default "crowdsec-bouncer" }}
   namespace: traefik
 spec:
   forwardAuth:

@@ -23,7 +23,7 @@ ingressRoute:
   enabled: false
   entryPoints:
     - websecure
-  host: crowdsec.example.com
+  host: crowdsec.nserbin.com
   pathPrefixes:
     - /
   serviceName: crowdsec-service
@@ -71,6 +71,11 @@ crowdsec:
         additionalLabels:
           release: kube-prometheus-stack
     env:
+      - name: BOUNCER_KEY_traefik
+        valueFrom:
+          secretKeyRef:
+            name: crowdsec-secrets
+            key: BOUNCER_KEY_traefik
       - name: ENROLL_KEY
         valueFrom:
           secretKeyRef:
@@ -80,8 +85,6 @@ crowdsec:
         value: "k3s-cluster"
       - name: ENROLL_TAGS
         value: "k3s linux traefik self-hosted"
-      - name: ENABLE_CONSOLE_MANAGEMENT
-        value: "true"
       - name: POSTGRES_DB
         valueFrom:
           secretKeyRef:
@@ -100,6 +103,7 @@ crowdsec:
 
   config:
     console.yaml: |
+      console_management: true
       share_manual_decisions: true
       share_tainted: true
       share_custom: true

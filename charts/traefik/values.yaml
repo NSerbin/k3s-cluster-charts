@@ -16,6 +16,7 @@ traefik:
     type: LoadBalancer
     spec:
       loadBalancerIP: 192.168.0.233
+      externalTrafficPolicy: Local
 
   providers:
     kubernetesCRD:
@@ -71,8 +72,10 @@ traefik:
 
   additionalArguments:
     - "--ping=true"
-    - "--entryPoints.web.forwardedHeaders.insecure=true"
-    - "--entryPoints.websecure.forwardedHeaders.insecure=true"
+    - "--entryPoints.web.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    - "--entryPoints.websecure.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+    - "--entrypoints.web.http.middlewares=traefik-crowdsec-bouncer@kubernetescrd"
+    - "--entrypoints.websecure.http.middlewares=traefik-crowdsec-bouncer@kubernetescrd"
     - "--entrypoints.traefik.address=:9000"
 
   securityContext:
@@ -92,3 +95,38 @@ dashboard:
   host: "traefik.nserbin.com"
   #entryPoint: "websecure"
   entryPoint: "web"
+
+crowdsecBouncer:
+  enabled: true
+  replicaCount: 1
+
+  image:
+    repository: fbonalair/traefik-crowdsec-bouncer
+    tag: latest
+    pullPolicy: IfNotPresent
+
+  crowdsecAgentHost: crowdsec-service.security.svc.cluster.local:8080
+  crowdsecBouncerScheme: http
+  logLevel: "1"
+  banResponseCode: "403"
+  banResponseMsg: "Forbidden"
+  healthCheckTimeout: 2s
+  port: "8080"
+  ginMode: release
+  trustedProxies: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+
+  secrets:
+    existingSecret: crowdsec-bouncer-secrets
+    keyField: BOUNCER_KEY_traefik
+
+  middleware:
+    enabled: true
+    name: crowdsec-bouncer
+    attachToDashboard: false
+
+  resources:
+    requests:
+      cpu: 20m
+      memory: 64Mi
+    limits:
+      memory: 128Mi

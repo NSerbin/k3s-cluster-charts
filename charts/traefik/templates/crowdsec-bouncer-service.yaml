@@ -1,9 +1,14 @@
-{{- if .Values.crowdsecBouncer.enabled }}
+{{- $csb := (.Values.crowdsecBouncer | default dict) -}}
+{{- if ($csb.enabled | default false) }}
 apiVersion: v1
 kind: Service
 metadata:
   name: crowdsec-traefik-bouncer
   namespace: traefik
+  annotations:
+    prometheus.io/scrape: "true"
+    prometheus.io/path: /api/v1/metrics
+    prometheus.io/port: "8080"
 spec:
   selector:
     app.kubernetes.io/name: crowdsec-traefik-bouncer
