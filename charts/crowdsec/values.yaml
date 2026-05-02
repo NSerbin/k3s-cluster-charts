@@ -71,20 +71,13 @@ crowdsec:
         additionalLabels:
           release: kube-prometheus-stack
     env:
+      - name: CUSTOM_HOSTNAME
+        value: "k3s-crowdsec-lapi"
       - name: BOUNCER_KEY_traefik
         valueFrom:
           secretKeyRef:
             name: crowdsec-secrets
             key: BOUNCER_KEY_traefik
-      - name: ENROLL_KEY
-        valueFrom:
-          secretKeyRef:
-            name: crowdsec-secrets
-            key: ENROLL_KEY
-      - name: ENROLL_INSTANCE_NAME
-        value: "k3s-cluster"
-      - name: ENROLL_TAGS
-        value: "k3s linux traefik self-hosted"
       - name: POSTGRES_DB
         valueFrom:
           secretKeyRef:

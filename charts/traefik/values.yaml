@@ -24,6 +24,12 @@ traefik:
     kubernetesIngress:
       enabled: true
 
+  experimental:
+    plugins:
+      bouncer:
+        moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
+        version: v1.6.0
+
   ports:
     web:
       port: 80
@@ -89,6 +95,11 @@ traefik:
   persistence:
     enabled: false
 
+  volumes:
+    - name: crowdsec-bouncer-secrets
+      type: secret
+      mountPath: /etc/traefik/secrets/crowdsec-bouncer
+
 
 dashboard:
   enabled: true
@@ -98,35 +109,30 @@ dashboard:
 
 crowdsecBouncer:
   enabled: true
-  replicaCount: 1
-
-  image:
-    repository: fbonalair/traefik-crowdsec-bouncer
-    tag: latest
-    pullPolicy: IfNotPresent
-
-  crowdsecAgentHost: crowdsec-service.security.svc.cluster.local:8080
-  crowdsecBouncerScheme: http
-  logLevel: "1"
-  banResponseCode: "403"
-  banResponseMsg: "Forbidden"
-  healthCheckTimeout: 2s
-  port: "8080"
-  ginMode: release
-  trustedProxies: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
 
   secrets:
     existingSecret: crowdsec-bouncer-secrets
     keyField: BOUNCER_KEY_traefik
+    mountPath: /etc/traefik/secrets/crowdsec-bouncer
 
   middleware:
     enabled: true
     name: crowdsec-bouncer
     attachToDashboard: false
-
-  resources:
-    requests:
-      cpu: 20m
-      memory: 64Mi
-    limits:
-      memory: 128Mi
+    crowdsecMode: stream
+    crowdsecLapiHost: crowdsec-service.security.svc.cluster.local:8080
+    crowdsecLapiScheme: http
+    forwardedHeadersTrustedIPs:
+      - 10.0.0.0/8
+      - 172.16.0.0/12
+      - 192.168.0.0/16
+    updateIntervalSeconds: 60
+    metricsUpdateIntervalSeconds: 60
+    remediationStatusCode: 403
+    httpTimeoutSeconds: 10
+    crowdsecAppsecEnabled: false
+    crowdsecAppsecHost: crowdsec-appsec-service.security.svc.cluster.local:7422
+    crowdsecAppsecPath: /
+    crowdsecAppsecFailureBlock: false
+    crowdsecAppsecUnreachableBlock: false
+    crowdsecAppsecBodyLimit: 10485760
