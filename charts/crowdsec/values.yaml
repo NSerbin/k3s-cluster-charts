@@ -53,13 +53,22 @@ crowdsec:
         podName: traefik-*
         program: traefik
         poll_without_inotify: true
+    additionalAcquisition:
+      - source: file
+        filenames:
+          - /var/log/auth.log
+          - /var/log/secure
+        force_inotify: true
+        poll_without_inotify: true
+        labels:
+          type: syslog
     env:
       - name: COLLECTIONS
-        value: "crowdsecurity/traefik"
+        value: "crowdsecurity/traefik crowdsecurity/base-http-scenarios crowdsecurity/http-cve crowdsecurity/linux crowdsecurity/sshd"
       - name: GID
         value: "0"
       - name: PARSERS
-        value: "crowdsecurity/cri-logs"
+        value: "crowdsecurity/cri-logs crowdsecurity/syslog-logs"
 
   lapi:
     replicas: 1
@@ -93,6 +102,10 @@ crowdsec:
             key: POSTGRES_PASSWORD
 
   config:
+    simulation.yaml: |
+      simulation: false
+      exclusions: []
+
     console.yaml: |
       console_management: true
       share_manual_decisions: true
