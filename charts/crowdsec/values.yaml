@@ -56,8 +56,8 @@ crowdsec:
     additionalAcquisition:
       - source: file
         filenames:
-          - /var/log/auth.log
-          - /var/log/secure
+          - /var/log/auth.log*
+          - /var/log/secure*
         force_inotify: true
         poll_without_inotify: true
         labels:
@@ -80,11 +80,6 @@ crowdsec:
         additionalLabels:
           release: kube-prometheus-stack
     env:
-      - name: BOUNCER_KEY_traefik
-        valueFrom:
-          secretKeyRef:
-            name: crowdsec-secrets
-            key: BOUNCER_KEY_traefik
       - name: POSTGRES_DB
         valueFrom:
           secretKeyRef:
