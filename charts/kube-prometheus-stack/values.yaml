@@ -75,13 +75,10 @@ kube-prometheus-stack:
       enabled: false
 
     sidecar:
-      dashboards:
-        enabled: true
-        defaultDashboardsEnabled: true
       datasources:
         enabled: true
         initDatasources: false
-        skipReload: false
+        skipReload: true
     
     envFromSecrets:
       - name: grafana-secrets-oidc
@@ -109,7 +106,7 @@ kube-prometheus-stack:
 
       auth.generic_oauth:
           name: authentik
-          enabled: false
+          enabled: true
           client_id: $__env{AUTHENTIK_CLIENT_ID}
           client_secret: $__env{AUTHENTIK_CLIENT_SECRET}
           scopes: "openid profile email"
