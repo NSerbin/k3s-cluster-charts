@@ -398,7 +398,7 @@ alerting:
 postgresql:
   enabled: true
   image: "postgres:16.3-alpine3.20"
-  serviceName: "grafana-postgres"
+  serviceName: "kube-prometheus-stack-postgres"
   port: 5432
   storage:
     size: 2Gi
