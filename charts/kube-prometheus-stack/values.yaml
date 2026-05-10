@@ -56,6 +56,8 @@ kube-prometheus-stack:
   
   grafana:
     enabled: true
+    annotations:
+      argocd.argoproj.io/sync-wave: "1"
     image:
       repository: grafana/grafana
       tag: "13.0.1"
