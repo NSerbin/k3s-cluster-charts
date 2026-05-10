@@ -1,0 +1,9 @@
+# Ignore local migration artifacts and backups
+*.db
+*.sql
+*.tar.gz
+convert_sqlite_to_postgres.py
+split_and_import.py
+grafana-backup.*
+grafana-sqlite-dump.*
+table_*.sql

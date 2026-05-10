@@ -88,10 +88,18 @@ kube-prometheus-stack:
     
     envFromSecrets:
       - name: grafana-secrets-oidc
+      - name: grafana-secrets-github-oidc
+      - name: grafana-secrets-github-app
+      - name: grafana-secrets-db
 
     grafana.ini:
       database:
-        type: sqlite3
+        type: postgres
+        host: kube-prometheus-stack-postgres.monitoring.svc.cluster.local:5432
+        name: $__env{POSTGRES_DB}
+        user: $__env{POSTGRES_USER}
+        password: $__env{POSTGRES_PASSWORD}
+        ssl_mode: disable
       
       server:
         domain: monitor.nserbin.com
