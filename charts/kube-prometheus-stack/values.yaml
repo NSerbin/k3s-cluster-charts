@@ -1,8 +1,13 @@
+# Preferido: secret pre-creado (ExternalSecrets/SOPS/manual)
+secrets:
+  existingSecret: "grafana-secrets-db"
+  create: false
+
 kube-prometheus-stack:
   
   # =========================
   # PROMETHEUS              
-  # =========================
+  # =========================  
   
   prometheus:
     enabled: true
@@ -58,11 +63,8 @@ kube-prometheus-stack:
     defaultDashboardsTimezone: "browser"
 
     plugins:
-      - grafana-github-datasource
       - andrewbmchugh-flow-panel
-      - grafana-polystat-panel
       - volkovlabs-echarts-panel
-      - sentinelone-dataset-datasource
       - yesoreyeram-infinity-datasource
 
     securityContext:
@@ -82,9 +84,11 @@ kube-prometheus-stack:
     
     envFromSecrets:
       - name: grafana-secrets-oidc
-      - name: grafana-secrets-github-oidc
 
     grafana.ini:
+      database:
+        type: sqlite3
+      
       server:
         domain: monitor.nserbin.com
         root_url: https://monitor.nserbin.com/
@@ -123,20 +127,6 @@ kube-prometheus-stack:
 
       auth.basic:
         enabled: true
-
-      auth.github:
-        enabled: false
-        allow_sign_up: false
-        client_id: $__env{GF_AUTH_GITHUB_CLIENT_ID}
-        client_secret: $__env{GF_AUTH_GITHUB_CLIENT_SECRET}
-        scopes: user:email,read:org
-        auth_url: https://github.com/login/oauth/authorize
-        token_url: https://github.com/login/oauth/access_token
-        api_url: https://api.github.com/user
-        email_attribute_path: email
-        role_attribute_path: "'GrafanaAdmin'"
-        allow_assign_grafana_admin: true
-        skip_org_role_sync: true
         
       api:
         enabled: true        
@@ -163,32 +153,7 @@ kube-prometheus-stack:
     service:
       type: ClusterIP
 
-    additionalDataSources:
-      - name: GitHub (App)
-        type: grafana-github-datasource
-        access: proxy
-        jsonData:
-          selectedAuthType: github-app
-          appId: ${GITHUB_APP_ID}
-          installationId: ${GITHUB_APP_INSTALLATION_ID}
-        secureJsonData:
-          privateKey: ${GITHUB_APP_PRIVATE_KEY}
-
-    envValueFrom:
-      GITHUB_APP_PRIVATE_KEY:
-        secretKeyRef:
-          name: grafana-secrets-github-app
-          key: GITHUB_APP_PRIVATE_KEY
-
-      GITHUB_APP_ID:
-        secretKeyRef:
-          name: grafana-secrets-github-app
-          key: GITHUB_APP_ID
-
-      GITHUB_APP_INSTALLATION_ID:
-        secretKeyRef:
-          name: grafana-secrets-github-app
-          key: GITHUB_APP_INSTALLATION_ID
+    envValueFrom: {}
 
   # =========================
   # NODE EXPORTER + KSM
@@ -412,4 +377,21 @@ alerting:
         matchers:
           - name: severity
             value: warning
-            matchType: "="      
+            matchType: "="
+
+# =========================
+# POSTGRESQL (Grafana DB)
+# =========================
+
+postgresql:
+  enabled: true
+  image: "postgres:16.3-alpine3.20"
+  serviceName: "grafana-postgres"
+  port: 5432
+  storage:
+    size: 2Gi
+
+  # Keys que deben existir en el secret grafana-secrets-db
+  dbNameKey: POSTGRES_DB
+  userKey: POSTGRES_USER
+  passwordKey: POSTGRES_PASSWORD
