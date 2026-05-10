@@ -1,9 +1,14 @@
 # Preferido: secret pre-creado (ExternalSecrets/SOPS/manual)
-secrets:
-  existingSecret: "grafana-secrets-db"
-  create: false
+# secrets:
+#   existingSecret: "grafana-secrets-db"
+#   create: false
 
 kube-prometheus-stack:
+  
+  # Preferido: secret pre-creado (ExternalSecrets/SOPS/manual)
+  secrets:
+    existingSecret: "grafana-secrets-db"
+    create: false
   
   # =========================
   # PROMETHEUS              
@@ -39,7 +44,6 @@ kube-prometheus-stack:
               requests:
                 storage: 20Gi
 
-      walCompression: true
       enableAdminAPI: false
 
   prometheusOperator:
