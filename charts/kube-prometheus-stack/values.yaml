@@ -91,12 +91,12 @@ kube-prometheus-stack:
           - sh
           - -ec
           - |
-            until pg_isready -h kube-prometheus-stack-postgres.monitoring.svc.cluster.local -p 5432 -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do
+            until pg_isready -h grafana-postgres.monitoring.svc.cluster.local -p 5432 -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do
               sleep 2
             done
 
             PGPASSWORD="$POSTGRES_PASSWORD" psql -v ON_ERROR_STOP=1 \
-              -h kube-prometheus-stack-postgres.monitoring.svc.cluster.local \
+              -h grafana-postgres.monitoring.svc.cluster.local \
               -p 5432 \
               -U "$POSTGRES_USER" \
               -d "$POSTGRES_DB" <<'SQL'
@@ -131,7 +131,7 @@ kube-prometheus-stack:
     grafana.ini:
       database:
         type: postgres
-        host: kube-prometheus-stack-postgres.monitoring.svc.cluster.local:5432
+        host: grafana-postgres.monitoring.svc.cluster.local:5432
         name: $__env{POSTGRES_DB}
         user: $__env{POSTGRES_USER}
         password: $__env{POSTGRES_PASSWORD}
@@ -434,7 +434,7 @@ alerting:
 postgresql:
   enabled: true
   image: "postgres:16.3-alpine3.20"
-  serviceName: "kube-prometheus-stack-postgres"
+  serviceName: "grafana-postgres"
   port: 5432
   storage:
     size: 2Gi
