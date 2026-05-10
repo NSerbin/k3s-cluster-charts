@@ -80,42 +80,6 @@ kube-prometheus-stack:
     initChownData:
       enabled: false
 
-    extraInitContainers:
-      - name: repair-grafana-db-migrations
-        image: postgres:16.3-alpine3.20
-        imagePullPolicy: IfNotPresent
-        envFrom:
-          - secretRef:
-              name: grafana-secrets-db
-        command:
-          - sh
-          - -ec
-          - |
-            until pg_isready -h grafana-postgres.monitoring.svc.cluster.local -p 5432 -U "$POSTGRES_USER" -d "$POSTGRES_DB"; do
-              sleep 2
-            done
-
-            PGPASSWORD="$POSTGRES_PASSWORD" psql -v ON_ERROR_STOP=1 \
-              -h grafana-postgres.monitoring.svc.cluster.local \
-              -p 5432 \
-              -U "$POSTGRES_USER" \
-              -d "$POSTGRES_DB" <<'SQL'
-            DO $$
-            BEGIN
-              IF to_regclass('public."IDX_dashboard_provisioning_dashboard_id"') IS NOT NULL
-                 AND to_regclass('public.migration_log') IS NOT NULL
-                 AND NOT EXISTS (
-                   SELECT 1
-                   FROM migration_log
-                   WHERE migration_id = 'create index IDX_dashboard_provisioning_dashboard_id - v2'
-                     AND success = true
-                 )
-              THEN
-                DROP INDEX "IDX_dashboard_provisioning_dashboard_id";
-              END IF;
-            END $$;
-            SQL
-
     sidecar:
       datasources:
         enabled: true
