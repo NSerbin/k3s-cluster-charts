@@ -19,6 +19,14 @@ spec:
     server: "https://kubernetes.default.svc"
     namespace: security
 
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      name: crowdsec-postgres
+      namespace: security
+      jqPathExpressions:
+        - .spec.volumeClaimTemplates[]?.status
+
   syncPolicy:
     automated:
       prune: true
@@ -26,3 +34,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+      - RespectIgnoreDifferences=true

@@ -32,10 +32,7 @@ spec:
       name: kube-prometheus-stack-postgres
       namespace: monitoring
       jqPathExpressions:
-        - .spec.volumeClaimTemplates[]?.apiVersion
-        - .spec.volumeClaimTemplates[]?.kind
         - .spec.volumeClaimTemplates[]?.status
-        - .spec.volumeClaimTemplates[]?.spec.volumeMode
 
   syncPolicy:
     automated:

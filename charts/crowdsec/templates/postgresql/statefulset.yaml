@@ -62,13 +62,16 @@ spec:
           resources:
 {{ toYaml .Values.postgresql.resources | indent 12 }}
   volumeClaimTemplates:
-    - metadata:
+    - apiVersion: v1
+      kind: PersistentVolumeClaim
+      metadata:
         name: data
       spec:
         accessModes: {{ toJson .Values.postgresql.storage.accessModes }}
         resources:
           requests:
             storage: {{ .Values.postgresql.storage.size }}
+        volumeMode: Filesystem
 {{- if .Values.postgresql.storage.storageClassName }}
         storageClassName: {{ .Values.postgresql.storage.storageClassName | quote }}
 {{- end }}
