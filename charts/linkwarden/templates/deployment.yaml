@@ -48,6 +48,12 @@ spec:
               value: ""
               {{- end }}
 
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: OPENAI_API_KEY
+
             {{- if .Values.meilisearch.enabled }}
             - name: MEILI_HOST
               value: {{ printf "http://%s-meilisearch:%d" (include "linkwarden.fullname" .) (.Values.meilisearch.service.port | int) | quote }}
