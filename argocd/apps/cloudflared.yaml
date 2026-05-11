@@ -4,6 +4,7 @@ metadata:
   name: cloudflared
   namespace: argocd
 spec:
+  revisionHistoryLimit: 5
   project: default
   source:
     repoURL: "https://github.com/NSerbin/k3s-cluster-charts.git"

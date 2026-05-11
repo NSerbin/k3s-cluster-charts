@@ -4,8 +4,6 @@ kind: StatefulSet
 metadata:
   name: {{ .Release.Name }}-postgres
   namespace: {{ .Release.Namespace }}
-  annotations:
-    argocd.argoproj.io/sync-wave: "-2"
   labels:
     app.kubernetes.io/name: postgres
     app.kubernetes.io/instance: {{ .Release.Name }}

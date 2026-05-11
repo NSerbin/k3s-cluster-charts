@@ -56,8 +56,6 @@ kube-prometheus-stack:
   
   grafana:
     enabled: true
-    annotations:
-      argocd.argoproj.io/sync-wave: "1"
     image:
       repository: grafana/grafana
       tag: "13.0.1"
@@ -131,13 +129,13 @@ kube-prometheus-stack:
           auth_url: $__env{AUTHENTIK_AUTH_URL}
           token_url: $__env{AUTHENTIK_TOKEN_URL}
           api_url: $__env{AUTHENTIK_API_URL}
+          allow_assign_grafana_admin: true
           # Optionally map user groups to Grafana roles
-          role_attribute_path: contains(groups, 'Grafana Admins') && 'Admin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
+          role_attribute_path: email == 'nicolas.serbin@gmail.com' && 'GrafanaAdmin' || contains(groups, 'Grafana Admins') && 'GrafanaAdmin' || contains(groups, 'Grafana Editors') && 'Editor' || 'Viewer'
 
       auth:
         disable_login_form: false
         signout_redirect_url: $__env{AUTHENTIK_SIGNOUT_REDIRECT_URL}
-        oauth_auto_login: true        
 
       auth.basic:
         enabled: true

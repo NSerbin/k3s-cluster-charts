@@ -4,6 +4,7 @@ metadata:
   name: crowdsec
   namespace: argocd
 spec:
+  revisionHistoryLimit: 5
   project: default
 
   source:

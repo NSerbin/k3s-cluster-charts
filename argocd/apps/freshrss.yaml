@@ -4,6 +4,7 @@ metadata:
   name: freshrss
   namespace: argocd
 spec:
+  revisionHistoryLimit: 5
   project: default
 
   source:
