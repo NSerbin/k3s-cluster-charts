@@ -14,10 +14,28 @@ spec:
     helm:
       valueFiles:
         - values.yaml
+      parameters:
+        - name: kube-prometheus-stack.grafana.admin.existingSecret
+          value: grafana-secrets-admin
+        - name: kube-prometheus-stack.grafana.admin.userKey
+          value: admin-user
+        - name: kube-prometheus-stack.grafana.admin.passwordKey
+          value: admin-password
 
   destination:
     server: "https://kubernetes.default.svc"
     namespace: monitoring
+
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      name: kube-prometheus-stack-postgres
+      namespace: monitoring
+      jqPathExpressions:
+        - .spec.volumeClaimTemplates[]?.apiVersion
+        - .spec.volumeClaimTemplates[]?.kind
+        - .spec.volumeClaimTemplates[]?.status
+        - .spec.volumeClaimTemplates[]?.spec.volumeMode
 
   syncPolicy:
     automated:
@@ -26,3 +44,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
+      - RespectIgnoreDifferences=true

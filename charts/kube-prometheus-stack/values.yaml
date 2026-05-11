@@ -61,7 +61,10 @@ kube-prometheus-stack:
       tag: "13.0.1"
       pullPolicy: IfNotPresent
 
-    existingSecret: grafana-secrets-admin
+    admin:
+      existingSecret: grafana-secrets-admin
+      userKey: admin-user
+      passwordKey: admin-password
 
     defaultDashboardsEnabled: true
     defaultDashboardsTimezone: "browser"
