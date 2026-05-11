@@ -1,4 +1,4 @@
-metricsServer:
+metrics-server:
   replicas: 1
 
   apiService:
