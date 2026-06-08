@@ -11,7 +11,7 @@ service:
   port: 3000
 
 ingressRoute:
-  enabled: true
+  enabled: false
   entryPoints: [web]
   host: bookmarks.nserbin.com
   pathPrefix: /

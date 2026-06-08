@@ -29,6 +29,28 @@ spec:
         fsGroupChangePolicy: {{ .Values.podSecurityContext.fsGroupChangePolicy | quote }}
       {{- end }}
 
+      {{- if .Values.migrations.enabled }}
+      initContainers:
+        - name: migrations
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            {{- toYaml .Values.migrations.command | nindent 12 }}
+          env:
+            {{- range $k, $v := .Values.env }}
+            - name: {{ $k }}
+              value: {{ $v | quote }}
+            {{- end }}
+            {{- with .Values.extraEnv }}
+            {{- toYaml . | nindent 12 }}
+            {{- end }}
+          {{- if .Values.persistence.enabled }}
+          volumeMounts:
+            - name: data
+              mountPath: /app/data
+          {{- end }}
+      {{- end }}
+
       containers:
         - name: grimoire
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"

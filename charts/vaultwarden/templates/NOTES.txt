@@ -1,0 +1,6 @@
+Vaultwarden will be exposed at:
+  https://{{ .Values.traefik.ingressRoute.host }}
+
+Required Vault secrets:
+  {{ .Values.secrets.appSecretName }} from k8s/core/security/vaultwarden/app
+  {{ .Values.secrets.dbSecretName }} from k8s/core/security/vaultwarden/db

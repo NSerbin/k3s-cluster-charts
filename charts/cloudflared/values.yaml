@@ -67,6 +67,10 @@ ingress:
     originRequest:
       httpHostHeader: "auth.nserbin.com"
 
+  - hostname: "btw.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "btw.nserbin.com"
 
   - service: "http_status:404"
 

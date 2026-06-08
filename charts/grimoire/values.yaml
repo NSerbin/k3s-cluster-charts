@@ -17,6 +17,13 @@ env:
 
 extraEnv: []
 
+migrations:
+  enabled: true
+  command:
+    - bun
+    - run
+    - run-migrations
+
 persistence:
   enabled: true
   size: 5Gi

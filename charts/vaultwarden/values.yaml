@@ -1,0 +1,97 @@
+replicaCount: 1
+
+image:
+  repository: vaultwarden/server
+  tag: "1.36.0"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+env:
+  SIGNUPS_ALLOWED: "false"
+  INVITATIONS_ALLOWED: "true"
+  WEBSOCKET_ENABLED: "true"
+  ROCKET_ADDRESS: "0.0.0.0"
+  ROCKET_PORT: "80"
+
+secrets:
+  appSecretName: vaultwarden-secrets-app
+  dbSecretName: vaultwarden-secrets-db
+
+database:
+  host: ""
+  port: 3306
+
+persistence:
+  enabled: true
+  storageClass: "local-path"
+  size: 5Gi
+  accessModes:
+    - ReadWriteOnce
+
+mysql:
+  enabled: true
+  image:
+    repository: mysql
+    tag: "9.6.0"
+    pullPolicy: IfNotPresent
+
+  service:
+    port: 3306
+
+  persistence:
+    enabled: true
+    storageClass: "local-path"
+    size: 5Gi
+    accessModes:
+      - ReadWriteOnce
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - web
+    host: "btw.nserbin.com"
+    pathPrefixes:
+      - "/"
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+mysqlResources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
