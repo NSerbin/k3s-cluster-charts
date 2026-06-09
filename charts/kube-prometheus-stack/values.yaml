@@ -271,7 +271,7 @@ kube-prometheus-stack:
       prometheusOperator: true
 
 externalTargets:
-  enabled: true
+  enabled: false
 
   namespace: monitoring
 
