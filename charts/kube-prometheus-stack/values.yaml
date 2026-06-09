@@ -280,25 +280,25 @@ externalTargets:
     value: kube-prometheus-stack
 
   # External Hosts
-  targets:
-    - name: rpi
-      ip: 192.168.0.4
-      exporters:
-        - name: node
-          port: 9100
-          path: /metrics
-          interval: 30s
-          scrapeTimeout: 10s
-        - name: cadvisor
-          port: 8080
-          path: /metrics
-          interval: 30s
-          scrapeTimeout: 10s
-        - name: cloudflare-tunnels
-          port: 60123
-          path: /metrics
-          interval: 30s
-          scrapeTimeout: 10s
+  # targets:
+  #   - name: rpi
+  #     ip: 192.168.0.4
+  #     exporters:
+  #       - name: node
+  #         port: 9100
+  #         path: /metrics
+  #         interval: 30s
+  #         scrapeTimeout: 10s
+  #       - name: cadvisor
+  #         port: 8080
+  #         path: /metrics
+  #         interval: 30s
+  #         scrapeTimeout: 10s
+  #       - name: cloudflare-tunnels
+  #         port: 60123
+  #         path: /metrics
+  #         interval: 30s
+  #         scrapeTimeout: 10s
 
 
 traefikRoutes:
