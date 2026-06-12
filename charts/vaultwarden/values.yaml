@@ -21,6 +21,15 @@ secrets:
   appSecretName: vaultwarden-secrets-app
   dbSecretName: vaultwarden-secrets-db
 
+push:
+  enabled: true
+  secretKeys:
+    enabled: PUSH_ENABLED
+    installationId: PUSH_INSTALLATION_ID
+    installationKey: PUSH_INSTALLATION_KEY
+    relayUri: PUSH_RELAY_URI
+    identityUri: PUSH_IDENTITY_URI
+
 database:
   host: ""
   port: 3306

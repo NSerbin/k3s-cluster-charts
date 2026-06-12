@@ -4,3 +4,10 @@ Vaultwarden will be exposed at:
 Required Vault secrets:
   {{ .Values.secrets.appSecretName }} from k8s/core/security/vaultwarden/app
   {{ .Values.secrets.dbSecretName }} from k8s/core/security/vaultwarden/db
+
+Required push keys in k8s/core/security/vaultwarden/app:
+  PUSH_ENABLED
+  PUSH_INSTALLATION_ID
+  PUSH_INSTALLATION_KEY
+  PUSH_RELAY_URI
+  PUSH_IDENTITY_URI

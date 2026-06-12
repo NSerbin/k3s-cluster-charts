@@ -74,6 +74,33 @@ spec:
                   key: MYSQL_PASSWORD
             - name: DATABASE_URL
               value: {{ printf "mysql://$(MYSQL_USER):$(MYSQL_PASSWORD)@%s:%v/$(MYSQL_DATABASE)" (default (printf "%s-mysql" (include "vaultwarden.fullname" .)) .Values.database.host) .Values.database.port | quote }}
+            {{- if .Values.push.enabled }}
+            - name: PUSH_ENABLED
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+                  key: {{ required "push.secretKeys.enabled is required" .Values.push.secretKeys.enabled }}
+            - name: PUSH_INSTALLATION_ID
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+                  key: {{ required "push.secretKeys.installationId is required" .Values.push.secretKeys.installationId }}
+            - name: PUSH_INSTALLATION_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+                  key: {{ required "push.secretKeys.installationKey is required" .Values.push.secretKeys.installationKey }}
+            - name: PUSH_RELAY_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+                  key: {{ required "push.secretKeys.relayUri is required" .Values.push.secretKeys.relayUri }}
+            - name: PUSH_IDENTITY_URI
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+                  key: {{ required "push.secretKeys.identityUri is required" .Values.push.secretKeys.identityUri }}
+            {{- end }}
 
           envFrom:
             - secretRef:
