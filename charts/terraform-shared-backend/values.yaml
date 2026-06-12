@@ -1,0 +1,59 @@
+replicaCount: 1
+
+fullnameOverride: terraform-shared-backend
+
+image:
+  repository: postgres
+  tag: "16-alpine"
+  pullPolicy: IfNotPresent
+
+secrets:
+  dbSecretName: terraform-shared-backend-secrets-db
+  keys:
+    user: POSTGRES_USER
+    password: POSTGRES_PASSWORD
+
+bootstrap:
+  database: postgres
+  managedDatabases: []
+  # - terraform_backend
+  # - terraform_proxmox
+
+service:
+  type: ClusterIP
+  port: 5432
+
+persistence:
+  enabled: true
+  storageClassName: "local-path"
+  accessModes:
+    - ReadWriteOnce
+  size: 5Gi
+  mountPath: /var/lib/postgresql/data
+  pgData: /var/lib/postgresql/data/pgdata
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+podSecurityContext:
+  fsGroup: 999
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 999
+  runAsGroup: 999
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

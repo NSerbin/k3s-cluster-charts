@@ -1,0 +1,25 @@
+Terraform shared backend PostgreSQL is available inside the cluster at:
+  {{ include "terraform-shared-backend.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}
+
+Required Vault secret:
+  {{ .Values.secrets.dbSecretName }} from k8s/core/infra/terraform-shared-backend/db
+
+Expected keys:
+  POSTGRES_USER
+  POSTGRES_PASSWORD
+
+Bootstrap database:
+  {{ .Values.bootstrap.database }}
+
+Optional first-boot managed databases:
+{{- if .Values.bootstrap.managedDatabases }}
+{{- range .Values.bootstrap.managedDatabases }}
+  - {{ . }}
+{{- end }}
+{{- else }}
+  none
+{{- end }}
+
+Restore a valid pg_dumpall plain SQL dump after the StatefulSet is running:
+  kubectl -n {{ .Release.Namespace }} cp "$HOME/postgrest-db-export-20260612-2341.dump" {{ include "terraform-shared-backend.fullname" . }}-0:/tmp/terraform-backend.dump
+  kubectl -n {{ .Release.Namespace }} exec {{ include "terraform-shared-backend.fullname" . }}-0 -- sh -lc 'sed -i "s/\r$//" /tmp/terraform-backend.dump && psql -v ON_ERROR_STOP=1 -U "$POSTGRES_USER" -d postgres -f /tmp/terraform-backend.dump'
