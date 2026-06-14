@@ -4,3 +4,4 @@ description: Helm chart for Karakeep with Chrome, Meilisearch, Traefik and Exter
 type: application
 version: 0.1.0
 appVersion: "release"
+home: https://github.com/karakeep-app/karakeep/releases

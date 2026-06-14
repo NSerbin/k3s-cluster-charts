@@ -3,6 +3,7 @@ name: vault-wrapper
 description: Wrapper chart to deploy HashiCorp Vault via official hashicorp/vault chart
 type: application
 version: 0.1.0
+home: https://github.com/hashicorp/vault/releases
 
 dependencies:
   - name: vault

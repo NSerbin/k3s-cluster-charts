@@ -3,6 +3,7 @@ name: metallb
 description: MetalLB + Homelab Config (IPAddressPools + L2Advertisements)
 type: application
 version: 0.1.0
+home: https://github.com/metallb/metallb/releases
 
 dependencies:
   - name: metallb

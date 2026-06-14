@@ -3,3 +3,4 @@ name: cloudflared-homelab
 description: Cloudflare Tunnel (cloudflared) runtime for k3s
 type: application
 version: 0.1.0
+home: https://github.com/cloudflare/cloudflared/releases

@@ -4,3 +4,4 @@ description: Shared PostgreSQL backend for Terraform state storage
 type: application
 version: 0.1.0
 appVersion: "16"
+home: https://www.postgresql.org/docs/release/

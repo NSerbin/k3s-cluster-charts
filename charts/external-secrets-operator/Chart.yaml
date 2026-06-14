@@ -3,6 +3,7 @@ name: external-secrets-operator
 description: Chart for External Secrets Operator + Vault SecretStore + ExternalSecrets
 type: application
 version: 0.1.0
+home: https://github.com/external-secrets/external-secrets/releases
 
 dependencies:
   - name: external-secrets

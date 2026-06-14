@@ -3,6 +3,7 @@ name: monitoring
 description: Prometheus + Grafana (kube-prometheus-stack)
 type: application
 version: 0.1.0
+home: https://github.com/prometheus-community/helm-charts/releases
 
 dependencies:
   - name: kube-prometheus-stack

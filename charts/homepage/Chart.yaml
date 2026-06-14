@@ -4,3 +4,4 @@ description: Self-managed chart for gethomepage/homepage (Traefik + Cloudflared 
 type: application
 version: 0.1.0
 appVersion: "v1.13.1"
+home: https://github.com/gethomepage/homepage/releases
