@@ -329,29 +329,19 @@ config:
             siteMonitor: http://karakeep-karakeep:3000
             description: Bookmarks
             server: k3s
-    
-        - DocuSeal:
-            icon: docuseal.png
-            href: https://docs.nserbin.com/
-            description: Sign documents
-            server: rpi
-        
+
+        - AppFlowy:
+            icon: appflowy.svg
+            href: https://appflowy.nserbin.com/
+            siteMonitor: http://appflowy-appflowy-web.tools/
+            description: Notes and workspace
+            server: k3s
+       
         - IT Tools:
             icon: 
             href: https://tools.nserbin.com/
             description: Multiple Tools
             server: k3s
-
-        - Watchtower:
-            icon: watchtower.svg
-            href: http://192.168.0.4:8081/
-            siteMonitor: http://192.168.0.4:8081/
-            description: Service to pull images
-            server: rpi
-            widget:
-              type: watchtower
-              url: http://192.168.0.4:8081/
-              key: {{HOMEPAGE_VAR_WATCHTOWER_KEY}}
 
         - SSH:
             icon: shell.svg
@@ -387,9 +377,9 @@ config:
         - Bitwarden:
             icon: bitwarden.svg
             href: https://btw.nserbin.com
-            siteMonitor: http://192.168.0.4:8484
+            siteMonitor: http://vaultwarden-vaultwarden.tools/
             description: Bitwarden
-            server: rpi
+            server: k3s
 
   widgetsYaml: |
     - kubernetes:
