@@ -1,0 +1,109 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/karakeep-app/karakeep
+  tag: "release"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+
+config:
+  nextauthUrl: ""
+  dataDir: /data
+  logLevel: info
+  disableNewReleaseCheck: "true"
+  dbWalMode: "true"
+  rateLimitingEnabled: "true"
+  extraEnv: {}
+
+secrets:
+  appSecretName: karakeep-secrets-app
+
+persistence:
+  enabled: true
+  storageClassName: "local-path"
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+
+chrome:
+  enabled: true
+  image:
+    repository: gcr.io/zenika-hub/alpine-chrome
+    tag: "124"
+    pullPolicy: IfNotPresent
+  service:
+    enabled: true
+    port: 9222
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+meilisearch:
+  enabled: true
+  image:
+    repository: getmeili/meilisearch
+    tag: "v1.41.0"
+    pullPolicy: IfNotPresent
+  service:
+    enabled: true
+    port: 7700
+  persistence:
+    enabled: true
+    storageClassName: "local-path"
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - web
+    host: "karakeep.nserbin.com"
+    pathPrefixes:
+      - "/"
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

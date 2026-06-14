@@ -1,0 +1,66 @@
+{{- if .Values.meilisearch.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "karakeep.fullname" . }}-meilisearch
+  labels:
+    {{- include "karakeep.labels" . | nindent 4 }}
+    app.kubernetes.io/component: meilisearch
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "karakeep.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: meilisearch
+  template:
+    metadata:
+      labels:
+        {{- include "karakeep.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: meilisearch
+    spec:
+      containers:
+        - name: meilisearch
+          image: "{{ .Values.meilisearch.image.repository }}:{{ .Values.meilisearch.image.tag }}"
+          imagePullPolicy: {{ .Values.meilisearch.image.pullPolicy }}
+          env:
+            - name: MEILI_MASTER_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+                  key: MEILI_MASTER_KEY
+            - name: MEILI_NO_ANALYTICS
+              value: "true"
+          ports:
+            - name: http
+              containerPort: 7700
+              protocol: TCP
+          {{- if .Values.meilisearch.persistence.enabled }}
+          volumeMounts:
+            - name: meili
+              mountPath: /meili_data
+          {{- end }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 5
+            failureThreshold: 6
+          resources:
+            {{- toYaml .Values.meilisearch.resources | nindent 12 }}
+      {{- if .Values.meilisearch.persistence.enabled }}
+      volumes:
+        - name: meili
+          persistentVolumeClaim:
+            claimName: {{ include "karakeep.fullname" . }}-meili
+      {{- end }}
+{{- end }}

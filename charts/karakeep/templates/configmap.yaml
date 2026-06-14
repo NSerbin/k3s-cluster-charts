@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "karakeep.fullname" . }}-config
+  labels:
+    {{- include "karakeep.labels" . | nindent 4 }}
+data:
+{{- $nextauthUrl := default (printf "https://%s" .Values.traefik.ingressRoute.host) .Values.config.nextauthUrl -}}
+{{- $data := dict
+  "NEXTAUTH_URL" $nextauthUrl
+  "DATA_DIR" .Values.config.dataDir
+  "LOG_LEVEL" .Values.config.logLevel
+  "DISABLE_NEW_RELEASE_CHECK" .Values.config.disableNewReleaseCheck
+  "DB_WAL_MODE" .Values.config.dbWalMode
+  "RATE_LIMITING_ENABLED" .Values.config.rateLimitingEnabled
+  "KARAKEEP_VERSION" .Values.image.tag
+-}}
+{{- if .Values.meilisearch.enabled -}}
+{{- $_ := set $data "MEILI_ADDR" (printf "http://%s-meilisearch:%d" (include "karakeep.fullname" .) (.Values.meilisearch.service.port | int)) -}}
+{{- end -}}
+{{- if .Values.chrome.enabled -}}
+{{- $_ := set $data "BROWSER_WEB_URL" (printf "http://%s-chrome:%d" (include "karakeep.fullname" .) (.Values.chrome.service.port | int)) -}}
+{{- end -}}
+{{- range $k, $v := .Values.config.extraEnv -}}
+{{- $_ := set $data $k (printf "%v" $v) -}}
+{{- end -}}
+{{- toYaml $data | nindent 2 }}

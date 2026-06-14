@@ -1,0 +1,6 @@
+apiVersion: v2
+name: karakeep
+description: Helm chart for Karakeep with Chrome, Meilisearch, Traefik and External Secrets integration
+type: application
+version: 0.1.0
+appVersion: "release"

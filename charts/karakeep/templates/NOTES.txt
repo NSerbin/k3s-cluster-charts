@@ -1,0 +1,12 @@
+Karakeep will be exposed at:
+  https://{{ .Values.traefik.ingressRoute.host }}
+
+Required Vault secret:
+  {{ .Values.secrets.appSecretName }} from k8s/tools/web/karakeep/app
+
+Expected keys:
+  NEXTAUTH_SECRET
+  MEILI_MASTER_KEY
+  NEXT_PUBLIC_SECRET
+
+Optional keys can be added to the same Vault path and will be injected into the web pod.

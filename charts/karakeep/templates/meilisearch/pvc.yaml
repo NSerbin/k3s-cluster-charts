@@ -1,0 +1,18 @@
+{{- if and .Values.meilisearch.enabled .Values.meilisearch.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "karakeep.fullname" . }}-meili
+  labels:
+    {{- include "karakeep.labels" . | nindent 4 }}
+    app.kubernetes.io/component: meilisearch
+spec:
+  {{- if .Values.meilisearch.persistence.storageClassName }}
+  storageClassName: {{ .Values.meilisearch.persistence.storageClassName | quote }}
+  {{- end }}
+  accessModes:
+    {{- toYaml .Values.meilisearch.persistence.accessModes | nindent 4 }}
+  resources:
+    requests:
+      storage: {{ .Values.meilisearch.persistence.size | quote }}
+{{- end }}

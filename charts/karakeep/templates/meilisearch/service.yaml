@@ -1,0 +1,18 @@
+{{- if and .Values.meilisearch.enabled .Values.meilisearch.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "karakeep.fullname" . }}-meilisearch
+  labels:
+    {{- include "karakeep.labels" . | nindent 4 }}
+    app.kubernetes.io/component: meilisearch
+spec:
+  selector:
+    {{- include "karakeep.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: meilisearch
+  ports:
+    - name: http
+      port: {{ .Values.meilisearch.service.port }}
+      targetPort: http
+      protocol: TCP
+{{- end }}
