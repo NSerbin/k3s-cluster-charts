@@ -323,16 +323,12 @@ config:
 
     - Tools:
 
-        - Linkwarden:
-            icon: linkwarden.png
+        - Karakeep:
+            icon: mdi-bookmark-multiple
             href: https://bookmarks.nserbin.com/
-            siteMonitor: http://linkwarden-linkwarden:3000
+            siteMonitor: http://karakeep-karakeep:3000
             description: Bookmarks
             server: k3s
-            widget:
-              type: linkwarden
-              url: http://linkwarden-linkwarden:3000
-              key: {{HOMEPAGE_VAR_LINKWARDEN_KEY}}
     
         - DocuSeal:
             icon: docuseal.png

@@ -74,7 +74,7 @@ traefik:
     enabled: true
     entryPoints:
       - web
-    host: "karakeep.nserbin.com"
+    host: "bookmarks.nserbin.com"
     pathPrefixes:
       - "/"
     middlewares: []
@@ -95,9 +95,9 @@ podSecurityContext:
   fsGroupChangePolicy: OnRootMismatch
 
 securityContext:
-  runAsNonRoot: true
-  runAsUser: 1000
-  runAsGroup: 1000
+  runAsNonRoot: false
+  runAsUser: 0
+  runAsGroup: 0
   allowPrivilegeEscalation: false
   readOnlyRootFilesystem: false
   capabilities:
