@@ -1,0 +1,22 @@
+GitHub Actions Runner Controller:
+  controller namespace: {{ .Values.namespaces.controller }}
+  runners namespace: {{ .Values.namespaces.runners }}
+  runner scale set: {{ .Values.runnerScaleSet.runnerScaleSetName }}
+  github config url: {{ .Values.runnerScaleSet.githubConfigUrl }}
+
+Required Vault secret:
+  {{ .Values.secrets.vaultPath }}
+
+Expected keys for GitHub App auth:
+  github_app_id
+  github_app_installation_id
+  github_app_private_key
+
+Alternative PAT auth:
+  If using a PAT instead of GitHub App, make the target Kubernetes secret
+  contain github_token and set runnerScaleSet.githubConfigSecret to that secret.
+
+Workflow runs-on labels:
+{{- range .Values.runnerScaleSet.scaleSetLabels }}
+  - {{ . }}
+{{- end }}

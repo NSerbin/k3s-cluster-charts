@@ -1,0 +1,146 @@
+namespaces:
+  create: true
+  controller: arc-systems
+  runners: github-runners
+
+secrets:
+  githubConfigSecretName: github-actions-runner-github-app
+  vaultPath: k8s/core/cicd/github-actions-runner/github-app
+
+controller:
+  enabled: true
+  namespaceOverride: arc-systems
+  replicaCount: 1
+  image:
+    repository: ghcr.io/actions/gha-runner-scale-set-controller
+    tag: "0.14.2"
+    pullPolicy: IfNotPresent
+  serviceAccount:
+    create: true
+    name: arc-gha-rs-controller
+  flags:
+    logLevel: info
+    logFormat: text
+    updateStrategy: immediate
+    runnerMaxConcurrentReconciles: 2
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  podSecurityContext:
+    runAsNonRoot: true
+  securityContext:
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    runAsNonRoot: true
+    capabilities:
+      drop:
+        - ALL
+  nodeSelector: {}
+  tolerations: []
+  affinity: {}
+
+runnerScaleSet:
+  enabled: true
+  namespaceOverride: github-runners
+  githubConfigUrl: https://github.com/NSerbin
+  githubConfigSecret: github-actions-runner-github-app
+  controllerServiceAccount:
+    namespace: arc-systems
+    name: arc-gha-rs-controller
+  runnerScaleSetName: nserbin-k3s
+  scaleSetLabels:
+    - self-hosted
+    - k3s
+    - dind
+    - linux
+    - x64
+  minRunners: 0
+  maxRunners: 2
+  listenerTemplate:
+    spec:
+      containers:
+        - name: listener
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+  template:
+    spec:
+      securityContext:
+        fsGroup: 123
+      initContainers:
+        - name: init-dind-externals
+          image: ghcr.io/actions/actions-runner:2.331.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - cp
+          args:
+            - -r
+            - /home/runner/externals/.
+            - /home/runner/tmpDir/
+          volumeMounts:
+            - name: dind-externals
+              mountPath: /home/runner/tmpDir
+      containers:
+        - name: runner
+          image: ghcr.io/actions/actions-runner:2.331.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - /home/runner/run.sh
+          env:
+            - name: DOCKER_HOST
+              value: unix:///var/run/docker.sock
+            - name: RUNNER_WAIT_FOR_DOCKER_IN_SECONDS
+              value: "120"
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+            - name: dind-sock
+              mountPath: /var/run
+        - name: dind
+          image: docker:28.5.2-dind
+          imagePullPolicy: IfNotPresent
+          args:
+            - dockerd
+            - --host=unix:///var/run/docker.sock
+            - --group=$(DOCKER_GROUP_GID)
+          env:
+            - name: DOCKER_GROUP_GID
+              value: "123"
+          securityContext:
+            privileged: true
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 4Gi
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+            - name: dind-sock
+              mountPath: /var/run
+            - name: dind-externals
+              mountPath: /home/runner/externals
+      volumes:
+        - name: work
+          emptyDir: {}
+        - name: dind-sock
+          emptyDir: {}
+        - name: dind-externals
+          emptyDir: {}

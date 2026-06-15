@@ -1,0 +1,17 @@
+{{- if .Values.namespaces.create }}
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespaces.controller | quote }}
+  labels:
+    {{- include "github-actions-runner.labels" . | nindent 4 }}
+    app.kubernetes.io/component: arc-controller
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ .Values.namespaces.runners | quote }}
+  labels:
+    {{- include "github-actions-runner.labels" . | nindent 4 }}
+    app.kubernetes.io/component: arc-runners
+{{- end }}
