@@ -12,6 +12,10 @@ Expected keys for GitHub App auth:
   github_app_installation_id
   github_app_private_key
 
+Required GitHub App repository permissions for repository-scoped runners:
+  Administration: Read and write
+  Metadata: Read-only
+
 Alternative PAT auth:
   If using a PAT instead of GitHub App, make the target Kubernetes secret
   contain github_token and set runnerScaleSet.githubConfigSecret to that secret.
