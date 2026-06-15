@@ -347,7 +347,7 @@ externalSecrets:
         - secretKey: HOMEPAGE_VAR_KARAKEEP_APIKEY
           remoteRef:
             key: k8s/tools/dashboards/homepage
-            property: KARAKEEP_APIKEY
+            property: HOMEPAGE_VAR_KARAKEEP_APIKEY
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
