@@ -1,4 +1,4 @@
-AapiVersion: argoproj.io/v1alpha1
+apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
   name: github-actions-runner
@@ -20,9 +20,6 @@ spec:
     namespace: arc-systems
 
   syncPolicy:
-    automated:
-      prune: true
-      selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true

@@ -329,6 +329,10 @@ config:
             siteMonitor: http://karakeep-karakeep:3000
             description: Bookmarks
             server: k3s
+            widget:
+              type: karakeep
+              url: http://karakeep-karakeep:3000
+              key: {{HOMEPAGE_VAR_KARAKEEP_APIKEY}}
 
         - AppFlowy:
             icon: appflowy.svg

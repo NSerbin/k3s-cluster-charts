@@ -343,6 +343,14 @@ externalSecrets:
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
+      data:
+        - secretKey: HOMEPAGE_VAR_KARAKEEP_APIKEY
+          remoteRef:
+            key: k8s/tools/dashboards/homepage
+            property: KARAKEEP_APIKEY
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: linkwarden-secrets-db
       namespace: tools

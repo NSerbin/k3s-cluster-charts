@@ -1,16 +1,15 @@
 namespaces:
-  create: true
+  create: false
   controller: arc-systems
   runners: github-runners
-  extraRunners:
-    - github-runners-with-vars
+  extraRunners: []
 
 secrets:
   githubConfigSecretName: github-actions-runner-github-app
   vaultPath: k8s/core/cicd/github-actions-runner/github-app
 
 controller:
-  enabled: true
+  enabled: false
   namespaceOverride: arc-systems
   replicaCount: 1
   image:
@@ -46,7 +45,7 @@ controller:
   affinity: {}
 
 runnerScaleSet:
-  enabled: true
+  enabled: false
   namespaceOverride: github-runners
   githubConfigUrl: https://github.com/NSerbin/tf-cloudflare
   githubConfigSecret: github-actions-runner-github-app
@@ -61,118 +60,8 @@ runnerScaleSet:
     - dind
     - linux
     - x64
-  minRunners: 1
-  maxRunners: 2
-  listenerTemplate:
-    spec:
-      containers:
-        - name: listener
-          resources:
-            requests:
-              cpu: 25m
-              memory: 64Mi
-            limits:
-              cpu: 250m
-              memory: 256Mi
-  template:
-    spec:
-      securityContext:
-        fsGroup: 123
-      initContainers:
-        - name: init-dind-externals
-          image: ghcr.io/actions/actions-runner:2.331.0
-          imagePullPolicy: IfNotPresent
-          command:
-            - cp
-          args:
-            - -r
-            - /home/runner/externals/.
-            - /home/runner/tmpDir/
-          volumeMounts:
-            - name: dind-externals
-              mountPath: /home/runner/tmpDir
-      containers:
-        - name: runner
-          image: ghcr.io/actions/actions-runner:2.331.0
-          imagePullPolicy: IfNotPresent
-          command:
-            - /home/runner/run.sh
-          env:
-            - name: DOCKER_HOST
-              value: unix:///var/run/docker.sock
-            - name: RUNNER_WAIT_FOR_DOCKER_IN_SECONDS
-              value: "120"
-          resources:
-            requests:
-              cpu: 250m
-              memory: 512Mi
-              ephemeral-storage: 1Gi
-            limits:
-              cpu: 2000m
-              memory: 4Gi
-              ephemeral-storage: 8Gi
-          volumeMounts:
-            - name: work
-              mountPath: /home/runner/_work
-            - name: dind-sock
-              mountPath: /var/run
-        - name: dind
-          image: docker:28.5.2-dind
-          imagePullPolicy: IfNotPresent
-          args:
-            - dockerd
-            - --host=unix:///var/run/docker.sock
-            - --group=$(DOCKER_GROUP_GID)
-          env:
-            - name: DOCKER_GROUP_GID
-              value: "123"
-          securityContext:
-            privileged: true
-          resources:
-            requests:
-              cpu: 250m
-              memory: 512Mi
-              ephemeral-storage: 4Gi
-            limits:
-              cpu: 2000m
-              memory: 4Gi
-              ephemeral-storage: 20Gi
-          volumeMounts:
-            - name: work
-              mountPath: /home/runner/_work
-            - name: dind-sock
-              mountPath: /var/run
-            - name: dind-externals
-              mountPath: /home/runner/externals
-      volumes:
-        - name: work
-          emptyDir:
-            sizeLimit: 20Gi
-        - name: dind-sock
-          emptyDir:
-            sizeLimit: 256Mi
-        - name: dind-externals
-          emptyDir:
-            sizeLimit: 2Gi
-
-runnerScaleSetWithVars:
-  enabled: true
-  namespaceOverride: github-runners-with-vars
-  githubConfigUrl: https://github.com/NSerbin/tf-cloudflare-local
-  githubConfigSecret: github-actions-runner-github-app
-  controllerServiceAccount:
-    namespace: arc-systems
-    name: arc-gha-rs-controller
-  runnerScaleSetName: gh-arc-cloudflare-vars-dind
-  scaleSetLabels:
-    - self-hosted
-    - gh-arc
-    - k3s
-    - dind
-    - linux
-    - x64
-  minRunners: 1
-  maxRunners: 2
+  minRunners: 0
+  maxRunners: 0
   listenerTemplate:
     spec:
       containers:
