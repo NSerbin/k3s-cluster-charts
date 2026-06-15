@@ -46,7 +46,7 @@ controller:
 runnerScaleSet:
   enabled: true
   namespaceOverride: github-runners
-  githubConfigUrl: https://github.com/NSerbin
+  githubConfigUrl: https://github.com/NSerbin/k3s-cluster-charts
   githubConfigSecret: github-actions-runner-github-app
   controllerServiceAccount:
     namespace: arc-systems
