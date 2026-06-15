@@ -16,3 +16,8 @@ dependencies:
     version: 0.14.2
     repository: oci://ghcr.io/actions/actions-runner-controller-charts
     condition: runnerScaleSet.enabled
+  - name: gha-runner-scale-set
+    alias: runnerScaleSetWithVars
+    version: 0.14.2
+    repository: oci://ghcr.io/actions/actions-runner-controller-charts
+    condition: runnerScaleSetWithVars.enabled

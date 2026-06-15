@@ -3,6 +3,10 @@ GitHub Actions Runner Controller:
   runners namespace: {{ .Values.namespaces.runners }}
   runner scale set: {{ .Values.runnerScaleSet.runnerScaleSetName }}
   github config url: {{ .Values.runnerScaleSet.githubConfigUrl }}
+{{- if .Values.runnerScaleSetWithVars.enabled }}
+  with-vars runner scale set: {{ .Values.runnerScaleSetWithVars.runnerScaleSetName }}
+  with-vars github config url: {{ .Values.runnerScaleSetWithVars.githubConfigUrl }}
+{{- end }}
 
 Required Vault secret:
   {{ .Values.secrets.vaultPath }}
