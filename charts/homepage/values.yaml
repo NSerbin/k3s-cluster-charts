@@ -281,11 +281,9 @@ config:
             siteMonitor: http://traefik.traefik:9000/ping
             description: Traefik
             server: k3s
-            # widget:
-            #   type: traefik
-            #   url: http://traefik.traefik:9000/
-            #   username: username # optional
-            #   password: password # optional
+            widget:
+              type: traefik
+              url: http://traefik.traefik:9000
         
         - RPI Cloudflare Tunnel:
             icon: cloudflare.svg
