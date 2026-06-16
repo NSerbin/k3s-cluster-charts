@@ -55,7 +55,7 @@ externalSecrets:
         - secretKey: credentials.json
           remoteRef:
             key: k8s/core/networking/cloudflare/credentials
-            property: credentials.json
+            property: 'credentials\.json'
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
