@@ -18,7 +18,7 @@ kube-prometheus-stack:
   prometheus:
     enabled: true
     prometheusSpec:
-      retention: 7d
+      retention: 24h
       scrapeInterval: 30s
       evaluationInterval: 30s
       walCompression: true
@@ -43,7 +43,7 @@ kube-prometheus-stack:
             accessModes: ["ReadWriteOnce"]
             resources:
               requests:
-                storage: 20Gi
+                storage: 5Gi
 
       enableAdminAPI: false
 
@@ -59,7 +59,7 @@ kube-prometheus-stack:
     enabled: true
     image:
       repository: grafana/grafana
-      tag: "13.0.1"
+      tag: "13.0.2"
       pullPolicy: IfNotPresent
 
     admin:
