@@ -1,0 +1,128 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appflowy.cloudName" . }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cloud
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appflowy.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: cloud
+  template:
+    metadata:
+      labels:
+        {{- include "appflowy.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: cloud
+    spec:
+      initContainers:
+        - name: wait-dependencies
+          image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
+          imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
+          command:
+            - sh
+            - -lc
+            - >-
+              until nc -z {{ include "appflowy.postgresName" . }} {{ .Values.postgres.service.port }}
+              && nc -z {{ include "appflowy.redisName" . }} {{ .Values.redis.service.port }}
+              {{- if .Values.minio.enabled }}
+              && nc -z {{ include "appflowy.minioName" . }} {{ .Values.minio.service.apiPort }}
+              {{- end }}
+              && nc -z {{ include "appflowy.gotrueName" . }} {{ .Values.gotrue.service.port }};
+              do sleep 2; done
+      containers:
+        - name: appflowy-cloud
+          image: "{{ .Values.cloud.image.repository }}:{{ .Values.cloud.image.tag }}"
+          imagePullPolicy: {{ .Values.cloud.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "appflowy.fullname" . }}-config
+            - secretRef:
+                name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_DB
+            - name: APPFLOWY_DATABASE_URL
+              value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)"
+            - name: APPFLOWY_INDEXER_DATABASE_URL
+              value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)"
+            - name: APPFLOWY_WORKER_DATABASE_URL
+              value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)"
+            - name: APPFLOWY_SEARCH_DATABASE_URL
+              value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)"
+            - name: AI_DATABASE_URL
+              value: "postgresql+psycopg://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)"
+            - name: AI_REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "appflowy.fullname" . }}-config
+                  key: APPFLOWY_REDIS_URI
+            - name: APPFLOWY_GOTRUE_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_JWT_SECRET
+            - name: APPFLOWY_GOTRUE_JWT_EXP
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "appflowy.fullname" . }}-config
+                  key: GOTRUE_JWT_EXP
+            - name: APPFLOWY_S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: {{ .Values.objectStorage.secretKeys.accessKey }}
+            - name: APPFLOWY_S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: {{ .Values.objectStorage.secretKeys.secretKey }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.cloud.service.port }}
+          readinessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 90
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.cloud.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appflowy.cloudName" . }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: cloud
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: {{ .Values.cloud.service.port }}
+      targetPort: http
+  selector:
+    {{- include "appflowy.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: cloud

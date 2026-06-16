@@ -1,0 +1,7 @@
+apiVersion: v2
+name: appflowy
+description: AppFlowy Cloud with PostgreSQL/pgvector, Redis, MinIO, GoTrue, Traefik and External Secrets integration
+type: application
+version: 0.1.0
+appVersion: "0.15.22"
+home: https://github.com/AppFlowy-IO/AppFlowy-Cloud/releases

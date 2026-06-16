@@ -1,0 +1,32 @@
+ExternalSecret expected:
+  {{ .Values.secrets.appSecretName }} from k8s/tools/productivity/appflowy/app
+
+Required keys:
+  POSTGRES_USER
+  POSTGRES_PASSWORD
+  POSTGRES_DB
+  GOTRUE_ADMIN_EMAIL
+  GOTRUE_ADMIN_PASSWORD
+  GOTRUE_JWT_SECRET
+  {{ .Values.objectStorage.secretKeys.accessKey }}
+  {{ .Values.objectStorage.secretKeys.secretKey }}
+
+Object storage:
+  minio.enabled=true deploys the bundled MinIO StatefulSet/Service/PVC.
+  minio.exposure.api.enabled=true exposes only the S3-compatible API route
+  used by presigned URLs. minio.exposure.console.enabled=false keeps the
+  MinIO console private by default.
+  minio.enabled=false disables bundled MinIO resources; set objectStorage.endpoint
+  and objectStorage.presignedUrlEndpoint for an external S3-compatible backend.
+
+Optional keys include:
+  GOTRUE_SMTP_HOST, GOTRUE_SMTP_PORT, GOTRUE_SMTP_USER, GOTRUE_SMTP_PASS,
+  GOTRUE_SMTP_ADMIN_EMAIL, APPFLOWY_MAILER_SMTP_HOST,
+  APPFLOWY_MAILER_SMTP_PORT, APPFLOWY_MAILER_SMTP_USERNAME,
+  APPFLOWY_MAILER_SMTP_EMAIL, APPFLOWY_MAILER_SMTP_PASSWORD,
+  APPFLOWY_MAILER_SMTP_TLS_KIND, GOTRUE_EXTERNAL_GOOGLE_CLIENT_ID,
+  GOTRUE_EXTERNAL_GOOGLE_SECRET, GOTRUE_EXTERNAL_GITHUB_CLIENT_ID,
+  GOTRUE_EXTERNAL_GITHUB_SECRET, GOTRUE_EXTERNAL_DISCORD_CLIENT_ID,
+  GOTRUE_EXTERNAL_DISCORD_SECRET, GOTRUE_EXTERNAL_APPLE_CLIENT_ID,
+  GOTRUE_EXTERNAL_APPLE_SECRET, GOTRUE_SAML_PRIVATE_KEY,
+  AI_OPENAI_API_KEY, AI_AZURE_OPENAI_API_KEY, ASSEMBLYAI_API_KEY.

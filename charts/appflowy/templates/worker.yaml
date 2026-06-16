@@ -1,0 +1,63 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appflowy.workerName" . }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: worker
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appflowy.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: worker
+  template:
+    metadata:
+      labels:
+        {{- include "appflowy.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: worker
+    spec:
+      initContainers:
+        - name: wait-cloud
+          image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
+          imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
+          command: ["sh", "-lc", "until nc -z {{ include "appflowy.cloudName" . }} {{ .Values.cloud.service.port }}; do sleep 2; done"]
+      containers:
+        - name: worker
+          image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"
+          imagePullPolicy: {{ .Values.worker.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "appflowy.fullname" . }}-config
+            - secretRef:
+                name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_DB
+            - name: APPFLOWY_WORKER_DATABASE_URL
+              value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)"
+            - name: APPFLOWY_S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: {{ .Values.objectStorage.secretKeys.accessKey }}
+            - name: APPFLOWY_S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: {{ .Values.objectStorage.secretKeys.secretKey }}
+          resources:
+            {{- toYaml .Values.worker.resources | nindent 12 }}

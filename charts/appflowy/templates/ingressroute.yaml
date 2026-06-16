@@ -1,0 +1,156 @@
+{{- if .Values.traefik.ingressRoute.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "appflowy.fullname" . }}-strip-gotrue
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+spec:
+  stripPrefix:
+    prefixes:
+      - /gotrue
+---
+{{- if and .Values.minio.enabled .Values.minio.exposure.console.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "appflowy.fullname" . }}-strip-minio
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+spec:
+  stripPrefix:
+    prefixes:
+      - {{ .Values.minio.exposure.console.pathPrefix }}
+---
+{{- end }}
+{{- if and .Values.minio.enabled .Values.minio.exposure.api.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "appflowy.fullname" . }}-strip-minio-api
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+spec:
+  stripPrefix:
+    prefixes:
+      - {{ .Values.minio.exposure.api.pathPrefix }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ include "appflowy.fullname" . }}-minio-api-headers
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+spec:
+  headers:
+    customRequestHeaders:
+      Host: {{ printf "%s:%v" (include "appflowy.minioName" .) .Values.minio.service.apiPort | quote }}
+---
+{{- end }}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "appflowy.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    {{- toYaml .Values.traefik.ingressRoute.entryPoints | nindent 4 }}
+  routes:
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`/gotrue`)
+      kind: Rule
+      priority: 100
+      middlewares:
+        - name: {{ include "appflowy.fullname" . }}-strip-gotrue
+      services:
+        - name: {{ include "appflowy.gotrueName" . }}
+          port: {{ .Values.gotrue.service.port }}
+          scheme: http
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`/ws`)
+      kind: Rule
+      priority: 100
+      services:
+        - name: {{ include "appflowy.cloudName" . }}
+          port: {{ .Values.cloud.service.port }}
+          scheme: http
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`/api`)
+      kind: Rule
+      priority: 100
+      services:
+        - name: {{ include "appflowy.cloudName" . }}
+          port: {{ .Values.cloud.service.port }}
+          scheme: http
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`/ai`)
+      kind: Rule
+      priority: 100
+      services:
+        - name: {{ include "appflowy.cloudName" . }}
+          port: {{ .Values.cloud.service.port }}
+          scheme: http
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`/console`)
+      kind: Rule
+      priority: 100
+      services:
+        - name: {{ include "appflowy.adminFrontendName" . }}
+          port: {{ .Values.adminFrontend.service.port }}
+          scheme: http
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`/web`)
+      kind: Rule
+      priority: 100
+      services:
+        - name: {{ include "appflowy.adminFrontendName" . }}
+          port: {{ .Values.adminFrontend.service.port }}
+          scheme: http
+    {{- if .Values.minio.enabled }}
+    {{- if .Values.minio.exposure.api.enabled }}
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`{{ .Values.minio.exposure.api.pathPrefix }}`)
+      kind: Rule
+      priority: 100
+      middlewares:
+        - name: {{ include "appflowy.fullname" . }}-strip-minio-api
+        - name: {{ include "appflowy.fullname" . }}-minio-api-headers
+      services:
+        - name: {{ include "appflowy.minioName" . }}
+          port: {{ .Values.minio.service.apiPort }}
+          scheme: http
+    {{- end }}
+    {{- if .Values.minio.exposure.console.enabled }}
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`{{ .Values.minio.exposure.console.pathPrefix }}`)
+      kind: Rule
+      priority: 90
+      middlewares:
+        - name: {{ include "appflowy.fullname" . }}-strip-minio
+      services:
+        - name: {{ include "appflowy.minioName" . }}
+          port: {{ .Values.minio.service.consolePort }}
+          scheme: http
+    {{- end }}
+    {{- end }}
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`/`)
+      kind: Rule
+      priority: 1
+      {{- if .Values.traefik.ingressRoute.middlewares }}
+      middlewares:
+        {{- range .Values.traefik.ingressRoute.middlewares }}
+        - name: {{ .name }}
+          {{- if .namespace }}
+          namespace: {{ .namespace }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      services:
+        - name: {{ include "appflowy.webName" . }}
+          port: {{ .Values.web.service.port }}
+          scheme: http
+  {{- if .Values.traefik.ingressRoute.tls.enabled }}
+  tls:
+    {{- if .Values.traefik.ingressRoute.tls.secretName }}
+    secretName: {{ .Values.traefik.ingressRoute.tls.secretName | quote }}
+    {{- end }}
+  {{- end }}
+{{- end }}

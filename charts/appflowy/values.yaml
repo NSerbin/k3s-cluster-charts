@@ -1,0 +1,244 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: "appflowy"
+
+secrets:
+  appSecretName: appflowy-secrets-app
+
+waitImage:
+  repository: busybox
+  tag: "1.36.1"
+  pullPolicy: IfNotPresent
+
+config:
+  fqdn: wiki.nserbin.com
+  scheme: https
+  wsScheme: wss
+  postgresDatabase: appflowy
+  accessControl: "true"
+  gotrueDisableSignup: "false"
+  gotrueMailerAutoconfirm: "true"
+  gotrueJwtExp: "604800"
+  aiEnabled: "false"
+  rustLog: info
+  assemblyAiApiBase: https://api.assemblyai.com/v2
+  assemblyAiStreamingApiBase: https://streaming.assemblyai.com/v3
+  extraEnv: {}
+
+objectStorage:
+  bucket: appflowy
+  useMinio: true
+  createBucket: true
+  region: us-east-1
+  endpoint: ""
+  presignedUrlEndpoint: ""
+  secretKeys:
+    accessKey: MINIO_ACCESS_KEY
+    secretKey: MINIO_SECRET_KEY
+
+postgres:
+  image:
+    repository: pgvector/pgvector
+    tag: "0.8.2-pg16"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+redis:
+  image:
+    repository: redis
+    tag: "7.4.9-bookworm"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+minio:
+  enabled: true
+  exposure:
+    api:
+      enabled: true
+      pathPrefix: /minio-api
+    console:
+      enabled: false
+      pathPrefix: /minio
+  image:
+    repository: minio/minio
+    tag: "RELEASE.2025-09-07T16-13-09Z"
+    pullPolicy: IfNotPresent
+  service:
+    apiPort: 9000
+    consolePort: 9001
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 20Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+gotrue:
+  image:
+    repository: appflowyinc/gotrue
+    tag: "0.15.22"
+    pullPolicy: IfNotPresent
+  service:
+    port: 9999
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+cloud:
+  image:
+    repository: appflowyinc/appflowy_cloud
+    tag: "0.15.22"
+    pullPolicy: IfNotPresent
+  service:
+    port: 8000
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+worker:
+  image:
+    repository: appflowyinc/appflowy_worker
+    tag: "0.15.22"
+    pullPolicy: IfNotPresent
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+search:
+  image:
+    repository: appflowyinc/appflowy_search
+    tag: "0.15.20"
+    pullPolicy: IfNotPresent
+  service:
+    port: 4002
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+web:
+  image:
+    repository: appflowyinc/appflowy_web
+    tag: "0.14.9"
+    pullPolicy: IfNotPresent
+  service:
+    port: 80
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+adminFrontend:
+  image:
+    repository: appflowyinc/admin_frontend
+    tag: "0.15.22"
+    pullPolicy: IfNotPresent
+  service:
+    port: 3000
+  pathPrefix: /console
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+ai:
+  enabled: false
+  image:
+    repository: appflowyinc/appflowy_ai
+    tag: "0.15.18"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5001
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - web
+    host: wiki.nserbin.com
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

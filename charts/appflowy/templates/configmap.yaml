@@ -1,0 +1,122 @@
+{{- $s3Endpoint := .Values.objectStorage.endpoint -}}
+{{- if .Values.minio.enabled -}}
+{{- $s3Endpoint = printf "http://%s:%v" (include "appflowy.minioName" .) .Values.minio.service.apiPort -}}
+{{- else if not $s3Endpoint -}}
+{{- fail "objectStorage.endpoint is required when minio.enabled=false" -}}
+{{- end -}}
+{{- $s3PresignedEndpoint := .Values.objectStorage.presignedUrlEndpoint -}}
+{{- if and .Values.minio.enabled (not $s3PresignedEndpoint) -}}
+{{- $s3PresignedEndpoint = printf "%s://%s%s" .Values.config.scheme .Values.config.fqdn .Values.minio.exposure.api.pathPrefix -}}
+{{- else if not $s3PresignedEndpoint -}}
+{{- $s3PresignedEndpoint = $s3Endpoint -}}
+{{- end -}}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "appflowy.fullname" . }}-config
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+data:
+  FQDN: {{ .Values.config.fqdn | quote }}
+  DOMAIN: {{ .Values.config.fqdn | quote }}
+  SCHEME: {{ .Values.config.scheme | quote }}
+  WS_SCHEME: {{ .Values.config.wsScheme | quote }}
+  APPFLOWY_BASE_URL: {{ printf "%s://%s" .Values.config.scheme .Values.config.fqdn | quote }}
+  APPFLOWY_WEB_URL: {{ printf "%s://%s" .Values.config.scheme .Values.config.fqdn | quote }}
+  APPFLOWY_WEBSOCKET_BASE_URL: {{ printf "%s://%s/ws/v2" .Values.config.wsScheme .Values.config.fqdn | quote }}
+  POSTGRES_HOST: {{ include "appflowy.postgresName" . | quote }}
+  POSTGRES_PORT: {{ .Values.postgres.service.port | quote }}
+  REDIS_HOST: {{ include "appflowy.redisName" . | quote }}
+  REDIS_PORT: {{ .Values.redis.service.port | quote }}
+  {{- if .Values.minio.enabled }}
+  MINIO_HOST: {{ include "appflowy.minioName" . | quote }}
+  MINIO_PORT: {{ .Values.minio.service.apiPort | quote }}
+  {{- end }}
+  APPFLOWY_GOTRUE_BASE_URL: {{ printf "http://%s:%v" (include "appflowy.gotrueName" .) .Values.gotrue.service.port | quote }}
+  API_EXTERNAL_URL: {{ printf "%s://%s/gotrue" .Values.config.scheme .Values.config.fqdn | quote }}
+  RUST_LOG: {{ .Values.config.rustLog | quote }}
+  APPFLOWY_ENVIRONMENT: production
+  APPFLOWY_ACCESS_CONTROL: {{ .Values.config.accessControl | quote }}
+  APPFLOWY_DATABASE_NAME: {{ .Values.config.postgresDatabase | quote }}
+  APPFLOWY_DATABASE_MAX_CONNECTIONS: "40"
+  APPFLOWY_WEBSOCKET_MAILBOX_SIZE: "6000"
+  APPFLOWY_DOCUMENT_CONTENT_SPLIT_LEN: "8000"
+  APPFLOWY_REDIS_URI: {{ printf "redis://%s:%v" (include "appflowy.redisName" .) .Values.redis.service.port | quote }}
+  ADMIN_FRONTEND_REDIS_URL: {{ printf "redis://%s:%v" (include "appflowy.redisName" .) .Values.redis.service.port | quote }}
+  ADMIN_FRONTEND_GOTRUE_URL: {{ printf "http://%s:%v" (include "appflowy.gotrueName" .) .Values.gotrue.service.port | quote }}
+  ADMIN_FRONTEND_APPFLOWY_CLOUD_URL: {{ printf "http://%s:%v" (include "appflowy.cloudName" .) .Values.cloud.service.port | quote }}
+  ADMIN_FRONTEND_PATH_PREFIX: {{ .Values.adminFrontend.pathPrefix | quote }}
+  ADMIN_FRONTEND_TLS_SKIP_VERIFY: "true"
+  ADMIN_FRONTEND_HOST: "0.0.0.0"
+  ADMIN_FRONTEND_PORT: {{ .Values.adminFrontend.service.port | quote }}
+  GOTRUE_URL: {{ printf "%s://%s/gotrue" .Values.config.scheme .Values.config.fqdn | quote }}
+  ADMIN_CONSOLE_URL: {{ printf "%s://%s%s" .Values.config.scheme .Values.config.fqdn .Values.adminFrontend.pathPrefix | quote }}
+  APPFLOWY_CLOUD_URL: {{ printf "http://%s:%v" (include "appflowy.cloudName" .) .Values.cloud.service.port | quote }}
+  REDIS_URL: {{ printf "redis://%s:%v" (include "appflowy.redisName" .) .Values.redis.service.port | quote }}
+  APPFLOWY_SEARCH_SERVICE_URL: {{ printf "http://%s:%v" (include "appflowy.searchName" .) .Values.search.service.port | quote }}
+  APPFLOWY_SEARCH_REQUEST_TIMEOUT_SECS: "10"
+  APPFLOWY_S3_USE_MINIO: {{ .Values.objectStorage.useMinio | quote }}
+  APPFLOWY_S3_CREATE_BUCKET: {{ .Values.objectStorage.createBucket | quote }}
+  APPFLOWY_S3_MINIO_URL: {{ $s3Endpoint | quote }}
+  APPFLOWY_S3_BUCKET: {{ .Values.objectStorage.bucket | quote }}
+  APPFLOWY_S3_REGION: {{ .Values.objectStorage.region | quote }}
+  APPFLOWY_S3_PRESIGNED_URL_ENDPOINT: {{ $s3PresignedEndpoint | quote }}
+  AI_ENABLED: {{ .Values.config.aiEnabled | quote }}
+  AI_SERVER_HOST: {{ include "appflowy.aiName" . | quote }}
+  AI_SERVER_PORT: {{ .Values.ai.service.port | quote }}
+  AI_APPFLOWY_BUCKET_NAME: {{ .Values.objectStorage.bucket | quote }}
+  AI_APPFLOWY_HOST: {{ printf "%s://%s" .Values.config.scheme .Values.config.fqdn | quote }}
+  AI_MINIO_URL: {{ $s3Endpoint | quote }}
+  AI_TEST_ENABLED: "false"
+  APPFLOWY_EMBEDDING_CHUNK_SIZE: "2000"
+  APPFLOWY_EMBEDDING_CHUNK_OVERLAP: "200"
+  APPFLOWY_INDEXER_ENABLED: "true"
+  APPFLOWY_INDEXER_REDIS_URL: {{ printf "redis://%s:%v" (include "appflowy.redisName" .) .Values.redis.service.port | quote }}
+  APPFLOWY_INDEXER_EMBEDDING_BUFFER_SIZE: "5000"
+  APPFLOWY_COLLABORATE_MULTI_THREAD: "false"
+  APPFLOWY_COLLABORATE_REMOVE_BATCH_SIZE: "100"
+  APPFLOWY_WORKER_REDIS_URL: {{ printf "redis://%s:%v" (include "appflowy.redisName" .) .Values.redis.service.port | quote }}
+  APPFLOWY_WORKER_DATABASE_NAME: {{ .Values.config.postgresDatabase | quote }}
+  APPFLOWY_SEARCH_HOST: "[::]"
+  APPFLOWY_SEARCH_PORT: {{ .Values.search.service.port | quote }}
+  APPFLOWY_BACKGROUND_INDEXER_ENABLED: "true"
+  APPFLOWY_INDEXER_DATABASE_ENABLED: "false"
+  APPFLOWY_KEYWORD_SEARCH_ENABLED: "true"
+  APPFLOWY_KEYWORD_WORKER_ENABLED: "true"
+  APPFLOWY_KEYWORD_INDEX_MAP_SIZE_BYTES: "2147483648"
+  APPFLOWY_KEYWORD_INDEX_DIR: /var/lib/appflowy/keyword_index
+  GOTRUE_DISABLE_SIGNUP: {{ .Values.config.gotrueDisableSignup | quote }}
+  GOTRUE_SITE_URL: appflowy-flutter://
+  GOTRUE_URI_ALLOW_LIST: "**"
+  GOTRUE_JWT_EXP: {{ .Values.config.gotrueJwtExp | quote }}
+  GOTRUE_JWT_ADMIN_GROUP_NAME: supabase_admin
+  GOTRUE_DB_DRIVER: postgres
+  GOTRUE_MAILER_AUTOCONFIRM: {{ .Values.config.gotrueMailerAutoconfirm | quote }}
+  GOTRUE_MAILER_URLPATHS_CONFIRMATION: /gotrue/verify
+  GOTRUE_MAILER_URLPATHS_INVITE: /gotrue/verify
+  GOTRUE_MAILER_URLPATHS_RECOVERY: /gotrue/verify
+  GOTRUE_MAILER_URLPATHS_EMAIL_CHANGE: /gotrue/verify
+  GOTRUE_SMTP_MAX_FREQUENCY: 1ns
+  GOTRUE_RATE_LIMIT_EMAIL_SENT: "100"
+  GOTRUE_MAILER_TEMPLATES_MAGIC_LINK: ""
+  GOTRUE_EXTERNAL_GOOGLE_ENABLED: "false"
+  GOTRUE_EXTERNAL_GOOGLE_REDIRECT_URI: {{ printf "%s://%s/gotrue/callback" .Values.config.scheme .Values.config.fqdn | quote }}
+  GOTRUE_EXTERNAL_GITHUB_ENABLED: "false"
+  GOTRUE_EXTERNAL_GITHUB_REDIRECT_URI: {{ printf "%s://%s/gotrue/callback" .Values.config.scheme .Values.config.fqdn | quote }}
+  GOTRUE_EXTERNAL_DISCORD_ENABLED: "false"
+  GOTRUE_EXTERNAL_DISCORD_REDIRECT_URI: {{ printf "%s://%s/gotrue/callback" .Values.config.scheme .Values.config.fqdn | quote }}
+  GOTRUE_EXTERNAL_APPLE_ENABLED: "false"
+  GOTRUE_EXTERNAL_APPLE_REDIRECT_URI: {{ printf "%s://%s/gotrue/callback" .Values.config.scheme .Values.config.fqdn | quote }}
+  GOTRUE_SAML_ENABLED: "false"
+  AI_OPENAI_API_SUMMARY_MODEL: ""
+  AI_AZURE_OPENAI_API_BASE: ""
+  AI_AZURE_OPENAI_API_VERSION: ""
+  ASSEMBLYAI_API_BASE: {{ .Values.config.assemblyAiApiBase | quote }}
+  ASSEMBLYAI_STREAMING_API_BASE: {{ .Values.config.assemblyAiStreamingApiBase | quote }}
+  PGADMIN_DEFAULT_EMAIL: ""
+  {{- if and .Values.minio.enabled .Values.minio.exposure.console.enabled }}
+  MINIO_BROWSER_REDIRECT_URL: {{ printf "%s://%s%s" .Values.config.scheme .Values.config.fqdn .Values.minio.exposure.console.pathPrefix | quote }}
+  {{- end }}
+  {{- range $key, $value := .Values.config.extraEnv }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}

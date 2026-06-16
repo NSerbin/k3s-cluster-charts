@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appflowy.gotrueName" . }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: gotrue
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appflowy.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: gotrue
+  template:
+    metadata:
+      labels:
+        {{- include "appflowy.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: gotrue
+    spec:
+      initContainers:
+        - name: wait-postgres
+          image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
+          imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
+          command: ["sh", "-lc", "until nc -z {{ include "appflowy.postgresName" . }} {{ .Values.postgres.service.port }}; do sleep 2; done"]
+      containers:
+        - name: gotrue
+          image: "{{ .Values.gotrue.image.repository }}:{{ .Values.gotrue.image.tag }}"
+          imagePullPolicy: {{ .Values.gotrue.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "appflowy.fullname" . }}-config
+            - secretRef:
+                name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_DB
+            - name: DATABASE_URL
+              value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)?search_path=auth"
+            - name: PORT
+              value: {{ .Values.gotrue.service.port | quote }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.gotrue.service.port }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.gotrue.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appflowy.gotrueName" . }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: gotrue
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: {{ .Values.gotrue.service.port }}
+      targetPort: http
+  selector:
+    {{- include "appflowy.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: gotrue

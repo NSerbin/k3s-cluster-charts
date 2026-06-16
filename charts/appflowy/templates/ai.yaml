@@ -1,0 +1,118 @@
+{{- if .Values.ai.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appflowy.aiName" . }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ai
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appflowy.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: ai
+  template:
+    metadata:
+      labels:
+        {{- include "appflowy.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: ai
+    spec:
+      initContainers:
+        - name: wait-cloud
+          image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
+          imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
+          command: ["sh", "-lc", "until nc -z {{ include "appflowy.cloudName" . }} {{ .Values.cloud.service.port }}; do sleep 2; done"]
+      containers:
+        - name: ai
+          image: "{{ .Values.ai.image.repository }}:{{ .Values.ai.image.tag }}"
+          imagePullPolicy: {{ .Values.ai.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "appflowy.fullname" . }}-config
+            - secretRef:
+                name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_DB
+            - name: AI_SERVER_PORT
+              value: {{ .Values.ai.service.port | quote }}
+            - name: APPFLOWY_AI_SERVER_PORT
+              value: {{ .Values.ai.service.port | quote }}
+            - name: AI_DATABASE_URL
+              value: "postgresql+psycopg://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)"
+            - name: APPFLOWY_AI_DATABASE_URL
+              value: "postgresql+psycopg://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)"
+            - name: AI_REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "appflowy.fullname" . }}-config
+                  key: APPFLOWY_REDIS_URI
+            - name: APPFLOWY_AI_REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "appflowy.fullname" . }}-config
+                  key: APPFLOWY_REDIS_URI
+            - name: APPFLOWY_GOTRUE_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_JWT_SECRET
+            - name: APPFLOWY_S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: {{ .Values.objectStorage.secretKeys.accessKey }}
+            - name: APPFLOWY_S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: {{ .Values.objectStorage.secretKeys.secretKey }}
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: AI_OPENAI_API_KEY
+                  optional: true
+          ports:
+            - name: http
+              containerPort: {{ .Values.ai.service.port }}
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 40
+            periodSeconds: 20
+          resources:
+            {{- toYaml .Values.ai.resources | nindent 12 }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appflowy.aiName" . }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: ai
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: {{ .Values.ai.service.port }}
+      targetPort: http
+  selector:
+    {{- include "appflowy.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: ai
+{{- end }}

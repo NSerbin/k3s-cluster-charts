@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "appflowy.searchName" . }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      {{- include "appflowy.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: search
+  template:
+    metadata:
+      labels:
+        {{- include "appflowy.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: search
+    spec:
+      initContainers:
+        - name: wait-dependencies
+          image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
+          imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
+          command: ["sh", "-lc", "until nc -z {{ include "appflowy.postgresName" . }} {{ .Values.postgres.service.port }} && nc -z {{ include "appflowy.redisName" . }} {{ .Values.redis.service.port }}; do sleep 2; done"]
+      containers:
+        - name: search
+          image: "{{ .Values.search.image.repository }}:{{ .Values.search.image.tag }}"
+          imagePullPolicy: {{ .Values.search.image.pullPolicy }}
+          envFrom:
+            - configMapRef:
+                name: {{ include "appflowy.fullname" . }}-config
+            - secretRef:
+                name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_PASSWORD
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: POSTGRES_DB
+            - name: APPFLOWY_SEARCH_DATABASE_URL
+              value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)"
+            - name: APPFLOWY_INDEXER_DATABASE_URL
+              value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)"
+            - name: APPFLOWY_SEARCH_REDIS_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: {{ include "appflowy.fullname" . }}-config
+                  key: APPFLOWY_REDIS_URI
+            - name: APPFLOWY_GOTRUE_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_JWT_SECRET
+            - name: APPFLOWY_S3_ACCESS_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: {{ .Values.objectStorage.secretKeys.accessKey }}
+            - name: APPFLOWY_S3_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: {{ .Values.objectStorage.secretKeys.secretKey }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.search.service.port }}
+          resources:
+            {{- toYaml .Values.search.resources | nindent 12 }}
+          volumeMounts:
+            - name: keyword-index
+              mountPath: /var/lib/appflowy/keyword_index
+      volumes:
+        - name: keyword-index
+          persistentVolumeClaim:
+            claimName: {{ include "appflowy.searchName" . }}-keyword-index
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "appflowy.searchName" . }}
+  labels:
+    {{- include "appflowy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: search
+spec:
+  type: ClusterIP
+  ports:
+    - name: http
+      port: {{ .Values.search.service.port }}
+      targetPort: http
+  selector:
+    {{- include "appflowy.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: search
