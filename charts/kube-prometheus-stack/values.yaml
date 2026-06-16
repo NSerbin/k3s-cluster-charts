@@ -4,6 +4,7 @@
 #   create: false
 
 kube-prometheus-stack:
+  cleanPrometheusOperatorObjectNames: true
   
   # Preferido: secret pre-creado (ExternalSecrets/SOPS/manual)
   secrets:
