@@ -2,12 +2,15 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: postgres
+  name: {{ .Values.postgresql.serviceName }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "freedium.labels" . | nindent 4 }}
 spec:
   serviceName: {{ .Values.postgresql.serviceName }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.postgresql.storage.retentionPolicy.whenDeleted | default "Retain" }}
+    whenScaled: {{ .Values.postgresql.storage.retentionPolicy.whenScaled | default "Retain" }}
   replicas: 1
   selector:
     matchLabels:

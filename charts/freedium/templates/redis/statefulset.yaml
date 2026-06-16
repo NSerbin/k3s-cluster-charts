@@ -2,12 +2,15 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: redis
+  name: {{ .Values.redis.serviceName }}
   namespace: {{ .Release.Namespace }}
   labels:
     {{- include "freedium.labels" . | nindent 4 }}
 spec:
   serviceName: {{ .Values.redis.serviceName }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: {{ .Values.redis.storage.retentionPolicy.whenDeleted | default "Retain" }}
+    whenScaled: {{ .Values.redis.storage.retentionPolicy.whenScaled | default "Retain" }}
   replicas: 1
   selector:
     matchLabels:
