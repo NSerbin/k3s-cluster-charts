@@ -376,10 +376,10 @@ config:
             href: https://auth.nserbin.com
             description: Authentik
             server: k3s
-            siteMonitor: http://authentik-authentik-server.tools:9000/
+            siteMonitor: http://authentik-server.tools:9000/
             widget:
               type: authentik
-              url: http://authentik-authentik-server.tools:9000
+              url: http://authentik-server.tools:9000
               key: {{HOMEPAGE_VAR_AUTHENTIK_KEY}}
               version: 2 
 
