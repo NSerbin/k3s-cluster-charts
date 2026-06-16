@@ -18,7 +18,7 @@ config:
   postgresDatabase: appflowy
   accessControl: "true"
   gotrueDisableSignup: "false"
-  gotrueMailerAutoconfirm: "true"
+  gotrueMailerAutoconfirm: "false"
   gotrueJwtExp: "604800"
   aiEnabled: "false"
   rustLog: info

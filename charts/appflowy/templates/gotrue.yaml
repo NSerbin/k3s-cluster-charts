@@ -51,6 +51,10 @@ spec:
               value: "postgres://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@{{ include "appflowy.postgresName" . }}:{{ .Values.postgres.service.port }}/$(POSTGRES_DB)?search_path=auth"
             - name: PORT
               value: {{ .Values.gotrue.service.port | quote }}
+            - name: GOTRUE_MAILER_AUTOCONFIRM
+              value: {{ .Values.config.gotrueMailerAutoconfirm | quote }}
+            - name: GOTRUE_MAILER_EXTERNAL_HOSTS
+              value: {{ .Values.config.fqdn | quote }}
           ports:
             - name: http
               containerPort: {{ .Values.gotrue.service.port }}
