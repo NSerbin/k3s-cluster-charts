@@ -97,6 +97,16 @@ crowdsec:
             key: POSTGRES_PASSWORD
 
   config:
+    postoverflows:
+      s01-whitelist:
+        nserbin-home.yaml: |
+          name: nserbin/home-whitelist
+          description: "Allowlist trusted NSerbin home/current IPs"
+          whitelist:
+            reason: "trusted home/current IP"
+            ip:
+              - "2.82.121.66"
+
     simulation.yaml: |
       simulation: false
       exclusions: []
