@@ -7,6 +7,9 @@ metrics-server:
   deploymentAnnotations:
     argocd.argoproj.io/sync-options: Force=true,Replace=true
 
+  podLabels:
+    k8s-app: metrics-server
+
   args:
     - --kubelet-insecure-tls
 
