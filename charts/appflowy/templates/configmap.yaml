@@ -33,6 +33,7 @@ data:
   MINIO_PORT: {{ .Values.minio.service.apiPort | quote }}
   {{- end }}
   APPFLOWY_GOTRUE_BASE_URL: {{ printf "http://%s:%v" (include "appflowy.gotrueName" .) .Values.gotrue.service.port | quote }}
+  APPFLOWY_GOTRUE_URL: {{ printf "%s://%s/gotrue" .Values.config.scheme .Values.config.fqdn | quote }}
   API_EXTERNAL_URL: {{ printf "%s://%s/gotrue" .Values.config.scheme .Values.config.fqdn | quote }}
   RUST_LOG: {{ .Values.config.rustLog | quote }}
   APPFLOWY_ENVIRONMENT: production
@@ -76,6 +77,8 @@ data:
   APPFLOWY_COLLABORATE_MULTI_THREAD: "false"
   APPFLOWY_COLLABORATE_REMOVE_BATCH_SIZE: "100"
   APPFLOWY_WORKER_REDIS_URL: {{ printf "redis://%s:%v" (include "appflowy.redisName" .) .Values.redis.service.port | quote }}
+  APPFLOWY_WORKER_ENVIRONMENT: production
+  APPFLOWY_WORKER_IMPORT_TICK_INTERVAL: "30"
   APPFLOWY_WORKER_DATABASE_NAME: {{ .Values.config.postgresDatabase | quote }}
   APPFLOWY_SEARCH_HOST: "[::]"
   APPFLOWY_SEARCH_PORT: {{ .Values.search.service.port | quote }}
