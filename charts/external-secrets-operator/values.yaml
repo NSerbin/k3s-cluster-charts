@@ -407,12 +407,14 @@ externalSecrets:
             property: GEMINI_APIKEY
             conversionStrategy: Default
             decodingStrategy: None
+            metadataPolicy: None
         - secretKey: OPENAI_BASE_URL
           remoteRef:
             key: k8s/tools/web/karakeep/app
             property: OPENAI_BASE_URL
             conversionStrategy: Default
             decodingStrategy: None
+            metadataPolicy: None
 
     - name: appflowy-secrets-app
       namespace: tools

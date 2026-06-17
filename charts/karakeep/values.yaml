@@ -38,6 +38,18 @@ chrome:
   service:
     enabled: true
     port: 9222
+  extraArgs:
+    - --enable-features=ConversionMeasurement,AttributionReportingCrossAppWeb
+    - --disable-background-networking
+    - --disable-component-update
+    - --disable-default-apps
+    - --disable-extensions
+    - --disable-renderer-backgrounding
+    - --disable-setuid-sandbox
+    - --disable-sync
+    - --metrics-recording-only
+    - --no-first-run
+    - --no-zygote
   resources:
     requests:
       cpu: 50m
