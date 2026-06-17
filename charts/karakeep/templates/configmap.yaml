@@ -13,6 +13,8 @@ data:
   "DISABLE_NEW_RELEASE_CHECK" .Values.config.disableNewReleaseCheck
   "DB_WAL_MODE" .Values.config.dbWalMode
   "RATE_LIMITING_ENABLED" .Values.config.rateLimitingEnabled
+  "INFERENCE_TEXT_MODEL" .Values.config.inferenceTextModel
+  "INFERENCE_IMAGE_MODEL" .Values.config.inferenceImageModel
   "KARAKEEP_VERSION" .Values.image.tag
 -}}
 {{- if .Values.meilisearch.enabled -}}

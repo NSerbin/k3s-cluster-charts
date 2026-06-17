@@ -18,6 +18,8 @@ config:
   dbWalMode: "true"
   rateLimitingEnabled: "true"
   openaiBaseUrl: "https://generativelanguage.googleapis.com/v1beta"
+  inferenceTextModel: "gemini-2.5-flash-lite"
+  inferenceImageModel: "gemini-2.5-flash-lite"
   extraEnv: {}
 
 secrets:
