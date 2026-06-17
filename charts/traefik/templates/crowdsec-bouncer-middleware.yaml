@@ -19,6 +19,10 @@ spec:
       crowdsecLapiKeyFile: {{ ($middleware.crowdsecLapiKeyFile | default (printf "%s/%s" $secretMountPath $secretKeyField)) | quote }}
       forwardedHeadersTrustedIPs:
 {{ toYaml ($middleware.forwardedHeadersTrustedIPs | default list) | indent 8 }}
+      {{- with $middleware.clientTrustedIPs }}
+      clientTrustedIPs:
+{{ toYaml . | indent 8 }}
+      {{- end }}
       updateIntervalSeconds: {{ $middleware.updateIntervalSeconds | default 60 }}
       metricsUpdateIntervalSeconds: {{ $middleware.metricsUpdateIntervalSeconds | default 60 }}
       remediationStatusCode: {{ $middleware.remediationStatusCode | default 403 }}
