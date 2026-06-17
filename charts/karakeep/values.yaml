@@ -17,6 +17,7 @@ config:
   disableNewReleaseCheck: "true"
   dbWalMode: "true"
   rateLimitingEnabled: "true"
+  openaiBaseUrl: "https://generativelanguage.googleapis.com/v1beta"
   extraEnv: {}
 
 secrets:

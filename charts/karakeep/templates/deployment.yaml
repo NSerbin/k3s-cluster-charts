@@ -66,6 +66,14 @@ spec:
                 name: {{ include "karakeep.fullname" . }}-config
             - secretRef:
                 name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+          env:
+            - name: OPENAI_BASE_URL
+              value: {{ .Values.config.openaiBaseUrl | quote }}
+            - name: OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+                  key: OPENAI_API_KEY
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
