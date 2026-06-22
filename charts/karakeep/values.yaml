@@ -57,6 +57,11 @@ persistence:
 
 chrome:
   enabled: true
+  dnsPolicy: ClusterFirst
+  dnsConfig:
+    options:
+      - name: ndots
+        value: "1"
   image:
     repository: gcr.io/zenika-hub/alpine-chrome
     tag: "124"
@@ -66,18 +71,7 @@ chrome:
   service:
     enabled: true
     port: 9222
-  extraArgs:
-    - --enable-features=ConversionMeasurement,AttributionReportingCrossAppWeb
-    - --disable-async-dns
-    - --disable-default-apps
-    - --disable-extensions
-    - --disable-features=UseDnsHttpsSvcb,UseDnsHttpsHttpsSvcb
-    - --disable-ipv6
-    - --disable-setuid-sandbox
-    - --disable-sync
-    - --metrics-recording-only
-    - --no-first-run
-    - --no-zygote
+  extraArgs: []
   resources:
     requests:
       cpu: 100m
