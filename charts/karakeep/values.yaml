@@ -71,7 +71,12 @@ chrome:
   service:
     enabled: true
     port: 9222
-  extraArgs: []
+  extraArgs:
+    - --enable-features=ConversionMeasurement,AttributionReportingCrossAppWeb
+  securityContext:
+    capabilities:
+      add:
+        - SYS_RESOURCE
   resources:
     requests:
       cpu: 100m
