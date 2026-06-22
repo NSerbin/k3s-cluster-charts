@@ -23,6 +23,7 @@ config:
   extraEnv: {}
 
 crawler:
+  allowedInternalHostnames: "."
   numWorkers: "1"
   browserConnectOnDemand: "false"
   downloadBannerImage: "true"

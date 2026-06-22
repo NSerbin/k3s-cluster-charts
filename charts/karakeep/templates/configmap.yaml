@@ -15,6 +15,7 @@ data:
   "RATE_LIMITING_ENABLED" .Values.config.rateLimitingEnabled
   "INFERENCE_TEXT_MODEL" .Values.config.inferenceTextModel
   "INFERENCE_IMAGE_MODEL" .Values.config.inferenceImageModel
+  "CRAWLER_ALLOWED_INTERNAL_HOSTNAMES" .Values.crawler.allowedInternalHostnames
   "CRAWLER_NUM_WORKERS" .Values.crawler.numWorkers
   "BROWSER_CONNECT_ONDEMAND" .Values.crawler.browserConnectOnDemand
   "CRAWLER_DOWNLOAD_BANNER_IMAGE" .Values.crawler.downloadBannerImage
