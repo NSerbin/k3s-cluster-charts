@@ -15,6 +15,26 @@ data:
   "RATE_LIMITING_ENABLED" .Values.config.rateLimitingEnabled
   "INFERENCE_TEXT_MODEL" .Values.config.inferenceTextModel
   "INFERENCE_IMAGE_MODEL" .Values.config.inferenceImageModel
+  "CRAWLER_NUM_WORKERS" .Values.crawler.numWorkers
+  "BROWSER_CONNECT_ONDEMAND" .Values.crawler.browserConnectOnDemand
+  "CRAWLER_DOWNLOAD_BANNER_IMAGE" .Values.crawler.downloadBannerImage
+  "CRAWLER_STORE_SCREENSHOT" .Values.crawler.storeScreenshot
+  "CRAWLER_FULL_PAGE_SCREENSHOT" .Values.crawler.fullPageScreenshot
+  "CRAWLER_SCREENSHOT_TIMEOUT_SEC" .Values.crawler.screenshotTimeoutSec
+  "CRAWLER_STORE_PDF" .Values.crawler.storePdf
+  "CRAWLER_FULL_PAGE_ARCHIVE" .Values.crawler.fullPageArchive
+  "CRAWLER_JOB_TIMEOUT_SEC" .Values.crawler.jobTimeoutSec
+  "CRAWLER_NAVIGATE_TIMEOUT_SEC" .Values.crawler.navigateTimeoutSec
+  "CRAWLER_PARSE_TIMEOUT_SEC" .Values.crawler.parseTimeoutSec
+  "CRAWLER_PARSER_MEM_LIMIT_MB" .Values.crawler.parserMemLimitMb
+  "CRAWLER_VIDEO_DOWNLOAD" .Values.crawler.videoDownload
+  "CRAWLER_VIDEO_DOWNLOAD_MAX_SIZE" .Values.crawler.videoDownloadMaxSize
+  "CRAWLER_VIDEO_DOWNLOAD_TIMEOUT_SEC" .Values.crawler.videoDownloadTimeoutSec
+  "CRAWLER_ENABLE_ADBLOCKER" .Values.crawler.enableAdblocker
+  "CRAWLER_MONOLITH_TIMEOUT_SEC" .Values.crawler.monolithTimeoutSec
+  "CRAWLER_YTDLP_ARGS" .Values.crawler.ytdlpArgs
+  "CRAWLER_MONOLITH_ARGS" .Values.crawler.monolithArgs
+  "HTML_CONTENT_SIZE_INLINE_THRESHOLD_BYTES" .Values.crawler.htmlContentSizeInlineThresholdBytes
   "KARAKEEP_VERSION" .Values.image.tag
 -}}
 {{- if .Values.meilisearch.enabled -}}

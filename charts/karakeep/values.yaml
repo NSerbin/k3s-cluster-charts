@@ -22,6 +22,28 @@ config:
   inferenceImageModel: "gemini-2.5-flash-lite"
   extraEnv: {}
 
+crawler:
+  numWorkers: "2"
+  browserConnectOnDemand: "false"
+  downloadBannerImage: "true"
+  storeScreenshot: "true"
+  fullPageScreenshot: "false"
+  screenshotTimeoutSec: "15"
+  storePdf: "false"
+  fullPageArchive: "false"
+  jobTimeoutSec: "180"
+  navigateTimeoutSec: "90"
+  parseTimeoutSec: "120"
+  parserMemLimitMb: "1024"
+  videoDownload: "false"
+  videoDownloadMaxSize: "50"
+  videoDownloadTimeoutSec: "600"
+  enableAdblocker: "true"
+  monolithTimeoutSec: "20"
+  ytdlpArgs: ""
+  monolithArgs: ""
+  htmlContentSizeInlineThresholdBytes: "5120"
+
 secrets:
   appSecretName: karakeep-secrets-app
 
@@ -55,11 +77,11 @@ chrome:
     - --no-zygote
   resources:
     requests:
-      cpu: 50m
-      memory: 128Mi
+      cpu: 100m
+      memory: 256Mi
     limits:
-      cpu: 500m
-      memory: 512Mi
+      cpu: 1000m
+      memory: 1Gi
 
 meilisearch:
   enabled: true
