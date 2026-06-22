@@ -23,7 +23,7 @@ spec:
           image: "{{ .Values.chrome.image.repository }}:{{ .Values.chrome.image.tag }}"
           imagePullPolicy: {{ .Values.chrome.image.pullPolicy }}
           command:
-            - chromium-browser
+            {{- toYaml .Values.chrome.command | nindent 12 }}
             - --headless
             - --no-sandbox
             - --disable-gpu

@@ -60,6 +60,8 @@ chrome:
     repository: gcr.io/zenika-hub/alpine-chrome
     tag: "124"
     pullPolicy: IfNotPresent
+  command:
+    - chromium-browser
   service:
     enabled: true
     port: 9222
@@ -69,10 +71,12 @@ chrome:
     - --disable-default-apps
     - --disable-extensions
     - --disable-features=UseDnsHttpsSvcb,UseDnsHttpsHttpsSvcb
+    - --disable-ipv6
     - --disable-setuid-sandbox
     - --disable-sync
     - --metrics-recording-only
     - --no-first-run
+    - --no-zygote
   resources:
     requests:
       cpu: 100m
