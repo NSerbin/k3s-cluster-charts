@@ -23,7 +23,7 @@ config:
   extraEnv: {}
 
 crawler:
-  numWorkers: "2"
+  numWorkers: "1"
   browserConnectOnDemand: "false"
   downloadBannerImage: "true"
   storeScreenshot: "true"
@@ -65,16 +65,14 @@ chrome:
     port: 9222
   extraArgs:
     - --enable-features=ConversionMeasurement,AttributionReportingCrossAppWeb
-    - --disable-background-networking
-    - --disable-component-update
+    - --disable-async-dns
     - --disable-default-apps
     - --disable-extensions
-    - --disable-renderer-backgrounding
+    - --disable-features=UseDnsHttpsSvcb,UseDnsHttpsHttpsSvcb
     - --disable-setuid-sandbox
     - --disable-sync
     - --metrics-recording-only
     - --no-first-run
-    - --no-zygote
   resources:
     requests:
       cpu: 100m
