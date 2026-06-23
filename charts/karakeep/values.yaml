@@ -73,6 +73,7 @@ chrome:
     port: 9222
   extraArgs:
     - --enable-features=ConversionMeasurement,AttributionReportingCrossAppWeb
+    - --mute-audio
   securityContext:
     runAsUser: 0
     runAsGroup: 0
