@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: grafana-mcp
+  namespace: argocd
+spec:
+  revisionHistoryLimit: 5
+  project: default
+
+  source:
+    repoURL: "https://github.com/NSerbin/k3s-cluster-charts.git"
+    targetRevision: "main"
+    path: "charts/grafana-mcp"
+    helm:
+      valueFiles:
+        - values.yaml
+
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: monitoring
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true

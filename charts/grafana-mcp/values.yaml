@@ -1,0 +1,55 @@
+replicaCount: 1
+
+fullnameOverride: grafana-mcp
+
+image:
+  repository: grafana/mcp-grafana
+  tag: "0.17.0"
+  pullPolicy: IfNotPresent
+
+grafana:
+  url: "http://kube-prometheus-stack-grafana.monitoring.svc.cluster.local"
+  secretName: grafana-mcp-secrets
+  tokenKey: GRAFANA_SERVICE_ACCOUNT_TOKEN
+
+mcp:
+  port: 8000
+  transport: streamable-http
+  endpointPath: /mcp
+  logLevel: info
+  disabledFlags:
+    - --disable-write
+    - --disable-admin
+    - --disable-incident
+    - --disable-oncall
+    - --disable-snapshot
+    - --disable-annotations
+    - --disable-provisioning
+
+service:
+  type: ClusterIP
+  port: 8000
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 64Mi
+  limits:
+    cpu: 200m
+    memory: 256Mi
+
+podSecurityContext:
+  runAsNonRoot: true
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

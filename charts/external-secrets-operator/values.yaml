@@ -265,6 +265,22 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None
 
+    - name: grafana-mcp-secrets
+      namespace: monitoring
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: grafana-mcp-secrets
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      dataFrom:
+        - extract:
+            key: k8s/core/monitoring/grafana/mcp
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
     - name: alertmanager-secrets-notifications
       namespace: monitoring
       secretStoreRef:

@@ -1,0 +1,14 @@
+Grafana MCP is available inside the cluster at:
+  http://{{ include "grafana-mcp.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}{{ .Values.mcp.endpointPath }}
+
+Required Vault secret:
+  kv/k8s/core/monitoring/grafana/mcp
+
+Expected key:
+  {{ .Values.grafana.tokenKey }}
+
+Local port-forward:
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "grafana-mcp.fullname" . }} 8000:{{ .Values.service.port }}
+
+Local MCP endpoint:
+  http://localhost:8000{{ .Values.mcp.endpointPath }}
