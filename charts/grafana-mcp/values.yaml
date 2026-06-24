@@ -20,8 +20,15 @@ mcp:
   disabledFlags:
     - --disable-write
     - --disable-admin
+    - --disable-api
+    - --disable-asserts
     - --disable-incident
     - --disable-oncall
+    - --disable-plugin
+    - --disable-proxied
+    - --disable-pyroscope
+    - --disable-rendering
+    - --disable-sift
     - --disable-snapshot
     - --disable-annotations
     - --disable-provisioning
