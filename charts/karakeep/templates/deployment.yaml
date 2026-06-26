@@ -66,6 +66,8 @@ spec:
                 name: {{ include "karakeep.fullname" . }}-config
             - secretRef:
                 name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
+            - secretRef:
+                name: {{ required "secrets.oidcSecretName is required" .Values.secrets.oidcSecretName }}
           env:
             - name: OPENAI_BASE_URL
               value: {{ .Values.config.openaiBaseUrl | quote }}

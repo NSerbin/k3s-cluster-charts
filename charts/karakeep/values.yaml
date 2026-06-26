@@ -47,6 +47,7 @@ crawler:
 
 secrets:
   appSecretName: karakeep-secrets-app
+  oidcSecretName: karakeep-secrets-oidc
 
 persistence:
   enabled: true

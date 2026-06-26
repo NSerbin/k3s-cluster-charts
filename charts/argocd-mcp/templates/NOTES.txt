@@ -1,0 +1,14 @@
+Argo CD MCP is available inside the cluster at:
+  http://{{ include "argocd-mcp.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}{{ .Values.mcp.endpointPath }}
+
+Required Vault secret:
+  kv/k8s/core/gitops/argocd/mcp
+
+Expected key:
+  {{ .Values.argocd.tokenKey }}
+
+Local port-forward:
+  kubectl -n {{ .Release.Namespace }} port-forward svc/{{ include "argocd-mcp.fullname" . }} 8001:{{ .Values.service.port }}
+
+Local MCP endpoint:
+  http://localhost:8001{{ .Values.mcp.endpointPath }}

@@ -1,0 +1,7 @@
+apiVersion: v2
+name: argocd-mcp
+description: Official Argo CD MCP server for the k3s GitOps control plane
+type: application
+version: 0.1.0
+appVersion: "v0.8.0"
+home: https://github.com/argoproj-labs/mcp-for-argocd/releases

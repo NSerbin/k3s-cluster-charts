@@ -3,10 +3,19 @@ Karakeep will be exposed at:
 
 Required Vault secret:
   {{ .Values.secrets.appSecretName }} from k8s/tools/web/karakeep/app
+  {{ .Values.secrets.oidcSecretName }} from k8s/tools/web/karakeep/oidc
 
 Expected keys:
   NEXTAUTH_SECRET
   MEILI_MASTER_KEY
   NEXT_PUBLIC_SECRET
+
+Expected OIDC keys:
+  NEXTAUTH_URL
+  OAUTH_CLIENT_ID
+  OAUTH_CLIENT_SECRET
+  OAUTH_WELLKNOWN_URL
+  OAUTH_PROVIDER_NAME
+  OAUTH_ALLOW_DANGEROUS_EMAIL_ACCOUNT_LINKING
 
 Optional keys can be added to the same Vault path and will be injected into the web pod.
