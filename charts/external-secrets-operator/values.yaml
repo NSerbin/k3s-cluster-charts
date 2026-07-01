@@ -292,7 +292,7 @@ externalSecrets:
         deletionPolicy: Retain
       dataFrom:
         - extract:
-            key: k8s/core/gitops/argocd/mcp
+            key: k8s/core/cicd/argocd/mcp
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
@@ -524,6 +524,22 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/core/security/vaultwarden/app
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
+    - name: vault-mcp-secrets
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: vault-mcp-secrets
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      dataFrom:
+        - extract:
+            key: k8s/core/security/vault/mcp
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None

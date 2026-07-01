@@ -2,7 +2,7 @@ Argo CD MCP is available inside the cluster at:
   http://{{ include "argocd-mcp.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local:{{ .Values.service.port }}{{ .Values.mcp.endpointPath }}
 
 Required Vault secret:
-  kv/k8s/core/gitops/argocd/mcp
+  kv/k8s/core/cicd/argocd/mcp
 
 Expected key:
   {{ .Values.argocd.tokenKey }}

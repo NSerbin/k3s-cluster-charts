@@ -1,0 +1,28 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: argocd-mcp
+  namespace: argocd
+spec:
+  revisionHistoryLimit: 5
+  project: default
+
+  source:
+    repoURL: "https://github.com/NSerbin/k3s-cluster-charts.git"
+    targetRevision: "main"
+    path: "charts/argocd-mcp"
+    helm:
+      valueFiles:
+        - values.yaml
+
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: argocd
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+      - ServerSideApply=true
