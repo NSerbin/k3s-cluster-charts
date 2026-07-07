@@ -1,0 +1,27 @@
+{{- if and .Values.traefik.ingressRoute.enabled .Values.traefik.middlewares.sharedArrayBufferHeaders.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Values.traefik.middlewares.sharedArrayBufferHeaders.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "bentopdf.labels" . | nindent 4 }}
+spec:
+  headers:
+    customResponseHeaders:
+      {{- toYaml .Values.traefik.middlewares.sharedArrayBufferHeaders.customResponseHeaders | nindent 6 }}
+{{- end }}
+{{- if and .Values.traefik.ingressRoute.enabled .Values.traefik.middlewares.mjsContentType.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: {{ .Values.traefik.middlewares.mjsContentType.name }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "bentopdf.labels" . | nindent 4 }}
+spec:
+  headers:
+    customResponseHeaders:
+      {{- toYaml .Values.traefik.middlewares.mjsContentType.customResponseHeaders | nindent 6 }}
+{{- end }}

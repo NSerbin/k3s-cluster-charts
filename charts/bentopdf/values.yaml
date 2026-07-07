@@ -1,0 +1,76 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: "bentopdf"
+
+image:
+  repository: ghcr.io/alam00000/bentopdf-simple
+  tag: "v2.8.6"
+  pullPolicy: IfNotPresent
+
+# The simple image is built with SIMPLE_MODE=true upstream. Keep the env var
+# explicit so this deployment's intent is visible from Kubernetes, too.
+env:
+  - name: SIMPLE_MODE
+    value: "true"
+
+service:
+  type: ClusterIP
+  port: 8080
+  targetPort: 8080
+
+traefik:
+  ingressRoute:
+    enabled: true
+    host: "pdf.nserbin.com"
+    entryPoints:
+      - web
+    pathPrefixes:
+      - /
+    middlewares:
+      - name: bentopdf-shared-array-buffer-headers
+    tls:
+      enabled: false
+      secretName: ""
+    mjsContentTypeFix:
+      enabled: false
+      pathRegexp: "^.*\\.mjs$"
+      middlewareName: bentopdf-mjs-content-type
+  middlewares:
+    sharedArrayBufferHeaders:
+      enabled: true
+      name: bentopdf-shared-array-buffer-headers
+      customResponseHeaders:
+        Cross-Origin-Opener-Policy: same-origin
+        Cross-Origin-Embedder-Policy: require-corp
+    mjsContentType:
+      enabled: false
+      name: bentopdf-mjs-content-type
+      customResponseHeaders:
+        Content-Type: application/javascript
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 64Mi
+  limits:
+    cpu: 250m
+    memory: 256Mi
+
+podSecurityContext:
+  fsGroup: 101
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 101
+  runAsGroup: 101
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
