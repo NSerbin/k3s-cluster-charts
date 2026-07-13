@@ -528,22 +528,6 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None
 
-    - name: vault-mcp-secrets
-      namespace: tools
-      secretStoreRef:
-        name: vault
-        kind: ClusterSecretStore
-      target:
-        name: vault-mcp-secrets
-        creationPolicy: Owner
-        deletionPolicy: Retain
-      dataFrom:
-        - extract:
-            key: k8s/core/security/vault/mcp
-            conversionStrategy: Default
-            decodingStrategy: None
-            metadataPolicy: None
-
     - name: terraform-shared-backend-secrets-db
       namespace: infra
       secretStoreRef:
