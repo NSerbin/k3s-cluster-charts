@@ -352,6 +352,13 @@ config:
             siteMonitor: http://appflowy-web/
             description: Notes and workspace
             server: k3s
+
+        - TREK:
+            icon: mdi-map-marker-path
+            href: https://travels.nserbin.com/
+            siteMonitor: http://trek:3000/api/health
+            description: Travel planning
+            server: k3s
        
         - IT Tools:
             icon: 
