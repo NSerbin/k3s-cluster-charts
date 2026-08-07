@@ -475,7 +475,7 @@ externalSecrets:
         deletionPolicy: Retain
       dataFrom:
         - extract:
-            key: k8s/tools/web/trek/app
+            key: k8s/tools/web/trek
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None

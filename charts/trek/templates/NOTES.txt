@@ -2,7 +2,7 @@ TREK will be exposed at:
   https://{{ .Values.traefik.ingressRoute.host }}
 
 Expected optional Vault path:
-  kv/k8s/tools/web/trek/app
+  kv/k8s/tools/web/trek
 
 Supported secret keys:
   ENCRYPTION_KEY
@@ -12,4 +12,3 @@ Supported secret keys:
   UNSPLASH_ACCESS_KEY
 
 The server manages JWT_SECRET internally in the data PVC.
-
