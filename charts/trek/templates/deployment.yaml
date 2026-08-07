@@ -58,13 +58,13 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secrets.existingSecret | quote }}
                   key: {{ .Values.secrets.keys.oidcClientSecret | quote }}
-                  optional: {{ .Values.secrets.optional }}
+                  optional: true
             - name: UNSPLASH_ACCESS_KEY
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secrets.existingSecret | quote }}
                   key: {{ .Values.secrets.keys.unsplashAccessKey | quote }}
-                  optional: {{ .Values.secrets.optional }}
+                  optional: true
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
