@@ -31,7 +31,7 @@ config:
 
 secrets:
   existingSecret: trek-secrets-app
-  optional: true
+  optional: false
   keys:
     encryptionKey: ENCRYPTION_KEY
     adminEmail: ADMIN_EMAIL
