@@ -356,6 +356,7 @@ config:
         - IT Tools:
             icon: 
             href: https://tools.nserbin.com/
+            siteMonitor: http://it-tools:8080/
             description: Multiple Tools
             server: k3s
 
