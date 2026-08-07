@@ -77,6 +77,11 @@ ingress:
     originRequest:
       httpHostHeader: "wiki.nserbin.com"
 
+  - hostname: "travels.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "travels.nserbin.com"
+
   - hostname: "pdf.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
     originRequest:

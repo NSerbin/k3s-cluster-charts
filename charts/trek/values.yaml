@@ -1,0 +1,93 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: "trek"
+
+image:
+  repository: mauriceboe/trek
+  tag: "3.4.1"
+  digest: "sha256:ce7fab639b89a6f62d484d1175a7d489a536a8c77291f56c03fec20608d4a3eb"
+  pullPolicy: IfNotPresent
+
+updateStrategy: Recreate
+
+service:
+  type: ClusterIP
+  port: 3000
+  targetPort: 3000
+
+config:
+  NODE_ENV: production
+  PORT: "3000"
+  TZ: "Europe/Lisbon"
+  LOG_LEVEL: "info"
+  APP_URL: "https://travels.nserbin.com"
+  ALLOWED_ORIGINS: "https://travels.nserbin.com"
+  FORCE_HTTPS: "true"
+  TRUST_PROXY: "1"
+  OIDC_DISPLAY_NAME: "Authentik"
+  OIDC_SCOPE: "openid email profile groups"
+  extraEnv: {}
+
+secrets:
+  existingSecret: trek-secrets-app
+  optional: true
+  keys:
+    encryptionKey: ENCRYPTION_KEY
+    adminEmail: ADMIN_EMAIL
+    adminPassword: ADMIN_PASSWORD
+    oidcClientSecret: OIDC_CLIENT_SECRET
+    unsplashAccessKey: UNSPLASH_ACCESS_KEY
+
+persistence:
+  enabled: true
+  data:
+    size: 2Gi
+    storageClassName: "local-path"
+    existingClaim: ""
+    annotations: {}
+  uploads:
+    size: 5Gi
+    storageClassName: "local-path"
+    existingClaim: ""
+    annotations: {}
+
+traefik:
+  ingressRoute:
+    enabled: true
+    host: "travels.nserbin.com"
+    entryPoints:
+      - web
+    pathPrefixes:
+      - /
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
