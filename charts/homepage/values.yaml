@@ -66,8 +66,9 @@ config:
     showStats: true
 
     layout:
-      Management:
-        icon: mdi-view-dashboard
+      # RPi-only category. Kept here to restore quickly if needed.
+      # Management:
+      #   icon: mdi-view-dashboard
       Monitoring:
         icon: mdi-monitor-eye
       Networking:
@@ -202,12 +203,13 @@ config:
               key: {{HOMEPAGE_VAR_ARGOCD_KEY}}
 
     - Monitoring:
-        - cAdvisor:
-            icon: cadvisor.png
-            href: https://cadvisor.nserbin.com
-            siteMonitor: http://192.168.0.4:8080
-            description: cAdvisor Dashboard
-            server: rpi
+        # RPi service. Kept here to restore quickly if needed.
+        # - cAdvisor:
+        #     icon: cadvisor.png
+        #     href: https://cadvisor.nserbin.com
+        #     siteMonitor: http://192.168.0.4:8080
+        #     description: cAdvisor Dashboard
+        #     server: rpi
 
         - Grafana:
             icon: grafana.png
@@ -240,16 +242,17 @@ config:
             description: Alertmanager
             server: k3s
 
-        - Uptime Kuma:
-            icon: uptime-kuma.png
-            href: https://status.nserbin.com/
-            siteMonitor: http://192.168.0.4:3001
-            description: Status dashboard for all the services
-            server: rpi
-            widget:
-              type: uptimekuma
-              url: http://192.168.0.4:3001/
-              slug: default
+        # RPi service. Kept here to restore quickly if needed.
+        # - Uptime Kuma:
+        #     icon: uptime-kuma.png
+        #     href: https://status.nserbin.com/
+        #     siteMonitor: http://192.168.0.4:3001
+        #     description: Status dashboard for all the services
+        #     server: rpi
+        #     widget:
+        #       type: uptimekuma
+        #       url: http://192.168.0.4:3001/
+        #       slug: default
 
     - News:
         - FreshRSS:
@@ -272,17 +275,18 @@ config:
             siteMonitor: http://freedium-web/
 
     - Networking:
-        - Pi-hole:
-            icon: pi-hole.svg
-            href: https://pihole.nserbin.com/admin
-            siteMonitor: http://192.168.0.4:83
-            description: Pi-hole DNS
-            server: rpi
-            widget:
-              type: pihole
-              url: http://192.168.0.4:83
-              version: 6
-              key: {{HOMEPAGE_VAR_PIHOLE_KEY}}
+        # RPi service. Kept here to restore quickly if needed.
+        # - Pi-hole:
+        #     icon: pi-hole.svg
+        #     href: https://pihole.nserbin.com/admin
+        #     siteMonitor: http://192.168.0.4:83
+        #     description: Pi-hole DNS
+        #     server: rpi
+        #     widget:
+        #       type: pihole
+        #       url: http://192.168.0.4:83
+        #       version: 6
+        #       key: {{HOMEPAGE_VAR_PIHOLE_KEY}}
               
         - Traefik:
             icon: traefik.svg
@@ -294,15 +298,16 @@ config:
               type: traefik
               url: http://traefik.traefik:9000
         
-        - RPI Cloudflare Tunnel:
-            icon: cloudflare.svg
-            href: https://cloudflare.com
-            description: Cloudflare
-            widget:
-              type: cloudflared
-              accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT}}
-              tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_RPI_TUNNEL_ID}}
-              key: {{HOMEPAGE_VAR_CLOUDFLARE_TOKEN}}
+        # RPi service. Kept here to restore quickly if needed.
+        # - RPI Cloudflare Tunnel:
+        #     icon: cloudflare.svg
+        #     href: https://cloudflare.com
+        #     description: Cloudflare
+        #     widget:
+        #       type: cloudflared
+        #       accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT}}
+        #       tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_RPI_TUNNEL_ID}}
+        #       key: {{HOMEPAGE_VAR_CLOUDFLARE_TOKEN}}
 
         - k3s Cloudflare Tunnel:
             icon: cloudflare.svg
@@ -314,19 +319,20 @@ config:
               tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_K3S_TUNNEL_ID}}
               key: {{HOMEPAGE_VAR_CLOUDFLARE_TOKEN}}
 
-    - Management:
-        - Portainer:
-            icon: portainer.svg
-            href: https://portainer.nserbin.com/
-            siteMonitor: http://192.168.0.4:9000/
-            description: Portainer
-            server: rpi
-            widget:
-              type: portainer
-              url: http://192.168.0.4:9000/
-              env: 1
-              kubernetes: false
-              key: {{HOMEPAGE_VAR_PORTAINER_KEY}}
+    # RPi-only category. Kept here to restore quickly if needed.
+    # - Management:
+    #     - Portainer:
+    #         icon: portainer.svg
+    #         href: https://portainer.nserbin.com/
+    #         siteMonitor: http://192.168.0.4:9000/
+    #         description: Portainer
+    #         server: rpi
+    #         widget:
+    #           type: portainer
+    #           url: http://192.168.0.4:9000/
+    #           env: 1
+    #           kubernetes: false
+    #           key: {{HOMEPAGE_VAR_PORTAINER_KEY}}
 
     - Tools:
 
@@ -376,6 +382,19 @@ config:
             server: rpi
 
     - Secrets:
+        # Legacy RPi FileBrowser entry. Kept here to restore quickly if needed.
+        # - FileBrowser:
+        #     icon: filebrowser.png
+        #     href: https://vault.nserbin.com/
+        #     siteMonitor: http://192.168.0.4:8082
+        #     description: FileBrowser
+        #     server: rpi
+        #     widget:
+        #       type: filebrowser
+        #       url: http://192.168.0.4:8082
+        #       username: {{HOMEPAGE_VAR_FILEBROWSER_USERNAME}}
+        #       password: {{HOMEPAGE_VAR_FILEBROWSER_PASSWORD}}
+
         - Vault:
             icon: vault.svg
             href: https://vault.nserbin.com/
