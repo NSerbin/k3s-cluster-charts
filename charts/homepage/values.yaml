@@ -76,6 +76,8 @@ config:
         icon: mdi-newspaper
       Security:
         icon: mdi-security
+      Secrets:
+        icon: mdi-shield-key
       Tools:
         icon: mdi-tools
       Cluster:
@@ -373,17 +375,20 @@ config:
             description: SSH Tunnel to RPi
             server: rpi
 
+    - Secrets:
         - Vault:
-            icon: filebrowser.png
+            icon: vault.svg
             href: https://vault.nserbin.com/
-            siteMonitor: http://192.168.0.4:8082
-            description: FileBrowser
-            server: rpi
-            widget:
-              type: filebrowser
-              url: http://192.168.0.4:8082
-              username: {{HOMEPAGE_VAR_FILEBROWSER_USERNAME}}
-              password: {{HOMEPAGE_VAR_FILEBROWSER_PASSWORD}}
+            siteMonitor: http://vault-ui:8200/v1/sys/health?standbyok=true
+            description: Secrets management
+            server: k3s
+
+        - Share:
+            icon: mdi-share-variant
+            href: https://share.nserbin.com/
+            siteMonitor: http://yopass:1337/
+            description: Secure secret sharing
+            server: k3s
 
     - Security:
         - Authentik:
