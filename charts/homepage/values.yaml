@@ -126,18 +126,6 @@ config:
               href: https://bard.google.com/chat
               description: Gemini
 
-    - Notes:
-        - Keep:
-            - icon: google-keep.svg
-              abbr: GK
-              href: https://keep.google.com
-              description: Google Keep
-        - Notion:
-            - icon: notion.png
-              abbr: NT
-              href: https://www.notion.so/koopernic
-              description: Notion
-
     - Social:
         - Reddit:
             - icon: reddit.png
