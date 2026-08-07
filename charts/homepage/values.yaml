@@ -267,7 +267,7 @@ config:
             href: http://free.nserbin.com
             description: Freedium Web Fork
             server: k3s
-            #siteMonitor: http://freedium-web
+            siteMonitor: http://freedium-web/
 
     - Networking:
         - Pi-hole:
