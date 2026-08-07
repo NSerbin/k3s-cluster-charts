@@ -5,7 +5,7 @@ fullnameOverride: "bentopdf"
 
 image:
   repository: ghcr.io/alam00000/bentopdf-simple
-  tag: "v2.8.6"
+  tag: "v2.8.6" 
   pullPolicy: IfNotPresent
 
 # The simple image is built with SIMPLE_MODE=true upstream. Keep the env var

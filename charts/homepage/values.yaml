@@ -328,6 +328,13 @@ config:
 
     - Tools:
 
+        - BentoPDF:
+            icon: mdi-bookmark-multiple
+            href: https://pdf.nserbin.com/
+            siteMonitor: http://bentopdf-bentopdf:8080
+            description: Bookmarks
+            server: k3s
+
         - Karakeep:
             icon: mdi-bookmark-multiple
             href: https://bookmarks.nserbin.com/
