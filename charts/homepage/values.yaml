@@ -329,7 +329,7 @@ config:
     - Tools:
 
         - BentoPDF:
-            icon: mdi-bookmark-multiple
+            icon: mdi-file-pdf-box
             href: https://pdf.nserbin.com/
             siteMonitor: http://bentopdf:8080
             description: PDF Tools
@@ -361,7 +361,7 @@ config:
             server: k3s
        
         - IT Tools:
-            icon: 
+            icon: it-tools.svg
             href: https://tools.nserbin.com/
             siteMonitor: http://it-tools:8080/
             description: Multiple Tools
