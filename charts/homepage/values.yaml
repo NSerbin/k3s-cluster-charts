@@ -375,11 +375,12 @@ config:
             description: Multiple Tools
             server: k3s
 
-        - SSH:
-            icon: shell.svg
-            href: https://ssh-tunnel.nserbin.com/
-            description: SSH Tunnel to RPi
-            server: rpi
+        # RPi service. Kept here to restore quickly if needed.
+        # - SSH:
+        #     icon: shell.svg
+        #     href: https://ssh-tunnel.nserbin.com/
+        #     description: SSH Tunnel to RPi
+        #     server: rpi
 
     - Secrets:
         # Legacy RPi FileBrowser entry. Kept here to restore quickly if needed.
