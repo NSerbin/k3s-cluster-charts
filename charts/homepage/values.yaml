@@ -349,7 +349,7 @@ config:
         - AppFlowy:
             icon: appflowy.svg
             href: https://wiki.nserbin.com/
-            siteMonitor: http://appflowy-appflowy-web.tools/
+            siteMonitor: http://appflowy-web/
             description: Notes and workspace
             server: k3s
        
