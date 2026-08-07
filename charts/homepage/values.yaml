@@ -391,7 +391,7 @@ config:
             href: https://auth.nserbin.com
             description: Authentik
             server: k3s
-            siteMonitor: http://authentik-server.tools:9000/
+            siteMonitor: http://authentik-server.tools:9000/-/health/live/
             widget:
               type: authentik
               url: http://authentik-server.tools:9000
