@@ -30,7 +30,7 @@ gateway:
     - "https://mcp.nserbin.com"
   authRequired: true
   mcpRequireAuth: true
-  basicAuthEnabled: false
+  basicAuthEnabled: true
   emailAuthEnabled: true
   sso:
     enabled: false

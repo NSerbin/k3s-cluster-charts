@@ -53,22 +53,23 @@ spec:
                 sleep 2
               done
 
-              export TOKEN="$(python3 -m mcpgateway.utils.create_jwt_token --username "${PLATFORM_ADMIN_EMAIL}" --exp 60 --secret "${JWT_SECRET_KEY}" --algo "${JWT_ALGORITHM:-HS256}" 2>/dev/null)"
-
               python3 - <<'PY'
+              import base64
               import json
               import os
               import urllib.error
               import urllib.request
 
               base = "http://{{ include "mcp-gateway.fullname" . }}:{{ .Values.service.port }}"
-              token = os.environ["TOKEN"]
               desired = {{ .Values.registration.gateways | toJson }}
+              basic_token = base64.b64encode(
+                  f"{os.environ['BASIC_AUTH_USER']}:{os.environ['BASIC_AUTH_PASSWORD']}".encode("utf-8")
+              ).decode("ascii")
 
               def api(method, path, payload=None):
                   body = json.dumps(payload).encode("utf-8") if payload is not None else None
                   req = urllib.request.Request(base + path, data=body, method=method)
-                  req.add_header("Authorization", f"Bearer {token}")
+                  req.add_header("Authorization", f"Basic {basic_token}")
                   req.add_header("Content-Type", "application/json")
                   with urllib.request.urlopen(req, timeout=30) as response:
                       raw = response.read().decode("utf-8")
