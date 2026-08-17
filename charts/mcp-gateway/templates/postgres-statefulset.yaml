@@ -10,7 +10,9 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
 spec:
   serviceName: {{ include "mcp-gateway.fullname" . }}-postgres-headless
+  podManagementPolicy: OrderedReady
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       {{- include "mcp-gateway.selectorLabels" . | nindent 6 }}
@@ -75,6 +77,13 @@ spec:
             - name: pgdata
               mountPath: {{ .Values.postgresql.persistence.mountPath | quote }}
           {{- end }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
   {{- if .Values.postgresql.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
@@ -91,5 +100,6 @@ spec:
         resources:
           requests:
             storage: {{ .Values.postgresql.persistence.size | quote }}
+        volumeMode: Filesystem
   {{- end }}
 {{- end }}

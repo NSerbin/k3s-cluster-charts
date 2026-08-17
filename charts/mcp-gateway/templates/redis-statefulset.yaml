@@ -10,7 +10,9 @@ metadata:
     argocd.argoproj.io/sync-wave: "0"
 spec:
   serviceName: {{ include "mcp-gateway.fullname" . }}-redis
+  podManagementPolicy: OrderedReady
   replicas: 1
+  revisionHistoryLimit: 10
   selector:
     matchLabels:
       {{- include "mcp-gateway.selectorLabels" . | nindent 6 }}
@@ -62,6 +64,13 @@ spec:
             - name: redisdata
               mountPath: /data
           {{- end }}
+  persistentVolumeClaimRetentionPolicy:
+    whenDeleted: Retain
+    whenScaled: Retain
+  updateStrategy:
+    rollingUpdate:
+      partition: 0
+    type: RollingUpdate
   {{- if .Values.redis.persistence.enabled }}
   volumeClaimTemplates:
     - metadata:
@@ -78,5 +87,6 @@ spec:
         resources:
           requests:
             storage: {{ .Values.redis.persistence.size | quote }}
+        volumeMode: Filesystem
   {{- end }}
 {{- end }}
