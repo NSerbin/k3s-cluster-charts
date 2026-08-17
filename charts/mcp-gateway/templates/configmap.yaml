@@ -48,14 +48,6 @@ data:
   ALLOW_UNAUTHENTICATED_ADMIN: "false"
   TRUST_PROXY_AUTH: "false"
   TRUST_PROXY_AUTH_DANGEROUSLY: "false"
-  SSO_ENABLED: {{ .Values.gateway.sso.enabled | quote }}
-  SSO_GENERIC_ENABLED: {{ .Values.gateway.sso.genericEnabled | quote }}
-  SSO_GENERIC_PROVIDER_ID: {{ .Values.gateway.sso.providerId | quote }}
-  SSO_GENERIC_DISPLAY_NAME: {{ .Values.gateway.sso.displayName | quote }}
-  SSO_GENERIC_SCOPE: {{ .Values.gateway.sso.scope | quote }}
-  SSO_PRESERVE_ADMIN_AUTH: {{ .Values.gateway.sso.preserveAdminAuth | quote }}
-  SSO_AUTO_CREATE_USERS: {{ .Values.gateway.sso.autoCreateUsers | quote }}
-  SSO_REQUIRE_ADMIN_APPROVAL: {{ .Values.gateway.sso.requireAdminApproval | quote }}
   SSO_GITHUB_ENABLED: "false"
   SSO_GOOGLE_ENABLED: "false"
   SSO_IBM_VERIFY_ENABLED: "false"
@@ -85,4 +77,3 @@ data:
   DB_POOL_SIZE: "10"
   DB_MAX_OVERFLOW: "20"
   REDIS_MAX_CONNECTIONS: "25"
-

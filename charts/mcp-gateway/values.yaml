@@ -48,9 +48,6 @@ gateway:
   sso:
     enabled: false
     genericEnabled: false
-    providerId: authentik
-    displayName: Authentik
-    scope: "openid profile email"
     preserveAdminAuth: true
     autoCreateUsers: true
     requireAdminApproval: false
