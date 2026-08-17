@@ -18,6 +18,19 @@ service:
   port: 80
   targetPort: 4444
 
+traefik:
+  ingressRoute:
+    enabled: true
+    host: "mcp.nserbin.com"
+    entryPoints:
+      - web
+    pathPrefixes:
+      - /
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
 secrets:
   appSecretName: mcp-gateway-secrets-app
   dbSecretName: mcp-gateway-secrets-db
