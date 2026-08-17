@@ -8,7 +8,9 @@ image:
   pullPolicy: IfNotPresent
 
 runtime:
-  package: "mcp-contextforge-gateway[postgres,redis]==1.0.7"
+  packages:
+    - "mcp-contextforge-gateway[redis]==1.0.7"
+    - "psycopg[binary]==3.3.4"
   installPath: /tmp/contextforge
 
 service:

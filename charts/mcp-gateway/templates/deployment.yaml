@@ -34,7 +34,7 @@ spec:
             - -lc
             - |
               set -eu
-              python -m pip install --no-cache-dir --target {{ .Values.runtime.installPath | quote }} {{ .Values.runtime.package | quote }}
+              python -m pip install --no-cache-dir --target {{ .Values.runtime.installPath | quote }}{{- range .Values.runtime.packages }} {{ . | quote }}{{- end }}
               export PYTHONPATH={{ .Values.runtime.installPath | quote }}
               export PATH={{ printf "%s/bin:$PATH" .Values.runtime.installPath | quote }}
               exec mcpgateway --host {{ .Values.gateway.host | quote }} --port {{ .Values.gateway.port }}
