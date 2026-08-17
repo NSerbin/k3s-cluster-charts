@@ -53,17 +53,41 @@ spec:
                 sleep 2
               done
 
-              export TOKEN="$(python3 -m mcpgateway.utils.create_jwt_token --username "${PLATFORM_ADMIN_EMAIL}" --exp 60 --secret "${JWT_SECRET_KEY}" --algo "${JWT_ALGORITHM:-HS256}" --admin --full-name "${PLATFORM_ADMIN_FULL_NAME}" 2>/dev/null)"
-
               python3 - <<'PY'
               import json
               import os
+              import time
               import urllib.error
               import urllib.request
+              import uuid
+
+              import jwt
 
               base = "http://{{ include "mcp-gateway.fullname" . }}:{{ .Values.service.port }}"
-              token = os.environ["TOKEN"]
               desired = {{ .Values.registration.gateways | toJson }}
+              now = int(time.time())
+              admin_email = os.environ["PLATFORM_ADMIN_EMAIL"]
+              token = jwt.encode(
+                  {
+                      "sub": admin_email,
+                      "username": admin_email,
+                      "user": {
+                          "email": admin_email,
+                          "full_name": os.environ.get("PLATFORM_ADMIN_FULL_NAME", admin_email),
+                          "is_admin": True,
+                          "auth_provider": "cli",
+                      },
+                      "teams": None,
+                      "iss": os.environ.get("JWT_ISSUER", "mcpgateway"),
+                      "aud": os.environ.get("JWT_AUDIENCE", "mcpgateway-api"),
+                      "env": os.environ.get("ENVIRONMENT", "production"),
+                      "iat": now,
+                      "exp": now + 3600,
+                      "jti": str(uuid.uuid4()),
+                  },
+                  os.environ["JWT_SECRET_KEY"],
+                  algorithm=os.environ.get("JWT_ALGORITHM", "HS256"),
+              )
 
               def api(method, path, payload=None):
                   body = json.dumps(payload).encode("utf-8") if payload is not None else None
