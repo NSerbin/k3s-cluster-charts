@@ -19,6 +19,44 @@ spec:
     server: "https://kubernetes.default.svc"
     namespace: tools
 
+  ignoreDifferences:
+    - group: apps
+      kind: StatefulSet
+      name: mcp-gateway-postgres
+      namespace: tools
+      jqPathExpressions:
+        - .spec.persistentVolumeClaimRetentionPolicy
+        - .spec.podManagementPolicy
+        - .spec.revisionHistoryLimit
+        - .spec.updateStrategy
+        - .spec.volumeClaimTemplates[].spec.volumeMode
+        - .spec.template.spec.dnsPolicy
+        - .spec.template.spec.restartPolicy
+        - .spec.template.spec.schedulerName
+        - .spec.template.spec.terminationGracePeriodSeconds
+        - .spec.template.spec.containers[].terminationMessagePath
+        - .spec.template.spec.containers[].terminationMessagePolicy
+        - .spec.template.spec.containers[].livenessProbe.successThreshold
+        - .spec.template.spec.containers[].readinessProbe.successThreshold
+    - group: apps
+      kind: StatefulSet
+      name: mcp-gateway-redis
+      namespace: tools
+      jqPathExpressions:
+        - .spec.persistentVolumeClaimRetentionPolicy
+        - .spec.podManagementPolicy
+        - .spec.revisionHistoryLimit
+        - .spec.updateStrategy
+        - .spec.volumeClaimTemplates[].spec.volumeMode
+        - .spec.template.spec.dnsPolicy
+        - .spec.template.spec.restartPolicy
+        - .spec.template.spec.schedulerName
+        - .spec.template.spec.terminationGracePeriodSeconds
+        - .spec.template.spec.containers[].terminationMessagePath
+        - .spec.template.spec.containers[].terminationMessagePolicy
+        - .spec.template.spec.containers[].livenessProbe.successThreshold
+        - .spec.template.spec.containers[].readinessProbe.successThreshold
+
   syncPolicy:
     automated:
       prune: true
@@ -26,4 +64,4 @@ spec:
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true
-
+      - RespectIgnoreDifferences=true
