@@ -1,0 +1,110 @@
+{{- if .Values.registration.enabled }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: {{ include "mcp-gateway.fullname" . }}-register-upstreams
+  labels:
+    {{- include "mcp-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: registration
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
+    argocd.argoproj.io/sync-wave: "3"
+spec:
+  backoffLimit: {{ .Values.registration.backoffLimit }}
+  activeDeadlineSeconds: {{ .Values.registration.activeDeadlineSeconds }}
+  ttlSecondsAfterFinished: {{ .Values.registration.ttlSecondsAfterFinished }}
+  template:
+    metadata:
+      labels:
+        {{- include "mcp-gateway.labels" . | nindent 8 }}
+        app.kubernetes.io/component: registration
+    spec:
+      restartPolicy: Never
+      securityContext:
+        {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      containers:
+        - name: register-upstreams
+          image: "{{ .Values.registration.image.repository }}:{{ .Values.registration.image.tag }}"
+          imagePullPolicy: {{ .Values.registration.image.pullPolicy }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          command:
+            - /bin/sh
+            - -lc
+            - |
+              set -eu
+
+              for i in $(seq 1 60); do
+                if python3 - <<'PY'
+              import urllib.request
+              try:
+                  with urllib.request.urlopen("http://{{ include "mcp-gateway.fullname" . }}:{{ .Values.service.port }}/health", timeout=3) as response:
+                      raise SystemExit(0 if response.status == 200 else 1)
+              except Exception:
+                  raise SystemExit(1)
+              PY
+                then
+                  break
+                fi
+                sleep 2
+              done
+
+              export TOKEN="$(python3 -m mcpgateway.utils.create_jwt_token --username "${PLATFORM_ADMIN_EMAIL}" --exp 60 --secret "${JWT_SECRET_KEY}" --algo "${JWT_ALGORITHM:-HS256}" 2>/dev/null)"
+
+              python3 - <<'PY'
+              import json
+              import os
+              import urllib.error
+              import urllib.request
+
+              base = "http://{{ include "mcp-gateway.fullname" . }}:{{ .Values.service.port }}"
+              token = os.environ["TOKEN"]
+              desired = {{ .Values.registration.gateways | toJson }}
+
+              def api(method, path, payload=None):
+                  body = json.dumps(payload).encode("utf-8") if payload is not None else None
+                  req = urllib.request.Request(base + path, data=body, method=method)
+                  req.add_header("Authorization", f"Bearer {token}")
+                  req.add_header("Content-Type", "application/json")
+                  with urllib.request.urlopen(req, timeout=30) as response:
+                      raw = response.read().decode("utf-8")
+                      return json.loads(raw) if raw else {}
+
+              current = api("GET", "/gateways")
+              by_name = {gateway.get("name"): gateway for gateway in current}
+
+              for gateway in desired:
+                  existing = by_name.get(gateway["name"])
+                  if existing:
+                      existing_id = existing["id"]
+                      try:
+                          api("DELETE", f"/gateways/{existing_id}")
+                      except Exception:
+                          pass
+
+                  api("POST", "/gateways", {
+                      "name": gateway["name"],
+                      "url": gateway["url"],
+                      "transport": gateway["transport"],
+                  })
+
+              print("mcp upstream registration complete")
+              PY
+          envFrom:
+            - secretRef:
+                name: {{ .Values.secrets.appSecretName | quote }}
+          resources:
+            requests:
+              cpu: 50m
+              memory: 128Mi
+            limits:
+              cpu: 300m
+              memory: 384Mi
+          volumeMounts:
+            - name: tmp
+              mountPath: /tmp
+      volumes:
+        - name: tmp
+          emptyDir: {}
+{{- end }}

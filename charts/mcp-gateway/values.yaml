@@ -1,0 +1,191 @@
+replicaCount: 1
+
+fullnameOverride: mcp-gateway
+
+image:
+  repository: ghcr.io/ibm/mcp-context-forge
+  tag: "v1.0.7"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 4444
+
+secrets:
+  appSecretName: mcp-gateway-secrets-app
+  dbSecretName: mcp-gateway-secrets-db
+
+gateway:
+  port: 4444
+  host: 0.0.0.0
+  appDomain: "https://mcp.nserbin.com"
+  allowedOrigins:
+    - "https://mcp.nserbin.com"
+  authRequired: true
+  mcpRequireAuth: true
+  basicAuthEnabled: false
+  emailAuthEnabled: true
+  sso:
+    enabled: false
+    genericEnabled: false
+    providerId: authentik
+    displayName: Authentik
+    scope: "openid profile email"
+    preserveAdminAuth: true
+    autoCreateUsers: true
+    requireAdminApproval: false
+  ssrf:
+    protectionEnabled: true
+    allowLocalhost: false
+    allowPrivateNetworks: false
+    allowedNetworks:
+      - "10.42.0.0/16"
+      - "10.43.0.0/16"
+    dnsFailClosed: true
+  features:
+    uiEnabled: true
+    adminApiEnabled: true
+    catalogEnabled: false
+    a2aEnabled: false
+    llmChatEnabled: false
+    stdioTransportEnabled: false
+    websocketRelayEnabled: false
+    reverseProxyEnabled: false
+    pluginsEnabled: false
+  logging:
+    level: INFO
+    format: json
+
+migration:
+  enabled: true
+  backoffLimit: 3
+  activeDeadlineSeconds: 600
+  ttlSecondsAfterFinished: 300
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 768Mi
+
+registration:
+  enabled: true
+  image:
+    repository: ghcr.io/ibm/mcp-context-forge
+    tag: "v1.0.7"
+    pullPolicy: IfNotPresent
+  backoffLimit: 3
+  activeDeadlineSeconds: 300
+  ttlSecondsAfterFinished: 300
+  gateways:
+    - name: argocd
+      url: http://argocd-mcp.argocd.svc.cluster.local:3000/mcp
+      transport: streamablehttp
+    - name: grafana
+      url: http://grafana-mcp.monitoring.svc.cluster.local:8000/mcp
+      transport: streamablehttp
+
+postgresql:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "17-alpine"
+    pullPolicy: IfNotPresent
+  database: mcpgateway
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+    mountPath: /var/lib/postgresql/data
+    pgData: /var/lib/postgresql/data/pgdata
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+  podSecurityContext:
+    fsGroup: 999
+    fsGroupChangePolicy: OnRootMismatch
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 999
+    runAsGroup: 999
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+redis:
+  enabled: true
+  image:
+    repository: redis
+    tag: "8.0-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 300m
+      memory: 256Mi
+  podSecurityContext:
+    fsGroup: 999
+    fsGroupChangePolicy: OnRootMismatch
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 999
+    runAsGroup: 999
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+resources:
+  requests:
+    cpu: 100m
+    memory: 256Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+podSecurityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  fsGroup: 10001
+  fsGroupChangePolicy: OnRootMismatch
+  seccompProfile:
+    type: RuntimeDefault
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 10001
+  runAsGroup: 10001
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+

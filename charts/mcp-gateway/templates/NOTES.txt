@@ -1,0 +1,29 @@
+MCP Gateway is available inside the cluster at:
+  http://{{ include "mcp-gateway.fullname" . }}.{{ .Release.Namespace }}.svc.cluster.local{{ .Values.service.port | printf ":%v" }}
+
+Required Vault secrets:
+  kv/k8s/core/security/mcp-gateway/app
+  kv/k8s/core/security/mcp-gateway/db
+
+Minimum app keys:
+  JWT_SECRET_KEY
+  AUTH_ENCRYPTION_SECRET
+  BASIC_AUTH_USER
+  BASIC_AUTH_PASSWORD
+  PLATFORM_ADMIN_EMAIL
+  PLATFORM_ADMIN_PASSWORD
+  PLATFORM_ADMIN_FULL_NAME
+  DEFAULT_USER_PASSWORD
+
+Minimum db keys:
+  POSTGRES_USER
+  POSTGRES_PASSWORD
+
+Optional Authentik OIDC keys:
+  SSO_GENERIC_CLIENT_ID
+  SSO_GENERIC_CLIENT_SECRET
+  SSO_GENERIC_AUTHORIZATION_URL
+  SSO_GENERIC_TOKEN_URL
+  SSO_GENERIC_USERINFO_URL
+  SSO_GENERIC_ISSUER
+  SSO_GENERIC_JWKS_URI

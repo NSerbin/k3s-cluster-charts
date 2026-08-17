@@ -297,6 +297,38 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None
 
+    - name: mcp-gateway-secrets-app
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: mcp-gateway-secrets-app
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      dataFrom:
+        - extract:
+            key: k8s/core/security/mcp-gateway/app
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
+    - name: mcp-gateway-secrets-db
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: mcp-gateway-secrets-db
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      dataFrom:
+        - extract:
+            key: k8s/core/security/mcp-gateway/db
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
     - name: alertmanager-secrets-notifications
       namespace: monitoring
       secretStoreRef:

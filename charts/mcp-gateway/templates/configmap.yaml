@@ -1,0 +1,88 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "mcp-gateway.fullname" . }}-config
+  labels:
+    {{- include "mcp-gateway.labels" . | nindent 4 }}
+    app.kubernetes.io/component: gateway
+data:
+  APP_NAME: "MCP Gateway"
+  HOST: {{ .Values.gateway.host | quote }}
+  PORT: {{ .Values.gateway.port | quote }}
+  APP_DOMAIN: {{ .Values.gateway.appDomain | quote }}
+  ALLOWED_ORIGINS: {{ .Values.gateway.allowedOrigins | toJson | quote }}
+  CORS_ENABLED: "true"
+  CORS_ALLOW_CREDENTIALS: "true"
+  ENVIRONMENT: "production"
+  LOG_LEVEL: {{ .Values.gateway.logging.level | quote }}
+  LOG_FORMAT: {{ .Values.gateway.logging.format | quote }}
+  LOG_TO_FILE: "false"
+  LOG_REQUESTS: "false"
+  TRANSPORT_TYPE: "all"
+  CACHE_TYPE: "redis"
+  CACHE_PREFIX: "mcpgw:"
+  USE_STATEFUL_SESSIONS: "false"
+  JSON_RESPONSE_ENABLED: "true"
+  MCPGATEWAY_UI_ENABLED: {{ .Values.gateway.features.uiEnabled | quote }}
+  MCPGATEWAY_ADMIN_API_ENABLED: {{ .Values.gateway.features.adminApiEnabled | quote }}
+  MCPGATEWAY_CATALOG_ENABLED: {{ .Values.gateway.features.catalogEnabled | quote }}
+  MCPGATEWAY_A2A_ENABLED: {{ .Values.gateway.features.a2aEnabled | quote }}
+  LLMCHAT_ENABLED: {{ .Values.gateway.features.llmChatEnabled | quote }}
+  MCPGATEWAY_STDIO_TRANSPORT_ENABLED: {{ .Values.gateway.features.stdioTransportEnabled | quote }}
+  MCPGATEWAY_WS_RELAY_ENABLED: {{ .Values.gateway.features.websocketRelayEnabled | quote }}
+  MCPGATEWAY_REVERSE_PROXY_ENABLED: {{ .Values.gateway.features.reverseProxyEnabled | quote }}
+  PLUGINS_ENABLED: {{ .Values.gateway.features.pluginsEnabled | quote }}
+  ENABLE_METRICS: "false"
+  HEALTH_CHECK_INTERVAL: "60"
+  HEALTH_CHECK_TIMEOUT: "5"
+  GATEWAY_VALIDATION_TIMEOUT: "5"
+  FEDERATION_TIMEOUT: "120"
+  TOOL_TIMEOUT: "60"
+  TOOL_RATE_LIMIT: "100"
+  TOOL_CONCURRENT_LIMIT: "10"
+  AUTH_REQUIRED: {{ .Values.gateway.authRequired | quote }}
+  MCP_REQUIRE_AUTH: {{ .Values.gateway.mcpRequireAuth | quote }}
+  API_ALLOW_BASIC_AUTH: {{ .Values.gateway.basicAuthEnabled | quote }}
+  EMAIL_AUTH_ENABLED: {{ .Values.gateway.emailAuthEnabled | quote }}
+  PUBLIC_REGISTRATION_ENABLED: "false"
+  ALLOW_UNAUTHENTICATED_ADMIN: "false"
+  TRUST_PROXY_AUTH: "false"
+  TRUST_PROXY_AUTH_DANGEROUSLY: "false"
+  SSO_ENABLED: {{ .Values.gateway.sso.enabled | quote }}
+  SSO_GENERIC_ENABLED: {{ .Values.gateway.sso.genericEnabled | quote }}
+  SSO_GENERIC_PROVIDER_ID: {{ .Values.gateway.sso.providerId | quote }}
+  SSO_GENERIC_DISPLAY_NAME: {{ .Values.gateway.sso.displayName | quote }}
+  SSO_GENERIC_SCOPE: {{ .Values.gateway.sso.scope | quote }}
+  SSO_PRESERVE_ADMIN_AUTH: {{ .Values.gateway.sso.preserveAdminAuth | quote }}
+  SSO_AUTO_CREATE_USERS: {{ .Values.gateway.sso.autoCreateUsers | quote }}
+  SSO_REQUIRE_ADMIN_APPROVAL: {{ .Values.gateway.sso.requireAdminApproval | quote }}
+  SSO_GITHUB_ENABLED: "false"
+  SSO_GOOGLE_ENABLED: "false"
+  SSO_IBM_VERIFY_ENABLED: "false"
+  SSO_OKTA_ENABLED: "false"
+  SSO_KEYCLOAK_ENABLED: "false"
+  SSO_ENTRA_ENABLED: "false"
+  SSO_ADFS_ENABLED: "false"
+  SSRF_PROTECTION_ENABLED: {{ .Values.gateway.ssrf.protectionEnabled | quote }}
+  SSRF_ALLOW_LOCALHOST: {{ .Values.gateway.ssrf.allowLocalhost | quote }}
+  SSRF_ALLOW_PRIVATE_NETWORKS: {{ .Values.gateway.ssrf.allowPrivateNetworks | quote }}
+  SSRF_ALLOWED_NETWORKS: {{ .Values.gateway.ssrf.allowedNetworks | toJson | quote }}
+  SSRF_DNS_FAIL_CLOSED: {{ .Values.gateway.ssrf.dnsFailClosed | quote }}
+  SSRF_BLOCKED_NETWORKS: '["169.254.169.254/32","169.254.169.123/32","fd00::1/128","169.254.0.0/16","fe80::/10"]'
+  SSRF_BLOCKED_HOSTS: '["metadata.google.internal","metadata.internal"]'
+  SECURITY_HEADERS_ENABLED: "true"
+  X_FRAME_OPTIONS: "DENY"
+  X_CONTENT_TYPE_OPTIONS_ENABLED: "true"
+  HSTS_ENABLED: "true"
+  HSTS_MAX_AGE: "31536000"
+  SECURE_COOKIES: "true"
+  COOKIE_SAMESITE: "lax"
+  REQUIRE_STRONG_SECRETS: "true"
+  MIN_SECRET_LENGTH: "32"
+  DEFAULT_ADMIN_ROLE: "platform_admin"
+  DEFAULT_USER_ROLE: "platform_viewer"
+  AUTO_CREATE_PERSONAL_TEAMS: "true"
+  DB_POOL_SIZE: "10"
+  DB_MAX_OVERFLOW: "20"
+  REDIS_MAX_CONNECTIONS: "25"
+

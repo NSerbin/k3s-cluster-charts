@@ -374,7 +374,7 @@ config:
         # Legacy RPi FileBrowser entry. Kept here to restore quickly if needed.
         # - FileBrowser:
         #     icon: filebrowser.png
-        #     href: https://vault.nserbin.com/
+        #     href: https://secrets.nserbin.com/
         #     siteMonitor: http://192.168.0.4:8082
         #     description: FileBrowser
         #     server: rpi
@@ -386,7 +386,7 @@ config:
 
         - Vault:
             icon: vault.svg
-            href: https://vault.nserbin.com/
+            href: https://secrets.nserbin.com/
             siteMonitor: http://vault-ui:8200/v1/sys/health?standbyok=true
             description: Secrets management
             server: k3s
