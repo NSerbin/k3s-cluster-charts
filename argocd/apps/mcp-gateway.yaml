@@ -25,37 +25,13 @@ spec:
       name: mcp-gateway-postgres
       namespace: tools
       jqPathExpressions:
-        - .spec.persistentVolumeClaimRetentionPolicy
-        - .spec.podManagementPolicy
-        - .spec.revisionHistoryLimit
-        - .spec.updateStrategy
-        - .spec.volumeClaimTemplates[].spec.volumeMode
-        - .spec.template.spec.dnsPolicy
-        - .spec.template.spec.restartPolicy
-        - .spec.template.spec.schedulerName
-        - .spec.template.spec.terminationGracePeriodSeconds
-        - .spec.template.spec.containers[].terminationMessagePath
-        - .spec.template.spec.containers[].terminationMessagePolicy
-        - .spec.template.spec.containers[].livenessProbe.successThreshold
-        - .spec.template.spec.containers[].readinessProbe.successThreshold
+        - .spec
     - group: apps
       kind: StatefulSet
       name: mcp-gateway-redis
       namespace: tools
       jqPathExpressions:
-        - .spec.persistentVolumeClaimRetentionPolicy
-        - .spec.podManagementPolicy
-        - .spec.revisionHistoryLimit
-        - .spec.updateStrategy
-        - .spec.volumeClaimTemplates[].spec.volumeMode
-        - .spec.template.spec.dnsPolicy
-        - .spec.template.spec.restartPolicy
-        - .spec.template.spec.schedulerName
-        - .spec.template.spec.terminationGracePeriodSeconds
-        - .spec.template.spec.containers[].terminationMessagePath
-        - .spec.template.spec.containers[].terminationMessagePolicy
-        - .spec.template.spec.containers[].livenessProbe.successThreshold
-        - .spec.template.spec.containers[].readinessProbe.successThreshold
+        - .spec
 
   syncPolicy:
     automated:
