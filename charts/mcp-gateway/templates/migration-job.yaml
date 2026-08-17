@@ -34,8 +34,11 @@ spec:
             - -lc
             - |
               set -eu
-              python3 /app/mcpgateway/utils/db_isready.py --max-tries 30 --interval 2 --timeout 5
-              python3 -m mcpgateway.bootstrap_db
+              python -m pip install --no-cache-dir --target {{ .Values.runtime.installPath | quote }} {{ .Values.runtime.package | quote }}
+              export PYTHONPATH={{ .Values.runtime.installPath | quote }}
+              export PATH={{ printf "%s/bin:$PATH" .Values.runtime.installPath | quote }}
+              python -m mcpgateway.utils.db_isready --max-tries 30 --interval 2 --timeout 5
+              python -m mcpgateway.bootstrap_db
           env:
             - name: POSTGRES_HOST
               value: {{ printf "%s-postgres" (include "mcp-gateway.fullname" .) | quote }}

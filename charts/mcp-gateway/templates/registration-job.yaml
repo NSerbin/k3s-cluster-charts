@@ -34,6 +34,9 @@ spec:
             - -lc
             - |
               set -eu
+              python -m pip install --no-cache-dir --target {{ .Values.runtime.installPath | quote }} {{ .Values.runtime.package | quote }}
+              export PYTHONPATH={{ .Values.runtime.installPath | quote }}
+              export PATH={{ printf "%s/bin:$PATH" .Values.runtime.installPath | quote }}
 
               for i in $(seq 1 60); do
                 if python3 - <<'PY'

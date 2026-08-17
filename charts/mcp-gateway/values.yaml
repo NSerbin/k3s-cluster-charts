@@ -3,9 +3,13 @@ replicaCount: 1
 fullnameOverride: mcp-gateway
 
 image:
-  repository: ghcr.io/ibm/mcp-context-forge
-  tag: "v1.0.7"
+  repository: python
+  tag: "3.12-slim-bookworm"
   pullPolicy: IfNotPresent
+
+runtime:
+  package: "mcp-contextforge-gateway[postgres,redis]==1.0.7"
+  installPath: /tmp/contextforge
 
 service:
   type: ClusterIP
@@ -73,8 +77,8 @@ migration:
 registration:
   enabled: true
   image:
-    repository: ghcr.io/ibm/mcp-context-forge
-    tag: "v1.0.7"
+    repository: python
+    tag: "3.12-slim-bookworm"
     pullPolicy: IfNotPresent
   backoffLimit: 3
   activeDeadlineSeconds: 300
@@ -188,4 +192,3 @@ securityContext:
 nodeSelector: {}
 tolerations: []
 affinity: {}
-
