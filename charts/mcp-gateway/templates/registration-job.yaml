@@ -125,10 +125,13 @@ spec:
               python3 - <<'PY'
               import asyncio
               import os
+              import time
 
               from sqlalchemy import select
 
-              from mcpgateway.db import EmailTeam, EmailTeamMember, EmailUser, get_db
+              from mcpgateway.db import EmailTeam, EmailTeamMember, EmailUser, Server, Tool, get_db
+              from mcpgateway.schemas import ServerCreate, ServerUpdate
+              from mcpgateway.services.server_service import ServerNameConflictError, ServerService
               from mcpgateway.services.team_management_service import (
                   MemberAlreadyExistsError,
                   TeamManagementError,
@@ -136,12 +139,14 @@ spec:
                   UserNotFoundError,
               )
 
-              desired_teams = {{ .Values.configuration.teams | toJson }}
+              desired_teams = {{ .Values.configuration.teams | default (list) | toJson }}
+              desired_virtual_servers = {{ .Values.configuration.virtualServers | default (list) | toJson }}
               admin_email = os.environ["PLATFORM_ADMIN_EMAIL"].strip().lower()
 
               async def reconcile():
                   db = next(get_db())
-                  service = TeamManagementService(db)
+                  team_service = TeamManagementService(db)
+                  server_service = ServerService()
 
                   admin = db.query(EmailUser).filter(EmailUser.email == admin_email).first()
                   if not admin:
@@ -162,7 +167,7 @@ spec:
                       if team:
                           if team.is_personal:
                               raise RuntimeError(f"Refusing to manage personal team with slug {slug}")
-                          await service.update_team(
+                          await team_service.update_team(
                               team_id=team.id,
                               name=name,
                               description=description,
@@ -174,7 +179,7 @@ spec:
                           db.commit()
                           print(f"updated team {slug}")
                       else:
-                          team = await service.create_team(
+                          team = await team_service.create_team(
                               name=name,
                               description=description,
                               created_by=admin_email,
@@ -201,13 +206,13 @@ spec:
 
                           if existing:
                               if existing.role != role:
-                                  await service.update_member_role(team.id, email, role)
+                                  await team_service.update_member_role(team.id, email, role)
                                   db.commit()
                                   print(f"updated member {email} as {role} in {slug}")
                               continue
 
                           try:
-                              await service.add_member_to_team(
+                              await team_service.add_member_to_team(
                                   team_id=team.id,
                                   user_email=email,
                                   role=role,
@@ -223,7 +228,101 @@ spec:
                           except TeamManagementError as exc:
                               raise RuntimeError(f"failed to manage member {email} in {slug}: {exc}") from exc
 
+                  desired_tool_names = {
+                      tool_name
+                      for virtual_server in desired_virtual_servers
+                      for tool_name in (virtual_server.get("tools") or [])
+                  }
+                  tools_by_name = {}
+                  for attempt in range(30):
+                      tools_by_name = {
+                          tool.name: tool
+                          for tool in db.query(Tool)
+                          .filter(Tool.enabled.is_(True))
+                          .all()
+                      }
+                      missing = desired_tool_names - set(tools_by_name)
+                      if not missing:
+                          break
+                      print(f"waiting for gateway tool discovery: {', '.join(sorted(missing))}")
+                      db.rollback()
+                      time.sleep(3)
+                  teams_by_slug = {
+                      team.slug: team
+                      for team in db.query(EmailTeam)
+                      .filter(EmailTeam.is_active.is_(True))
+                      .all()
+                  }
+
+                  for desired in desired_virtual_servers:
+                      name = desired["name"]
+                      tool_names = desired.get("tools") or []
+                      missing_tools = [tool_name for tool_name in tool_names if tool_name not in tools_by_name]
+                      if missing_tools:
+                          raise RuntimeError(f"Missing tools for virtual server {name}: {', '.join(missing_tools)}")
+
+                      team_slug = desired.get("teamSlug")
+                      team_id = None
+                      if team_slug:
+                          team = teams_by_slug.get(team_slug)
+                          if not team:
+                              raise RuntimeError(f"Missing team slug {team_slug} for virtual server {name}")
+                          team_id = team.id
+
+                      associated_tool_ids = [tools_by_name[tool_name].id for tool_name in tool_names]
+                      visibility = desired.get("visibility", "private")
+
+                      existing = db.query(Server).filter(
+                          Server.name == name,
+                          Server.owner_email == admin_email,
+                          Server.team_id == team_id,
+                      ).first()
+
+                      payload = {
+                          "name": name,
+                          "description": desired.get("description"),
+                          "icon": desired.get("icon"),
+                          "tags": desired.get("tags") or [],
+                          "associated_tools": associated_tool_ids,
+                          "associated_resources": desired.get("resources") or [],
+                          "associated_prompts": desired.get("prompts") or [],
+                          "team_id": team_id,
+                          "owner_email": admin_email,
+                          "visibility": visibility,
+                      }
+
+                      if existing:
+                          update_payload = ServerUpdate(**payload)
+                          await server_service.update_server(
+                              db,
+                              existing.id,
+                              update_payload,
+                              admin_email,
+                              modified_by=admin_email,
+                              modified_via="bootstrap",
+                          )
+                          db.commit()
+                          print(f"updated virtual server {name}")
+                      else:
+                          create_payload = ServerCreate(**payload)
+                          try:
+                              await server_service.register_server(
+                                  db,
+                                  create_payload,
+                                  created_by=admin_email,
+                                  created_via="bootstrap",
+                                  team_id=team_id,
+                                  owner_email=admin_email,
+                                  visibility=visibility,
+                              )
+                              db.commit()
+                              print(f"created virtual server {name}")
+                          except ServerNameConflictError:
+                              db.rollback()
+                              raise
+
                   db.close()
+                  await server_service.shutdown()
 
               asyncio.run(reconcile())
               print("mcp gateway ContextForge configuration complete")

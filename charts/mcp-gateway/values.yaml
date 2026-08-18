@@ -112,6 +112,56 @@ configuration:
       visibility: private
       maxMembers: null
       members: []
+  virtualServers:
+    - name: k3s-gitops
+      description: Argo CD MCP tools for K3s GitOps operations.
+      visibility: private
+      tags:
+        - k3s
+        - gitops
+        - argocd
+      tools:
+        - argocd-list-applications
+        - argocd-list-clusters
+        - argocd-get-application
+        - argocd-get-application-events
+        - argocd-get-application-managed-resources
+        - argocd-get-application-resource-tree
+        - argocd-get-application-workload-logs
+        - argocd-get-resource-actions
+        - argocd-get-resource-events
+        - argocd-get-resources
+    - name: k3s-observability
+      description: Grafana MCP tools for K3s observability.
+      visibility: private
+      tags:
+        - k3s
+        - monitoring
+        - grafana
+      tools:
+        - grafana-analyze-loki-labels
+        - grafana-check-datasources-health
+        - grafana-generate-deeplink
+        - grafana-get-dashboard-by-uid
+        - grafana-get-dashboard-panel-queries
+        - grafana-get-dashboard-property
+        - grafana-get-dashboard-summary
+        - grafana-get-datasource
+        - grafana-list-datasources
+        - grafana-list-loki-label-names
+        - grafana-list-loki-label-values
+        - grafana-list-prometheus-label-names
+        - grafana-list-prometheus-label-values
+        - grafana-list-prometheus-metric-metadata
+        - grafana-list-prometheus-metric-names
+        - grafana-query-loki-logs
+        - grafana-query-loki-patterns
+        - grafana-query-loki-stats
+        - grafana-query-prometheus
+        - grafana-query-prometheus-histogram
+        - grafana-search-dashboards
+        - grafana-search-folders
+        - grafana-suggest-loki-alloy-label-config
 
 postgresql:
   enabled: true
