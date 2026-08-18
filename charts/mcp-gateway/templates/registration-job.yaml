@@ -1,11 +1,11 @@
-{{- if .Values.registration.enabled }}
+{{- if or .Values.registration.enabled .Values.configuration.enabled }}
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "mcp-gateway.fullname" . }}-register-upstreams
+  name: {{ include "mcp-gateway.fullname" . }}-bootstrap
   labels:
     {{- include "mcp-gateway.labels" . | nindent 4 }}
-    app.kubernetes.io/component: registration
+    app.kubernetes.io/component: bootstrap
   annotations:
     argocd.argoproj.io/hook: PostSync
     argocd.argoproj.io/hook-delete-policy: BeforeHookCreation,HookSucceeded
@@ -18,13 +18,13 @@ spec:
     metadata:
       labels:
         {{- include "mcp-gateway.labels" . | nindent 8 }}
-        app.kubernetes.io/component: registration
+        app.kubernetes.io/component: bootstrap
     spec:
       restartPolicy: Never
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
-        - name: register-upstreams
+        - name: bootstrap
           image: "{{ .Values.registration.image.repository }}:{{ .Values.registration.image.tag }}"
           imagePullPolicy: {{ .Values.registration.image.pullPolicy }}
           securityContext:
@@ -64,7 +64,7 @@ spec:
               import jwt
 
               base = "http://{{ include "mcp-gateway.fullname" . }}:{{ .Values.service.port }}"
-              desired = {{ .Values.registration.gateways | toJson }}
+              desired_gateways = {{ .Values.registration.gateways | toJson }}
               now = int(time.time())
               admin_email = os.environ["PLATFORM_ADMIN_EMAIL"]
               token = jwt.encode(
@@ -98,10 +98,11 @@ spec:
                       raw = response.read().decode("utf-8")
                       return json.loads(raw) if raw else {}
 
+              {{- if .Values.registration.enabled }}
               current = api("GET", "/gateways")
               by_name = {gateway.get("name"): gateway for gateway in current}
 
-              for gateway in desired:
+              for gateway in desired_gateways:
                   existing = by_name.get(gateway["name"])
                   if existing:
                       existing_id = existing["id"]
@@ -117,10 +118,144 @@ spec:
                   })
 
               print("mcp upstream registration complete")
+              {{- end }}
               PY
+
+              {{- if .Values.configuration.enabled }}
+              python3 - <<'PY'
+              import asyncio
+              import os
+
+              from sqlalchemy import select
+
+              from mcpgateway.db import EmailTeam, EmailTeamMember, EmailUser, get_db
+              from mcpgateway.services.team_management_service import (
+                  MemberAlreadyExistsError,
+                  TeamManagementError,
+                  TeamManagementService,
+                  UserNotFoundError,
+              )
+
+              desired_teams = {{ .Values.configuration.teams | toJson }}
+              admin_email = os.environ["PLATFORM_ADMIN_EMAIL"].strip().lower()
+
+              async def reconcile():
+                  db = next(get_db())
+                  service = TeamManagementService(db)
+
+                  admin = db.query(EmailUser).filter(EmailUser.email == admin_email).first()
+                  if not admin:
+                      raise RuntimeError(f"Platform admin user {admin_email} does not exist")
+
+                  for desired in desired_teams:
+                      name = desired["name"]
+                      slug = desired.get("slug") or name.lower().replace(" ", "-")
+                      description = desired.get("description")
+                      visibility = desired.get("visibility", "private")
+                      max_members = desired.get("maxMembers")
+                      members = desired.get("members") or []
+
+                      team = db.execute(
+                          select(EmailTeam).where(EmailTeam.slug == slug)
+                      ).scalar_one_or_none()
+
+                      if team:
+                          if team.is_personal:
+                              raise RuntimeError(f"Refusing to manage personal team with slug {slug}")
+                          await service.update_team(
+                              team_id=team.id,
+                              name=name,
+                              description=description,
+                              visibility=visibility,
+                              max_members=max_members,
+                              updated_by=admin_email,
+                              skip_limits=True,
+                          )
+                          db.commit()
+                          print(f"updated team {slug}")
+                      else:
+                          team = await service.create_team(
+                              name=name,
+                              description=description,
+                              created_by=admin_email,
+                              visibility=visibility,
+                              max_members=max_members,
+                              skip_limits=True,
+                          )
+                          if team.slug != slug:
+                              team.slug = slug
+                              db.commit()
+                          print(f"created team {slug}")
+
+                      for member in members:
+                          email = str(member["email"]).strip().lower()
+                          role = str(member.get("role", "member")).strip().lower()
+                          if role not in {"owner", "member"}:
+                              raise RuntimeError(f"Invalid role {role} for {email} in team {slug}")
+
+                          existing = db.query(EmailTeamMember).filter(
+                              EmailTeamMember.team_id == team.id,
+                              EmailTeamMember.user_email == email,
+                              EmailTeamMember.is_active.is_(True),
+                          ).first()
+
+                          if existing:
+                              if existing.role != role:
+                                  await service.update_member_role(team.id, email, role)
+                                  db.commit()
+                                  print(f"updated member {email} as {role} in {slug}")
+                              continue
+
+                          try:
+                              await service.add_member_to_team(
+                                  team_id=team.id,
+                                  user_email=email,
+                                  role=role,
+                                  invited_by=admin_email,
+                                  grant_source="bootstrap",
+                              )
+                              db.commit()
+                              print(f"added member {email} as {role} in {slug}")
+                          except UserNotFoundError:
+                              print(f"skipped missing user {email} for team {slug}")
+                          except MemberAlreadyExistsError:
+                              pass
+                          except TeamManagementError as exc:
+                              raise RuntimeError(f"failed to manage member {email} in {slug}: {exc}") from exc
+
+                  db.close()
+
+              asyncio.run(reconcile())
+              print("mcp gateway ContextForge configuration complete")
+              PY
+              {{- end }}
+          env:
+            - name: POSTGRES_HOST
+              value: {{ printf "%s-postgres" (include "mcp-gateway.fullname" .) | quote }}
+            - name: POSTGRES_PORT
+              value: {{ .Values.postgresql.service.port | quote }}
+            - name: POSTGRES_DB
+              value: {{ .Values.postgresql.database | quote }}
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName | quote }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName | quote }}
+                  key: POSTGRES_PASSWORD
+            - name: DATABASE_URL
+              value: >-
+                postgresql+psycopg://$(POSTGRES_USER):$(POSTGRES_PASSWORD)@$(POSTGRES_HOST):$(POSTGRES_PORT)/$(POSTGRES_DB)
+            - name: REDIS_URL
+              value: redis://{{ include "mcp-gateway.fullname" . }}-redis:{{ .Values.redis.service.port }}/0
           envFrom:
             - secretRef:
                 name: {{ .Values.secrets.appSecretName | quote }}
+            - configMapRef:
+                name: {{ include "mcp-gateway.fullname" . }}-config
           resources:
             requests:
               cpu: 50m

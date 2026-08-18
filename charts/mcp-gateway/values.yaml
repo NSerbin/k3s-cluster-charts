@@ -103,6 +103,16 @@ registration:
       url: http://grafana-mcp.monitoring.svc.cluster.local:8000/mcp
       transport: streamablehttp
 
+configuration:
+  enabled: true
+  teams:
+    - name: Platform
+      slug: platform
+      description: Shared ContextForge team for cluster/platform MCP resources.
+      visibility: private
+      maxMembers: null
+      members: []
+
 postgresql:
   enabled: true
   image:
