@@ -62,7 +62,7 @@ gateway:
   features:
     uiEnabled: true
     adminApiEnabled: true
-    catalogEnabled: false
+    catalogEnabled: true
     a2aEnabled: false
     llmChatEnabled: false
     stdioTransportEnabled: false
