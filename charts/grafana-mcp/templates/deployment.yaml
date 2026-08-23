@@ -32,6 +32,10 @@ spec:
             - {{ .Values.mcp.endpointPath | quote }}
             - --log-level
             - {{ .Values.mcp.logLevel | quote }}
+            {{- with .Values.mcp.allowedHosts }}
+            - --allowed-hosts
+            - {{ join "," . | quote }}
+            {{- end }}
             {{- range .Values.mcp.disabledFlags }}
             - {{ . | quote }}
             {{- end }}

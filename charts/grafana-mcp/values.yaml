@@ -17,6 +17,15 @@ mcp:
   transport: streamable-http
   endpointPath: /mcp
   logLevel: info
+  allowedHosts:
+    - grafana-mcp
+    - grafana-mcp:8000
+    - grafana-mcp.monitoring
+    - grafana-mcp.monitoring:8000
+    - grafana-mcp.monitoring.svc
+    - grafana-mcp.monitoring.svc:8000
+    - grafana-mcp.monitoring.svc.cluster.local
+    - grafana-mcp.monitoring.svc.cluster.local:8000
   disabledFlags:
     - --disable-write
     - --disable-admin
