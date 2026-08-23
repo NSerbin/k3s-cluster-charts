@@ -111,7 +111,12 @@ data:
   GOTRUE_EXTERNAL_DISCORD_REDIRECT_URI: {{ printf "%s://%s/gotrue/callback" .Values.config.scheme .Values.config.fqdn | quote }}
   GOTRUE_EXTERNAL_APPLE_ENABLED: "false"
   GOTRUE_EXTERNAL_APPLE_REDIRECT_URI: {{ printf "%s://%s/gotrue/callback" .Values.config.scheme .Values.config.fqdn | quote }}
-  GOTRUE_SAML_ENABLED: "false"
+  AUTH_SAML_ENABLED: {{ .Values.config.samlEnabled | quote }}
+  GOTRUE_SAML_ENABLED: {{ .Values.config.samlEnabled | quote }}
+  AUTH_SAML_ENTRY_POINT: "https://auth.nserbin.com/application/saml/appflowy/"
+  AUTH_SAML_ISSUER: "https://auth.nserbin.com/application/saml/appflowy/metadata/"
+  AUTH_SAML_CALLBACK_URL: {{ printf "%s://%s/gotrue/sso/saml/acs" .Values.config.scheme .Values.config.fqdn | quote }}
+  AUTH_SAML_DEFAULT_REDIRECT_URL: {{ printf "%s://%s/auth/callback" .Values.config.scheme .Values.config.fqdn | quote }}
   AI_OPENAI_API_SUMMARY_MODEL: ""
   AI_AZURE_OPENAI_API_BASE: ""
   AI_AZURE_OPENAI_API_VERSION: ""

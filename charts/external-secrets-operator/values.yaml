@@ -109,6 +109,90 @@ externalSecrets:
         creationPolicy: Owner
         deletionPolicy: Retain
       data:
+        - secretKey: ARGOCD_OIDC_CLIENT_ID
+          remoteRef:
+            key: k8s/core/cicd/argocd/oidc
+            property: OIDC_CLIENT_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: ARGOCD_OIDC_CLIENT_SECRET
+          remoteRef:
+            key: k8s/core/cicd/argocd/oidc
+            property: OIDC_CLIENT_SECRET
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: FRESHRSS_OIDC_CLIENT_ID
+          remoteRef:
+            key: k8s/tools/rss/freshrss/oidc
+            property: OIDC_CLIENT_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: FRESHRSS_OIDC_CLIENT_SECRET
+          remoteRef:
+            key: k8s/tools/rss/freshrss/oidc
+            property: OIDC_CLIENT_SECRET
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: GRAFANA_OIDC_CLIENT_ID
+          remoteRef:
+            key: k8s/core/monitoring/grafana/oidc
+            property: AUTHENTIK_CLIENT_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: GRAFANA_OIDC_CLIENT_SECRET
+          remoteRef:
+            key: k8s/core/monitoring/grafana/oidc
+            property: AUTHENTIK_CLIENT_SECRET
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: KARAKEEP_OIDC_CLIENT_ID
+          remoteRef:
+            key: k8s/tools/web/karakeep/oidc
+            property: OAUTH_CLIENT_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: KARAKEEP_OIDC_CLIENT_SECRET
+          remoteRef:
+            key: k8s/tools/web/karakeep/oidc
+            property: OAUTH_CLIENT_SECRET
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: MCP_GATEWAY_OIDC_CLIENT_ID
+          remoteRef:
+            key: k8s/core/security/mcp-gateway/app
+            property: SSO_GENERIC_CLIENT_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: MCP_GATEWAY_OIDC_CLIENT_SECRET
+          remoteRef:
+            key: k8s/core/security/mcp-gateway/app
+            property: SSO_GENERIC_CLIENT_SECRET
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: VAULT_OIDC_CLIENT_ID
+          remoteRef:
+            key: k8s/core/security/vault/oidc
+            property: OIDC_CLIENT_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: VAULT_OIDC_CLIENT_SECRET
+          remoteRef:
+            key: k8s/core/security/vault/oidc
+            property: OIDC_CLIENT_SECRET
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
         - secretKey: TREK_OIDC_CLIENT_ID
           remoteRef:
             key: k8s/tools/web/trek

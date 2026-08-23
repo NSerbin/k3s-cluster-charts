@@ -20,6 +20,7 @@ config:
   gotrueDisableSignup: "false"
   gotrueMailerAutoconfirm: "false"
   gotrueJwtExp: "604800"
+  samlEnabled: "true"
   aiEnabled: "false"
   rustLog: info
   assemblyAiApiBase: https://api.assemblyai.com/v2
