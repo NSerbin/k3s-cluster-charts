@@ -93,7 +93,7 @@ registration:
     tag: "3.12-slim-bookworm"
     pullPolicy: IfNotPresent
   backoffLimit: 3
-  activeDeadlineSeconds: 300
+  activeDeadlineSeconds: 900
   ttlSecondsAfterFinished: 300
   gateways:
     - name: argocd

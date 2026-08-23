@@ -64,7 +64,7 @@ spec:
               import jwt
 
               base = "http://{{ include "mcp-gateway.fullname" . }}:{{ .Values.service.port }}"
-              desired_gateways = {{ .Values.registration.gateways | toJson }}
+              desired_gateways = json.loads({{ .Values.registration.gateways | toJson | quote }})
               now = int(time.time())
               admin_email = os.environ["PLATFORM_ADMIN_EMAIL"]
               token = jwt.encode(
@@ -124,6 +124,7 @@ spec:
               {{- if .Values.configuration.enabled }}
               python3 - <<'PY'
               import asyncio
+              import json
               import os
               import time
 
@@ -139,8 +140,8 @@ spec:
                   UserNotFoundError,
               )
 
-              desired_teams = {{ .Values.configuration.teams | default (list) | toJson }}
-              desired_virtual_servers = {{ .Values.configuration.virtualServers | default (list) | toJson }}
+              desired_teams = json.loads({{ .Values.configuration.teams | default (list) | toJson | quote }})
+              desired_virtual_servers = json.loads({{ .Values.configuration.virtualServers | default (list) | toJson | quote }})
               admin_email = os.environ["PLATFORM_ADMIN_EMAIL"].strip().lower()
 
               async def reconcile():
