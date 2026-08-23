@@ -57,13 +57,12 @@ traefik:
       protocol: TCP
 
 
-  logs:
-    general:
-      level: INFO
+  log:
+    level: INFO
 
-    access:
-      enabled: true
-      format: json
+  accessLog:
+    enabled: true
+    format: json
 
   metrics:
     prometheus:
