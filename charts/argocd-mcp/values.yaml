@@ -14,9 +14,11 @@ argocd:
 
 mcp:
   port: 3000
+  bindAddress: "0.0.0.0"
   endpointPath: /mcp
   healthPath: /healthz
   readOnly: true
+  allowUnauthenticated: true
 
 service:
   type: ClusterIP

@@ -368,6 +368,13 @@ config:
             description: Multiple Tools
             server: k3s
 
+        - MCP Gateway:
+            icon: mdi-hub
+            href: https://mcp.nserbin.com/
+            siteMonitor: http://mcp-gateway/
+            description: ContextForge
+            server: k3s
+
         # RPi service. Kept here to restore quickly if needed.
         # - SSH:
         #     icon: shell.svg

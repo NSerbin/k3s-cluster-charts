@@ -25,9 +25,14 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
             - http
+            {{- if .Values.mcp.allowUnauthenticated }}
+            - --allow-unauthenticated
+            {{- end }}
           env:
             - name: PORT
               value: {{ .Values.mcp.port | quote }}
+            - name: MCP_BIND_ADDRESS
+              value: {{ .Values.mcp.bindAddress | quote }}
             - name: ARGOCD_BASE_URL
               value: {{ .Values.argocd.baseUrl | quote }}
             - name: ARGOCD_API_TOKEN
