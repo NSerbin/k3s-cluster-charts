@@ -24,12 +24,7 @@ spec:
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           args:
-            - node
-            - dist/index.js
             - http
-            {{- if .Values.mcp.stateless }}
-            - --stateless
-            {{- end }}
           env:
             - name: PORT
               value: {{ .Values.mcp.port | quote }}

@@ -17,7 +17,6 @@ mcp:
   endpointPath: /mcp
   healthPath: /healthz
   readOnly: true
-  stateless: true
 
 service:
   type: ClusterIP
