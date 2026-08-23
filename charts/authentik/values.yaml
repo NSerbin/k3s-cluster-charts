@@ -46,7 +46,7 @@ authentik:
   logLevel: "info"
   extraEnvFromSecrets:
     - name: authentik-apps-oidc-secrets
-      optional: true
+      optional: false
 
 blueprints:
   enabled: true
