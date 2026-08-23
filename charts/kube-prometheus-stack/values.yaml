@@ -169,7 +169,11 @@ kube-prometheus-stack:
     service:
       type: ClusterIP
 
-    envValueFrom: {}
+    envValueFrom:
+      GOMEMLIMIT:
+        resourceFieldRef:
+          resource: limits.memory
+          divisor: "1"
 
   # =========================
   # NODE EXPORTER + KSM
