@@ -3,5 +3,5 @@ name: authentik
 description: Authentik (custom chart for k3s + Traefik IngressRoute + ArgoCD)
 type: application
 version: 0.1.0
-appVersion: "2025.10.4"
+appVersion: "2026.8.0"
 home: https://github.com/goauthentik/authentik/releases
