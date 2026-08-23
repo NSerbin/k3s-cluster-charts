@@ -25,6 +25,8 @@ config:
   ALLOWED_ORIGINS: "https://travels.nserbin.com"
   FORCE_HTTPS: "true"
   TRUST_PROXY: "1"
+  OIDC_ISSUER: "https://auth.nserbin.com/application/o/trek/"
+  OIDC_DISCOVERY_URL: "https://auth.nserbin.com/application/o/trek/.well-known/openid-configuration"
   OIDC_DISPLAY_NAME: "Authentik"
   OIDC_SCOPE: "openid email profile groups"
   extraEnv: {}
@@ -36,6 +38,7 @@ secrets:
     encryptionKey: ENCRYPTION_KEY
     adminEmail: ADMIN_EMAIL
     adminPassword: ADMIN_PASSWORD
+    oidcClientId: OIDC_CLIENT_ID
     oidcClientSecret: OIDC_CLIENT_SECRET
     unsplashAccessKey: UNSPLASH_ACCESS_KEY
 

@@ -3,5 +3,5 @@ name: bentopdf
 description: Self-managed chart for BentoPDF simple mode with Traefik IngressRoute
 type: application
 version: 0.1.0
-appVersion: "v2.8.6"
+appVersion: "v2.8.7"
 home: https://github.com/alam00000/bentopdf/releases

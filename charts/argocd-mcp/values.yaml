@@ -4,7 +4,7 @@ fullnameOverride: argocd-mcp
 
 image:
   repository: ghcr.io/argoproj-labs/mcp-for-argocd
-  tag: "v0.8.0"
+  tag: "v0.9.0"
   pullPolicy: IfNotPresent
 
 argocd:

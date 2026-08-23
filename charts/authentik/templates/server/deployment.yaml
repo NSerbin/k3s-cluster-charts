@@ -60,6 +60,30 @@ spec:
                 secretKeyRef:
                   name: {{ .Values.secrets.existingSecret }}
                   key: {{ .Values.postgresql.passwordKey }}
+          {{- with .Values.authentik.extraEnvFromSecrets }}
+          envFrom:
+            {{- range . }}
+            - secretRef:
+                {{- if kindIs "string" . }}
+                name: {{ . | quote }}
+                {{- else }}
+                name: {{ .name | quote }}
+                optional: {{ .optional | default false }}
+                {{- end }}
+            {{- end }}
+          {{- end }}
+          {{- if and .Values.blueprints.enabled .Values.blueprints.apps.enabled }}
+          volumeMounts:
+            - name: authentik-blueprints-apps
+              mountPath: {{ printf "%s/%s" (.Values.blueprints.mountPath | default "/blueprints/k3s") (.Values.blueprints.apps.fileName | default "apps.yaml") | quote }}
+              subPath: {{ .Values.blueprints.apps.fileName | default "apps.yaml" | quote }}
+          {{- end }}
 
           resources:
             {{- toYaml .Values.resources.server | nindent 12 }}
+      {{- if and .Values.blueprints.enabled .Values.blueprints.apps.enabled }}
+      volumes:
+        - name: authentik-blueprints-apps
+          configMap:
+            name: {{ include "authentik.fullname" . }}-blueprints-apps
+      {{- end }}

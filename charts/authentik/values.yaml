@@ -44,7 +44,16 @@ bootstrap:
 
 authentik:
   logLevel: "info"
-  # extraEnv: []  # lista de env vars adicionales (opcional)
+  extraEnvFromSecrets:
+    - name: authentik-apps-oidc-secrets
+      optional: true
+
+blueprints:
+  enabled: true
+  mountPath: /blueprints
+  apps:
+    enabled: true
+    fileName: k3s-managed-apps.yaml
 
 postgresql:
   enabled: true

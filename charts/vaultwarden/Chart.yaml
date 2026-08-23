@@ -3,5 +3,5 @@ name: vaultwarden
 description: Vaultwarden with MySQL, ESO-provided secrets, and Traefik IngressRoute
 type: application
 version: 0.1.1
-appVersion: "1.37.1"
+appVersion: "1.37.2"
 home: https://github.com/dani-garcia/vaultwarden/releases

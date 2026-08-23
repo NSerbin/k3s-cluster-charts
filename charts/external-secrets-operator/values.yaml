@@ -99,6 +99,59 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None            
 
+    - name: authentik-apps-oidc-secrets
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: authentik-apps-oidc-secrets
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      data:
+        - secretKey: TREK_OIDC_CLIENT_ID
+          remoteRef:
+            key: k8s/tools/web/trek
+            property: OIDC_CLIENT_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: TREK_OIDC_CLIENT_SECRET
+          remoteRef:
+            key: k8s/tools/web/trek
+            property: OIDC_CLIENT_SECRET
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: APPFLOWY_SAML_CERT
+          remoteRef:
+            key: k8s/tools/productivity/appflowy/app
+            property: AUTH_SAML_CERT
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: APPFLOWY_SAML_PRIVATE_KEY
+          remoteRef:
+            key: k8s/tools/productivity/appflowy/app
+            property: GOTRUE_SAML_PRIVATE_KEY
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: HOMEPAGE_OIDC_CLIENT_ID
+          remoteRef:
+            key: k8s/tools/dashboards/homepage
+            property: HOMEPAGE_OIDC_CLIENT_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: HOMEPAGE_OIDC_CLIENT_SECRET
+          remoteRef:
+            key: k8s/tools/dashboards/homepage
+            property: HOMEPAGE_OIDC_CLIENT_SECRET
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
     - name: crowdsec-secrets
       namespace: security
       secretStoreRef:

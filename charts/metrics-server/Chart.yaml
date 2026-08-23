@@ -8,5 +8,5 @@ home: https://github.com/kubernetes-sigs/metrics-server/releases
 dependencies:
   - name: metrics-server
     repository: "https://kubernetes-sigs.github.io/metrics-server"
-    version: "3.13.1"
+    version: "3.14.0"
     alias: metrics-server

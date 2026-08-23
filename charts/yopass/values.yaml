@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: jhaals/yopass
-  tag: "14.1.0"
+  tag: "14.9.0"
   pullPolicy: IfNotPresent
 
 memcached:

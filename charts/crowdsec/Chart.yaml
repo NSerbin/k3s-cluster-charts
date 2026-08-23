@@ -3,7 +3,7 @@ name: crowdsec
 description: Wrapper chart (official CrowdSec chart + local PostgreSQL + ExternalSecret + Traefik IngressRoute)
 type: application
 version: 0.2.0
-appVersion: "1.7.7"
+appVersion: "1.7.8"
 home: https://github.com/crowdsecurity/crowdsec/releases
 
 dependencies:

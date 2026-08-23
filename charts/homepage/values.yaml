@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/gethomepage/homepage
-  tag: "v1.13.1"
+  tag: "v2.1.2"
   pullPolicy: IfNotPresent
 
 nameOverride: ""
@@ -27,6 +27,11 @@ affinity: {}
 
 env:
   HOMEPAGE_ALLOWED_HOSTS: "*"
+  HOMEPAGE_AUTH_ENABLED: "true"
+  HOMEPAGE_EXTERNAL_URL: "https://home.nserbin.com"
+  HOMEPAGE_OIDC_ISSUER: "https://auth.nserbin.com/application/o/homepage/"
+  HOMEPAGE_OIDC_NAME: "Authentik"
+  HOMEPAGE_OIDC_SCOPE: "openid email profile"
   NODE_OPTIONS: "--dns-result-order=ipv4first"
 
 secrets:

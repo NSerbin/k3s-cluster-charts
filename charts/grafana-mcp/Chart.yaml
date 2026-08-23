@@ -3,5 +3,5 @@ name: grafana-mcp
 description: Official Grafana MCP server for the k3s observability stack
 type: application
 version: 0.1.0
-appVersion: "0.17.0"
+appVersion: "1.1.0"
 home: https://github.com/grafana/mcp-grafana/releases
