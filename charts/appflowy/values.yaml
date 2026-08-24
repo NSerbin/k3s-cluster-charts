@@ -41,7 +41,7 @@ objectStorage:
 postgres:
   image:
     repository: pgvector/pgvector
-    tag: "0.8.2-pg16"
+    tag: "0.8.6-pg16"
     pullPolicy: IfNotPresent
   service:
     port: 5432
@@ -62,7 +62,7 @@ postgres:
 redis:
   image:
     repository: redis
-    tag: "7.4.9-bookworm"
+    tag: "7.4.11-bookworm"
     pullPolicy: IfNotPresent
   service:
     port: 6379
@@ -107,7 +107,7 @@ minio:
 gotrue:
   image:
     repository: appflowyinc/gotrue
-    tag: "0.15.22"
+    tag: "0.17.12"
     pullPolicy: IfNotPresent
   service:
     port: 9999
@@ -122,7 +122,7 @@ gotrue:
 cloud:
   image:
     repository: appflowyinc/appflowy_cloud
-    tag: "0.15.22"
+    tag: "0.17.12"
     pullPolicy: IfNotPresent
   service:
     port: 8000
@@ -137,7 +137,7 @@ cloud:
 worker:
   image:
     repository: appflowyinc/appflowy_worker
-    tag: "0.15.22"
+    tag: "0.17.12"
     pullPolicy: IfNotPresent
   resources:
     requests:
@@ -150,7 +150,7 @@ worker:
 search:
   image:
     repository: appflowyinc/appflowy_search
-    tag: "0.15.20"
+    tag: "0.17.12"
     pullPolicy: IfNotPresent
   service:
     port: 4002
@@ -171,7 +171,7 @@ search:
 web:
   image:
     repository: appflowyinc/appflowy_web
-    tag: "0.14.9"
+    tag: "0.16.18"
     pullPolicy: IfNotPresent
   service:
     port: 80
@@ -186,7 +186,7 @@ web:
 adminFrontend:
   image:
     repository: appflowyinc/admin_frontend
-    tag: "0.15.22"
+    tag: "0.17.12"
     pullPolicy: IfNotPresent
   service:
     port: 3000
@@ -203,7 +203,7 @@ ai:
   enabled: false
   image:
     repository: appflowyinc/appflowy_ai
-    tag: "0.15.18"
+    tag: "0.17.7"
     pullPolicy: IfNotPresent
   service:
     port: 5001

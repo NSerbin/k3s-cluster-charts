@@ -79,7 +79,7 @@ runnerScaleSet:
         fsGroup: 123
       initContainers:
         - name: init-dind-externals
-          image: ghcr.io/actions/actions-runner:2.331.0
+          image: ghcr.io/actions/actions-runner:2.336.0
           imagePullPolicy: IfNotPresent
           command:
             - cp
@@ -92,7 +92,7 @@ runnerScaleSet:
               mountPath: /home/runner/tmpDir
       containers:
         - name: runner
-          image: ghcr.io/actions/actions-runner:2.331.0
+          image: ghcr.io/actions/actions-runner:2.336.0
           imagePullPolicy: IfNotPresent
           command:
             - /home/runner/run.sh
