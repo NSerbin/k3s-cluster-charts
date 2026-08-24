@@ -116,7 +116,7 @@ runnerScaleSet:
             - name: dind-sock
               mountPath: /var/run
         - name: dind
-          image: docker:28.5.2-dind
+          image: docker:29.7.2-dind
           imagePullPolicy: IfNotPresent
           args:
             - dockerd
