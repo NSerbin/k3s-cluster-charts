@@ -4,7 +4,7 @@ fullnameOverride: mcp-gateway
 
 image:
   repository: python
-  tag: "3.12-slim-bookworm"
+  tag: "3.14-slim-bookworm"
   pullPolicy: IfNotPresent
 
 runtime:
@@ -90,7 +90,7 @@ registration:
   enabled: true
   image:
     repository: python
-    tag: "3.12-slim-bookworm"
+    tag: "3.14-slim-bookworm"
     pullPolicy: IfNotPresent
   backoffLimit: 3
   activeDeadlineSeconds: 900
@@ -204,7 +204,7 @@ redis:
   enabled: true
   image:
     repository: redis
-    tag: "8.0-alpine"
+    tag: "8.10-alpine"
     pullPolicy: IfNotPresent
   service:
     port: 6379
