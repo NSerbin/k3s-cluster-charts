@@ -167,7 +167,7 @@ postgresql:
   enabled: true
   image:
     repository: postgres
-    tag: "17-alpine"
+    tag: "18"
     pullPolicy: IfNotPresent
   database: mcpgateway
   service:
