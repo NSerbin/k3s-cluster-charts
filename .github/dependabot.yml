@@ -23,6 +23,10 @@ updates:
         update-types:
           - "patch"
           - "minor"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
 
   - package-ecosystem: "docker"
     directories:
@@ -46,3 +50,11 @@ updates:
         update-types:
           - "patch"
           - "minor"
+    ignore:
+      - dependency-name: "*"
+        update-types:
+          - "version-update:semver-major"
+      - dependency-name: "gcr.io/zenika-hub/alpine-chrome"
+      - dependency-name: "zenika-hub/alpine-chrome"
+      - dependency-name: "ghcr.io/nserbin/*"
+      - dependency-name: "nserbin/*"
