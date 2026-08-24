@@ -16,6 +16,18 @@ updates:
     commit-message:
       prefix: "deps(helm)"
       include: "scope"
+    allow:
+      - dependency-name: "crowdsec"
+      - dependency-name: "external-secrets"
+      - dependency-name: "gha-runner-scale-set-controller"
+      - dependency-name: "gha-runner-scale-set"
+      - dependency-name: "controller"
+      - dependency-name: "runnerScaleSet"
+      - dependency-name: "kube-prometheus-stack"
+      - dependency-name: "metallb"
+      - dependency-name: "metrics-server"
+      - dependency-name: "traefik"
+      - dependency-name: "vault"
     groups:
       helm-chart-patch-minor:
         patterns:
@@ -27,6 +39,20 @@ updates:
       - dependency-name: "*"
         update-types:
           - "version-update:semver-major"
+      - dependency-name: "busybox"
+      - dependency-name: "docker"
+      - dependency-name: "gcr.io/zenika-hub/alpine-chrome"
+      - dependency-name: "zenika-hub/alpine-chrome"
+      - dependency-name: "ghcr.io/nserbin/*"
+      - dependency-name: "memcached"
+      - dependency-name: "minio/minio"
+      - dependency-name: "mysql"
+      - dependency-name: "nserbin/*"
+      - dependency-name: "ollama/ollama"
+      - dependency-name: "pgvector/pgvector"
+      - dependency-name: "postgres"
+      - dependency-name: "python"
+      - dependency-name: "redis"
 
   - package-ecosystem: "docker"
     directories:
@@ -43,6 +69,24 @@ updates:
     commit-message:
       prefix: "deps(docker)"
       include: "scope"
+    allow:
+      - dependency-name: "appflowyinc/*"
+      - dependency-name: "argoproj-labs/mcp-for-argocd"
+      - dependency-name: "alam00000/bentopdf-simple"
+      - dependency-name: "cloudflare/cloudflared"
+      - dependency-name: "crowdsecurity/crowdsec"
+      - dependency-name: "freshrss/freshrss"
+      - dependency-name: "gethomepage/homepage"
+      - dependency-name: "getmeili/meilisearch"
+      - dependency-name: "goauthentik/server"
+      - dependency-name: "grafana/grafana"
+      - dependency-name: "grafana/mcp-grafana"
+      - dependency-name: "jhaals/yopass"
+      - dependency-name: "karakeep-app/karakeep"
+      - dependency-name: "linkwarden/linkwarden"
+      - dependency-name: "mauriceboe/trek"
+      - dependency-name: "sharevb/it-tools"
+      - dependency-name: "vaultwarden/server"
     groups:
       docker-image-patch-minor:
         patterns:
@@ -54,6 +98,16 @@ updates:
       - dependency-name: "*"
         update-types:
           - "version-update:semver-major"
+      - dependency-name: "busybox"
+      - dependency-name: "docker"
+      - dependency-name: "memcached"
+      - dependency-name: "minio/minio"
+      - dependency-name: "mysql"
+      - dependency-name: "ollama/ollama"
+      - dependency-name: "pgvector/pgvector"
+      - dependency-name: "postgres"
+      - dependency-name: "python"
+      - dependency-name: "redis"
       - dependency-name: "gcr.io/zenika-hub/alpine-chrome"
       - dependency-name: "zenika-hub/alpine-chrome"
       - dependency-name: "ghcr.io/nserbin/*"
