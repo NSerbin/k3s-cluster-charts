@@ -3,7 +3,7 @@ secrets:
 
 postgresql:
   enabled: true
-  image: postgres:17-alpine
+  image: postgres:18-alpine
   imagePullPolicy: IfNotPresent
   serviceName: crowdsec-postgres
   port: 5432
