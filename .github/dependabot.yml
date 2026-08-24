@@ -1,0 +1,48 @@
+version: 2
+
+updates:
+  - package-ecosystem: "helm"
+    directories:
+      - "/charts/*"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:00"
+      timezone: "Europe/Lisbon"
+    labels:
+      - "dependencies"
+      - "helm"
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: "deps(helm)"
+      include: "scope"
+    groups:
+      helm-chart-patch-minor:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+          - "minor"
+
+  - package-ecosystem: "docker"
+    directories:
+      - "/charts/*"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "10:30"
+      timezone: "Europe/Lisbon"
+    labels:
+      - "dependencies"
+      - "docker"
+    open-pull-requests-limit: 10
+    commit-message:
+      prefix: "deps(docker)"
+      include: "scope"
+    groups:
+      docker-image-patch-minor:
+        patterns:
+          - "*"
+        update-types:
+          - "patch"
+          - "minor"
