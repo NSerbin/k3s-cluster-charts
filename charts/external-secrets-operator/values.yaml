@@ -235,6 +235,20 @@ externalSecrets:
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
+        - secretKey: LIBREDB_OIDC_CLIENT_ID
+          remoteRef:
+            key: k8s/tools/database/libredb/oidc
+            property: OIDC_CLIENT_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: LIBREDB_OIDC_CLIENT_SECRET
+          remoteRef:
+            key: k8s/tools/database/libredb/oidc
+            property: OIDC_CLIENT_SECRET
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: crowdsec-secrets
       namespace: security
@@ -671,6 +685,11 @@ externalSecrets:
             metadataPolicy: None
         - extract:
             key: k8s/tools/database/libredb/db
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - extract:
+            key: k8s/tools/database/libredb/oidc
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None

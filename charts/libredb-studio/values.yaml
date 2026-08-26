@@ -197,7 +197,7 @@ studio:
     pullPolicy: IfNotPresent
     tag: "0.13.4"
 
-  authProvider: local
+  authProvider: oidc
 
   config:
     logLevel: info
@@ -205,9 +205,9 @@ studio:
     storageProvider: postgres
     bindAddress: "0.0.0.0"
     oidcIssuer: ""
-    oidcScope: "openid profile email"
-    oidcRoleClaim: ""
-    oidcAdminRoles: "admin"
+    oidcScope: "openid profile email groups"
+    oidcRoleClaim: "groups"
+    oidcAdminRoles: "admin,libredb-admin"
 
   secrets:
     existingSecret: libredb-studio-secrets-app
@@ -238,6 +238,14 @@ studio:
     - secretRef:
         name: libredb-studio-secrets-seed
         optional: true
+
+  extraEnv:
+    - name: OIDC_ISSUER
+      valueFrom:
+        secretKeyRef:
+          name: libredb-studio-secrets-app
+          key: OIDC_ISSUER
+          optional: false
 
   service:
     type: ClusterIP
