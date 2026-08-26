@@ -13,6 +13,8 @@ spec:
       {{- include "authentik.selectorLabels" . | nindent 6 }}
   template:
     metadata:
+      annotations:
+        checksum/blueprints-apps: {{ include (print $.Template.BasePath "/blueprints-apps-configmap.yaml") . | sha256sum }}
       labels:
         app.kubernetes.io/component: worker
         {{- include "authentik.selectorLabels" . | nindent 8 }}

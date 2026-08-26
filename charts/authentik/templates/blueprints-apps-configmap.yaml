@@ -144,9 +144,6 @@ data:
             - matching_mode: strict
               url: https://libredb.nserbin.com/api/auth/oidc/callback
               redirect_uri_type: authorization
-            - matching_mode: strict
-              url: https://libredb.nserbin.com/login
-              redirect_uri_type: post_logout
           grant_types:
             - authorization_code
             - refresh_token
