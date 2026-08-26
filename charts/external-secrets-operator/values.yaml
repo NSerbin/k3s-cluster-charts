@@ -649,6 +649,239 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None
 
+    - name: libredb-studio-secrets-app
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: libredb-studio-secrets-app
+        creationPolicy: Owner
+        deletionPolicy: Retain
+        template:
+          engineVersion: v2
+          mergePolicy: Merge
+          data:
+            STORAGE_POSTGRES_URL: 'postgresql://{{ .POSTGRES_USER }}:{{ .POSTGRES_PASSWORD }}@libredb-studio-postgres:5432/{{ .POSTGRES_DB }}'
+      dataFrom:
+        - extract:
+            key: k8s/tools/database/libredb/app
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - extract:
+            key: k8s/tools/database/libredb/db
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
+    - name: libredb-studio-secrets-seed
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: libredb-studio-secrets-seed
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      data:
+        - secretKey: TF_SHARED_BACKEND_POSTGRES_USER
+          remoteRef:
+            key: k8s/core/tools/iac/terraform-shared-backend/db
+            property: POSTGRES_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: TF_SHARED_BACKEND_POSTGRES_PASSWORD
+          remoteRef:
+            key: k8s/core/tools/iac/terraform-shared-backend/db
+            property: POSTGRES_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: GRAFANA_POSTGRES_DB
+          remoteRef:
+            key: k8s/core/monitoring/grafana/db
+            property: POSTGRES_DB
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: GRAFANA_POSTGRES_USER
+          remoteRef:
+            key: k8s/core/monitoring/grafana/db
+            property: POSTGRES_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: GRAFANA_POSTGRES_PASSWORD
+          remoteRef:
+            key: k8s/core/monitoring/grafana/db
+            property: POSTGRES_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: CROWDSEC_POSTGRES_DB
+          remoteRef:
+            key: k8s/core/security/crowdsec/db
+            property: POSTGRES_DB
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: CROWDSEC_POSTGRES_USER
+          remoteRef:
+            key: k8s/core/security/crowdsec/db
+            property: POSTGRES_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: CROWDSEC_POSTGRES_PASSWORD
+          remoteRef:
+            key: k8s/core/security/crowdsec/db
+            property: POSTGRES_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: APPFLOWY_POSTGRES_DB
+          remoteRef:
+            key: k8s/tools/productivity/appflowy/app
+            property: POSTGRES_DB
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: APPFLOWY_POSTGRES_USER
+          remoteRef:
+            key: k8s/tools/productivity/appflowy/app
+            property: POSTGRES_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: APPFLOWY_POSTGRES_PASSWORD
+          remoteRef:
+            key: k8s/tools/productivity/appflowy/app
+            property: POSTGRES_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: AUTHENTIK_POSTGRES_DB
+          remoteRef:
+            key: k8s/core/security/authentik
+            property: POSTGRES_DB
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: AUTHENTIK_POSTGRES_USER
+          remoteRef:
+            key: k8s/core/security/authentik
+            property: POSTGRES_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: AUTHENTIK_POSTGRES_PASSWORD
+          remoteRef:
+            key: k8s/core/security/authentik
+            property: POSTGRES_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: FREEDIUM_POSTGRES_DB
+          remoteRef:
+            key: k8s/tools/web/freedium/db
+            property: POSTGRES_DB
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: FREEDIUM_POSTGRES_USER
+          remoteRef:
+            key: k8s/tools/web/freedium/db
+            property: POSTGRES_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: FREEDIUM_POSTGRES_PASSWORD
+          remoteRef:
+            key: k8s/tools/web/freedium/db
+            property: POSTGRES_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: MCP_GATEWAY_POSTGRES_USER
+          remoteRef:
+            key: k8s/core/security/mcp-gateway/db
+            property: POSTGRES_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: MCP_GATEWAY_POSTGRES_PASSWORD
+          remoteRef:
+            key: k8s/core/security/mcp-gateway/db
+            property: POSTGRES_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: LIBREDB_STUDIO_POSTGRES_DB
+          remoteRef:
+            key: k8s/tools/database/libredb/db
+            property: POSTGRES_DB
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: LIBREDB_STUDIO_POSTGRES_USER
+          remoteRef:
+            key: k8s/tools/database/libredb/db
+            property: POSTGRES_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: LIBREDB_STUDIO_POSTGRES_PASSWORD
+          remoteRef:
+            key: k8s/tools/database/libredb/db
+            property: POSTGRES_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: VAULTWARDEN_MYSQL_DATABASE
+          remoteRef:
+            key: k8s/core/security/vaultwarden/db
+            property: MYSQL_DATABASE
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: VAULTWARDEN_MYSQL_USER
+          remoteRef:
+            key: k8s/core/security/vaultwarden/db
+            property: MYSQL_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: VAULTWARDEN_MYSQL_PASSWORD
+          remoteRef:
+            key: k8s/core/security/vaultwarden/db
+            property: MYSQL_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: FRESHRSS_MYSQL_DATABASE
+          remoteRef:
+            key: k8s/tools/rss/freshrss/db
+            property: MYSQL_DATABASE
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: FRESHRSS_MYSQL_USER
+          remoteRef:
+            key: k8s/tools/rss/freshrss/db
+            property: MYSQL_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: FRESHRSS_MYSQL_PASSWORD
+          remoteRef:
+            key: k8s/tools/rss/freshrss/db
+            property: MYSQL_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
     - name: appflowy-secrets-app
       namespace: tools
       secretStoreRef:

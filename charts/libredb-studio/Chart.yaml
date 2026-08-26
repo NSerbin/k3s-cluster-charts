@@ -1,0 +1,13 @@
+apiVersion: v2
+name: libredb-studio
+description: LibreDB Studio with self-managed PostgreSQL, Traefik, and ESO-managed secrets
+type: application
+version: 0.1.0
+appVersion: "0.13.4"
+home: https://github.com/libredb/libredb-studio/releases
+
+dependencies:
+  - name: libredb-studio
+    repository: oci://ghcr.io/libredb/charts
+    version: "0.1.51"
+    alias: studio

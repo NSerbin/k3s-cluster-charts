@@ -1,0 +1,6 @@
+dependencies:
+- name: libredb-studio
+  repository: oci://ghcr.io/libredb/charts
+  version: 0.1.51
+digest: sha256:acde82f897b2011b11060eaa03e34031a666e9bbc205f258e216055a03e259cb
+generated: "2026-08-26T10:12:33.076828+01:00"

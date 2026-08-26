@@ -1,0 +1,12 @@
+{{- if .Values.seedConnections.enabled }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Values.seedConnections.configMapName }}
+  labels:
+    {{- include "libredb-wrapper.labels" . | nindent 4 }}
+    app.kubernetes.io/component: seed-connections
+data:
+  {{ .Values.seedConnections.configMapKey }}: |
+{{ toYaml .Values.seedConnections.config | nindent 4 }}
+{{- end }}

@@ -375,6 +375,13 @@ config:
             description: ContextForge
             server: k3s
 
+        - LibreDB Studio:
+            icon: mdi-database-search
+            href: https://libredb.nserbin.com/
+            siteMonitor: http://libredb-studio/
+            description: Database cockpit
+            server: k3s
+
         # RPi service. Kept here to restore quickly if needed.
         # - SSH:
         #     icon: shell.svg

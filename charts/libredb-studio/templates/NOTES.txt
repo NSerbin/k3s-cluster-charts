@@ -1,0 +1,26 @@
+Vault paths expected by ESO:
+  k8s/tools/database/libredb/app
+  k8s/tools/database/libredb/db
+
+Required app keys:
+  JWT_SECRET
+  ADMIN_EMAIL
+  ADMIN_PASSWORD
+
+Required db keys:
+  POSTGRES_USER
+  POSTGRES_PASSWORD
+  POSTGRES_DB
+
+Optional app keys:
+  USER_EMAIL
+  USER_PASSWORD
+  LLM_API_KEY
+
+Optional future OIDC app keys:
+  OIDC_CLIENT_ID
+  OIDC_CLIENT_SECRET
+
+Seed connections:
+  Put non-secret seed structure in values.yaml using ${ENV_VAR} placeholders.
+  Credential placeholders are populated by ESO from the existing app/db Vault paths.

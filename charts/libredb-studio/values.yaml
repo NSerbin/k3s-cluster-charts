@@ -1,0 +1,278 @@
+fullnameOverride: libredb-studio
+
+secrets:
+  appSecretName: libredb-studio-secrets-app
+  seedSecretName: libredb-studio-secrets-seed
+
+postgres:
+  enabled: true
+  image:
+    repository: postgres
+    tag: "17-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+    mountPath: /var/lib/postgresql/data
+    pgData: /var/lib/postgresql/data/pgdata
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+  podSecurityContext:
+    fsGroup: 999
+    fsGroupChangePolicy: OnRootMismatch
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 999
+    runAsGroup: 999
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: false
+    capabilities:
+      drop:
+        - ALL
+
+seedConnections:
+  enabled: true
+  configMapName: libredb-studio-seed-connections
+  configMapKey: seed-connections.yaml
+  cacheTTL: 60000
+  config:
+    version: "1"
+    defaults:
+      managed: true
+      environment: production
+    connections:
+      - id: terraform-backend-postgres
+        name: Terraform Backend
+        type: postgres
+        host: terraform-shared-backend.infra.svc.cluster.local
+        port: 5432
+        database: terraform_backend
+        user: "${TF_SHARED_BACKEND_POSTGRES_USER}"
+        password: "${TF_SHARED_BACKEND_POSTGRES_PASSWORD}"
+        roles: ["admin"]
+      - id: terraform-proxmox-postgres
+        name: Terraform Proxmox
+        type: postgres
+        host: terraform-shared-backend.infra.svc.cluster.local
+        port: 5432
+        database: terraform_proxmox
+        user: "${TF_SHARED_BACKEND_POSTGRES_USER}"
+        password: "${TF_SHARED_BACKEND_POSTGRES_PASSWORD}"
+        roles: ["admin"]
+      - id: grafana-postgres
+        name: Grafana
+        type: postgres
+        host: grafana-postgres.monitoring.svc.cluster.local
+        port: 5432
+        database: "${GRAFANA_POSTGRES_DB}"
+        user: "${GRAFANA_POSTGRES_USER}"
+        password: "${GRAFANA_POSTGRES_PASSWORD}"
+        roles: ["admin"]
+      - id: crowdsec-postgres
+        name: CrowdSec
+        type: postgres
+        host: crowdsec-postgres.security.svc.cluster.local
+        port: 5432
+        database: "${CROWDSEC_POSTGRES_DB}"
+        user: "${CROWDSEC_POSTGRES_USER}"
+        password: "${CROWDSEC_POSTGRES_PASSWORD}"
+        roles: ["admin"]
+      - id: appflowy-postgres
+        name: AppFlowy
+        type: postgres
+        host: appflowy-postgres.tools.svc.cluster.local
+        port: 5432
+        database: "${APPFLOWY_POSTGRES_DB}"
+        user: "${APPFLOWY_POSTGRES_USER}"
+        password: "${APPFLOWY_POSTGRES_PASSWORD}"
+        roles: ["admin"]
+      - id: authentik-postgres
+        name: Authentik
+        type: postgres
+        host: authentik-postgres.tools.svc.cluster.local
+        port: 5432
+        database: "${AUTHENTIK_POSTGRES_DB}"
+        user: "${AUTHENTIK_POSTGRES_USER}"
+        password: "${AUTHENTIK_POSTGRES_PASSWORD}"
+        roles: ["admin"]
+      - id: freedium-postgres
+        name: Freedium
+        type: postgres
+        host: freedium-postgres.tools.svc.cluster.local
+        port: 5432
+        database: "${FREEDIUM_POSTGRES_DB}"
+        user: "${FREEDIUM_POSTGRES_USER}"
+        password: "${FREEDIUM_POSTGRES_PASSWORD}"
+        roles: ["admin"]
+      - id: mcp-gateway-postgres
+        name: MCP Gateway
+        type: postgres
+        host: mcp-gateway-postgres.tools.svc.cluster.local
+        port: 5432
+        database: mcpgateway
+        user: "${MCP_GATEWAY_POSTGRES_USER}"
+        password: "${MCP_GATEWAY_POSTGRES_PASSWORD}"
+        roles: ["admin"]
+      - id: libredb-studio-postgres
+        name: LibreDB Studio Storage
+        type: postgres
+        host: libredb-studio-postgres.tools.svc.cluster.local
+        port: 5432
+        database: "${LIBREDB_STUDIO_POSTGRES_DB}"
+        user: "${LIBREDB_STUDIO_POSTGRES_USER}"
+        password: "${LIBREDB_STUDIO_POSTGRES_PASSWORD}"
+        roles: ["admin"]
+      - id: vaultwarden-mysql
+        name: Vaultwarden
+        type: mysql
+        host: vaultwarden-vaultwarden-mysql.tools.svc.cluster.local
+        port: 3306
+        database: "${VAULTWARDEN_MYSQL_DATABASE}"
+        user: "${VAULTWARDEN_MYSQL_USER}"
+        password: "${VAULTWARDEN_MYSQL_PASSWORD}"
+        roles: ["admin"]
+      - id: freshrss-mysql
+        name: FreshRSS
+        type: mysql
+        host: freshrss-freshrss-mysql.tools.svc.cluster.local
+        port: 3306
+        database: "${FRESHRSS_MYSQL_DATABASE}"
+        user: "${FRESHRSS_MYSQL_USER}"
+        password: "${FRESHRSS_MYSQL_PASSWORD}"
+        roles: ["admin"]
+      - id: argocd-redis
+        name: Argo CD Redis
+        type: redis
+        host: argocd-redis.argocd.svc.cluster.local
+        port: 6379
+        roles: ["admin"]
+      - id: appflowy-redis
+        name: AppFlowy Redis
+        type: redis
+        host: appflowy-redis.tools.svc.cluster.local
+        port: 6379
+        roles: ["admin"]
+      - id: freedium-redis
+        name: Freedium Redis
+        type: redis
+        host: freedium-redis.tools.svc.cluster.local
+        port: 6379
+        roles: ["admin"]
+      - id: mcp-gateway-redis
+        name: MCP Gateway Redis
+        type: redis
+        host: mcp-gateway-redis.tools.svc.cluster.local
+        port: 6379
+        roles: ["admin"]
+
+traefik:
+  ingressRoute:
+    enabled: true
+    host: "libredb.nserbin.com"
+    entryPoints:
+      - web
+    pathPrefixes:
+      - /
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+studio:
+  fullnameOverride: libredb-studio
+  replicaCount: 1
+
+  image:
+    repository: ghcr.io/libredb/libredb-studio
+    pullPolicy: IfNotPresent
+    tag: "0.13.4"
+
+  authProvider: local
+
+  config:
+    logLevel: info
+    authBootstrap: "off"
+    storageProvider: postgres
+    bindAddress: "0.0.0.0"
+    oidcIssuer: ""
+    oidcScope: "openid profile email"
+    oidcRoleClaim: ""
+    oidcAdminRoles: "admin"
+
+  secrets:
+    existingSecret: libredb-studio-secrets-app
+    existingSecretKeys:
+      jwtSecret: JWT_SECRET
+      adminEmail: ADMIN_EMAIL
+      adminPassword: ADMIN_PASSWORD
+      userEmail: USER_EMAIL
+      userPassword: USER_PASSWORD
+      llmApiKey: LLM_API_KEY
+      oidcClientId: OIDC_CLIENT_ID
+      oidcClientSecret: OIDC_CLIENT_SECRET
+      storagePostgresUrl: STORAGE_POSTGRES_URL
+
+  postgresql:
+    enabled: false
+
+  persistence:
+    enabled: false
+
+  seedConnections:
+    enabled: true
+    existingConfigMap: libredb-studio-seed-connections
+    configMapKey: seed-connections.yaml
+    cacheTTL: 60000
+
+  extraEnvFrom:
+    - secretRef:
+        name: libredb-studio-secrets-seed
+        optional: true
+
+  service:
+    type: ClusterIP
+    port: 80
+    targetPort: 3000
+
+  ingress:
+    enabled: false
+
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    fsGroup: 1001
+    fsGroupChangePolicy: OnRootMismatch
+    seccompProfile:
+      type: RuntimeDefault
+
+  securityContext:
+    runAsNonRoot: true
+    runAsUser: 1001
+    runAsGroup: 1001
+    allowPrivilegeEscalation: false
+    readOnlyRootFilesystem: true
+    capabilities:
+      drop:
+        - ALL
+
+  networkPolicy:
+    enabled: false
