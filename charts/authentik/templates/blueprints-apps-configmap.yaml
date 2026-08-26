@@ -125,8 +125,15 @@ data:
           scope_name: groups
           description: LibreDB Studio groups claim
           expression: |
+            groups = [group.name for group in request.user.ak_groups.all()]
+            libredb_roles = list(groups)
+
+            if request.user.email and request.user.email.lower() == "nicolas.serbin@gmail.com":
+                libredb_roles.append("admin")
+
             return {
-                "groups": [group.name for group in request.user.ak_groups.all()],
+                "groups": groups,
+                "libredb_roles": libredb_roles,
             }
 
       - model: authentik_providers_oauth2.oauth2provider

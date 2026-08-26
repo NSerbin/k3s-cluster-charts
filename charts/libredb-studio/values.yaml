@@ -206,7 +206,7 @@ studio:
     bindAddress: "0.0.0.0"
     oidcIssuer: ""
     oidcScope: "openid profile email groups"
-    oidcRoleClaim: "groups"
+    oidcRoleClaim: "libredb_roles"
     oidcAdminRoles: "admin,libredb-admin"
 
   secrets:
