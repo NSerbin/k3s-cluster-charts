@@ -1,0 +1,164 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: "monetr"
+
+image:
+  repository: ghcr.io/monetr/monetr
+  tag: "v1.15.3"
+  pullPolicy: IfNotPresent
+
+waitImage:
+  repository: busybox
+  tag: "1.36.1"
+  pullPolicy: IfNotPresent
+
+secrets:
+  existingSecret: monetr-secrets-app
+  certificateKey: ed25519.key
+
+config:
+  environment: self-hosted
+  allowSignUp: true
+  logLevel: info
+  logFormat: text
+  externalUrl: https://money.nserbin.com
+  proofOfWorkEnabled: false
+  maxNumberOfLinks: 0
+
+email:
+  enabled: false
+  domain: ""
+  verificationEnabled: false
+  forgotPasswordEnabled: false
+
+plaid:
+  enabled: false
+  webhooksEnabled: false
+  countryCodes:
+    - US
+
+lunchFlow:
+  enabled: false
+
+sentry:
+  enabled: false
+
+kms:
+  provider: vault
+  vault:
+    keyID: monetr
+    authMethod: kubernetes
+    role: monetr
+    endpoint: http://vault.tools.svc.cluster.local:8200
+    tokenFile: /var/run/secrets/kubernetes.io/serviceaccount/token
+    insecureSkipVerify: false
+
+postgres:
+  image:
+    repository: postgres
+    tag: "16-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+redis:
+  image:
+    repository: redis
+    tag: "7.4.9-bookworm"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  database: 0
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+minio:
+  enabled: true
+  image:
+    repository: minio/minio
+    tag: "RELEASE.2025-09-07T16-13-09Z"
+    pullPolicy: IfNotPresent
+  bucket: monetr
+  region: us-east-1
+  service:
+    apiPort: 9000
+    consolePort: 9001
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: true
+
+service:
+  type: ClusterIP
+  port: 4000
+  targetPort: 4000
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 1000
+  runAsGroup: 1000
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 256Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - web
+    host: money.nserbin.com
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

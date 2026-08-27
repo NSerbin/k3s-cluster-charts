@@ -1,0 +1,8 @@
+apiVersion: v2
+name: monetr
+description: Self-hosted monetr deployment with PostgreSQL, Redis, MinIO, Vault KMS, Traefik and ESO.
+type: application
+version: 0.1.0
+appVersion: "v1.15.3"
+home: https://github.com/monetr/monetr/releases
+icon: https://github.com/monetr.png

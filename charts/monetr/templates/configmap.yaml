@@ -1,0 +1,82 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "monetr.fullname" . }}-config
+  labels:
+    {{- include "monetr.labels" . | nindent 4 }}
+    app.kubernetes.io/component: config
+data:
+  config.yaml: |
+    environment: {{ .Values.config.environment | quote }}
+    allowSignUp: {{ .Values.config.allowSignUp }}
+
+    email:
+      enabled: {{ .Values.email.enabled }}
+      domain: {{ .Values.email.domain | quote }}
+      verification:
+        enabled: {{ .Values.email.verificationEnabled }}
+        tokenLifetime: 10m
+      forgotPassword:
+        enabled: {{ .Values.email.forgotPasswordEnabled }}
+        tokenLifetime: 10m
+
+    keyManagement:
+      provider: {{ .Values.kms.provider | quote }}
+      vault:
+        keyID: {{ .Values.kms.vault.keyID | quote }}
+        authMethod: {{ .Values.kms.vault.authMethod | quote }}
+        role: {{ .Values.kms.vault.role | quote }}
+        endpoint: {{ .Values.kms.vault.endpoint | quote }}
+        tokenFile: {{ .Values.kms.vault.tokenFile | quote }}
+        insecureSkipVerify: {{ .Values.kms.vault.insecureSkipVerify }}
+
+    links:
+      maxNumberOfLinks: {{ .Values.config.maxNumberOfLinks }}
+
+    logging:
+      level: {{ .Values.config.logLevel | quote }}
+      format: {{ .Values.config.logFormat | quote }}
+
+    lunchFlow:
+      enabled: {{ .Values.lunchFlow.enabled }}
+      allowedApiUrls: []
+
+    plaid:
+      enabled: {{ .Values.plaid.enabled }}
+      webhooksEnabled: {{ .Values.plaid.webhooksEnabled }}
+      countryCodes:
+{{ toYaml .Values.plaid.countryCodes | indent 8 }}
+
+    postgresql:
+      address: {{ include "monetr.postgresName" . | quote }}
+      port: {{ .Values.postgres.service.port }}
+      insecureSkipVerify: false
+
+    proofOfWork:
+      enabled: {{ .Values.config.proofOfWorkEnabled }}
+
+    redis:
+      enabled: true
+      address: {{ include "monetr.redisName" . | quote }}
+      port: {{ .Values.redis.service.port }}
+      database: {{ .Values.redis.database }}
+      username: ""
+
+    security:
+      privateKey: "/etc/monetr/certificate/ed25519.key"
+
+    sentry:
+      enabled: {{ .Values.sentry.enabled }}
+
+    server:
+      externalUrl: {{ .Values.config.externalUrl | quote }}
+
+    storage:
+      enabled: {{ .Values.minio.enabled }}
+      provider: "s3"
+      s3:
+        endpoint: {{ printf "http://%s:%v" (include "monetr.minioName" .) .Values.minio.service.apiPort | quote }}
+        bucket: {{ .Values.minio.bucket | quote }}
+        region: {{ .Values.minio.region | quote }}
+        forcePathStyle: true
+        useEnvCredentials: true

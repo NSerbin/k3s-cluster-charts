@@ -1,0 +1,16 @@
+monetr will be available through Traefik at:
+  https://{{ .Values.traefik.ingressRoute.host }}
+
+Vault path expected by ESO:
+  kv/k8s/tools/finance/monetr/app
+
+Required keys:
+  POSTGRES_USER
+  POSTGRES_PASSWORD
+  POSTGRES_DB
+  MINIO_ACCESS_KEY
+  MINIO_SECRET_KEY
+  ed25519.key
+
+Vault Transit key expected by monetr:
+  transit/keys/{{ .Values.kms.vault.keyID }}

@@ -84,6 +84,8 @@ config:
         icon: mdi-security
       Secrets:
         icon: mdi-shield-key
+      Finance:
+        icon: mdi-cash-multiple
       Tools:
         icon: mdi-tools
       Cluster:
@@ -415,6 +417,14 @@ config:
             href: https://share.nserbin.com/
             siteMonitor: http://yopass:1337/
             description: Secure secret sharing
+            server: k3s
+
+    - Finance:
+        - monetr:
+            icon: mdi-cash-multiple
+            href: https://money.nserbin.com/
+            siteMonitor: http://monetr:4000/api/health
+            description: Personal finance
             server: k3s
 
     - Security:

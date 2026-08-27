@@ -1,0 +1,33 @@
+{{- if .Values.postgres.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "monetr.postgresName" . }}-data
+  labels:
+    {{- include "monetr.labels" . | nindent 4 }}
+    app.kubernetes.io/component: postgres
+spec:
+  accessModes:
+    {{- toYaml .Values.postgres.persistence.accessModes | nindent 4 }}
+  storageClassName: {{ .Values.postgres.persistence.storageClassName | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.postgres.persistence.size | quote }}
+---
+{{- end }}
+{{- if and .Values.minio.enabled .Values.minio.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "monetr.minioName" . }}-data
+  labels:
+    {{- include "monetr.labels" . | nindent 4 }}
+    app.kubernetes.io/component: minio
+spec:
+  accessModes:
+    {{- toYaml .Values.minio.persistence.accessModes | nindent 4 }}
+  storageClassName: {{ .Values.minio.persistence.storageClassName | quote }}
+  resources:
+    requests:
+      storage: {{ .Values.minio.persistence.size | quote }}
+{{- end }}
