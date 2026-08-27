@@ -110,6 +110,34 @@ spec:
 {{- define "monetr.env" -}}
 - name: MONETR_ENVIRONMENT
   value: {{ .Values.config.environment | quote }}
+- name: MONETR_EMAIL_ENABLED
+  value: {{ .Values.email.enabled | quote }}
+- name: MONETR_EMAIL_DOMAIN
+  value: {{ .Values.email.domain | quote }}
+- name: MONETR_EMAIL_VERIFICATION_ENABLED
+  value: {{ .Values.email.verificationEnabled | quote }}
+- name: MONETR_EMAIL_FORGOT_PASSWORD_ENABLED
+  value: {{ .Values.email.forgotPasswordEnabled | quote }}
+- name: MONETR_EMAIL_SMTP_USERNAME
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets.existingSecret | quote }}
+      key: MONETR_EMAIL_SMTP_USERNAME
+- name: MONETR_EMAIL_SMTP_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets.existingSecret | quote }}
+      key: MONETR_EMAIL_SMTP_PASSWORD
+- name: MONETR_EMAIL_SMTP_HOST
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets.existingSecret | quote }}
+      key: MONETR_EMAIL_SMTP_HOST
+- name: MONETR_EMAIL_SMTP_PORT
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets.existingSecret | quote }}
+      key: MONETR_EMAIL_SMTP_PORT
 - name: MONETR_PG_ADDRESS
   value: {{ include "monetr.postgresName" . | quote }}
 - name: MONETR_PG_PORT

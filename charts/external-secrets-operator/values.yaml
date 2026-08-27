@@ -709,6 +709,35 @@ externalSecrets:
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
+      data:
+        - secretKey: MONETR_EMAIL_SMTP_USERNAME
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_USERNAME
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: MONETR_EMAIL_SMTP_PASSWORD
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: MONETR_EMAIL_SMTP_HOST
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_HOST
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: MONETR_EMAIL_SMTP_PORT
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_PORT
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: libredb-studio-secrets-seed
       namespace: tools
@@ -974,9 +1003,102 @@ externalSecrets:
         name: vaultwarden-secrets-app
         creationPolicy: Owner
         deletionPolicy: Retain
-      dataFrom:
-        - extract:
+      data:
+        - secretKey: ADMIN_TOKEN
+          remoteRef:
             key: k8s/core/security/vaultwarden/app
+            property: ADMIN_TOKEN
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: DOMAIN
+          remoteRef:
+            key: k8s/core/security/vaultwarden/app
+            property: DOMAIN
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: PUSH_ENABLED
+          remoteRef:
+            key: k8s/core/security/vaultwarden/app
+            property: PUSH_ENABLED
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: PUSH_INSTALLATION_ID
+          remoteRef:
+            key: k8s/core/security/vaultwarden/app
+            property: PUSH_INSTALLATION_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: PUSH_INSTALLATION_KEY
+          remoteRef:
+            key: k8s/core/security/vaultwarden/app
+            property: PUSH_INSTALLATION_KEY
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: PUSH_RELAY_URI
+          remoteRef:
+            key: k8s/core/security/vaultwarden/app
+            property: PUSH_RELAY_URI
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: PUSH_IDENTITY_URI
+          remoteRef:
+            key: k8s/core/security/vaultwarden/app
+            property: PUSH_IDENTITY_URI
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_AUTH_MECHANISM
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_AUTH_MECHANISM
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_FROM
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_FROM
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_USERNAME
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_USERNAME
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_PASSWORD
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_HOST
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_HOST
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_PORT
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_PORT
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_SECURITY
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_SECURITY
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None

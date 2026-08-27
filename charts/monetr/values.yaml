@@ -27,10 +27,10 @@ config:
   maxNumberOfLinks: 0
 
 email:
-  enabled: false
-  domain: ""
-  verificationEnabled: false
-  forgotPasswordEnabled: false
+  enabled: true
+  domain: nserbin.com
+  verificationEnabled: true
+  forgotPasswordEnabled: true
 
 plaid:
   enabled: false
