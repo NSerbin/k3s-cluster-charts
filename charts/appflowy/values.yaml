@@ -107,7 +107,7 @@ minio:
 gotrue:
   image:
     repository: appflowyinc/gotrue
-    tag: "0.15.22"
+    tag: "0.18.2"
     pullPolicy: IfNotPresent
   service:
     port: 9999
@@ -122,7 +122,7 @@ gotrue:
 cloud:
   image:
     repository: appflowyinc/appflowy_cloud
-    tag: "0.15.22"
+    tag: "0.18.2"
     pullPolicy: IfNotPresent
   service:
     port: 8000
@@ -137,7 +137,7 @@ cloud:
 worker:
   image:
     repository: appflowyinc/appflowy_worker
-    tag: "0.15.22"
+    tag: "0.18.2"
     pullPolicy: IfNotPresent
   resources:
     requests:
@@ -171,7 +171,7 @@ search:
 web:
   image:
     repository: appflowyinc/appflowy_web
-    tag: "0.15.22"
+    tag: "0.17.1"
     pullPolicy: IfNotPresent
   service:
     port: 80
@@ -186,7 +186,7 @@ web:
 adminFrontend:
   image:
     repository: appflowyinc/admin_frontend
-    tag: "0.15.22"
+    tag: "0.17.13"
     pullPolicy: IfNotPresent
   service:
     port: 3000
@@ -203,7 +203,7 @@ ai:
   enabled: false
   image:
     repository: appflowyinc/appflowy_ai
-    tag: "0.15.22"
+    tag: "0.17.7"
     pullPolicy: IfNotPresent
   service:
     port: 5001
