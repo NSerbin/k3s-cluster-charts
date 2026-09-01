@@ -92,7 +92,9 @@ config:
         icon: mdi-school
       Travel:
         icon: mdi-airplane
-      Tools:
+      Media Tools:
+        icon: mdi-multimedia
+      Developer Tools:
         icon: mdi-tools
       Cluster:
         icon: mdi-kubernetes
@@ -109,30 +111,6 @@ config:
               abbr: TD
               href: https://tutorialsdojo.com/
               description: Tutorials Dojo
-
-    - Developer:
-        - GitHub:
-            - icon: github-light.png
-              abbr: GH
-              href: https://github.com/Nserbin
-              description: Github Repository
-        - GitLab:
-            - icon: gitlab.png
-              abbr: GL
-              href: https://gitlab.com/
-              description: Gitlab Repository
-        - GitGuardian:
-            - icon: ""
-              abbr: GG
-              href: https://dashboard.gitguardian.com/
-              description: Check leaks in repositories
-
-    - Social:
-        - Reddit:
-            - icon: reddit.png
-              abbr: RE
-              href: https://reddit.com/
-              description: Reddit
 
     - Entertainment:
         - Amazon Music:
@@ -263,6 +241,11 @@ config:
             server: k3s
             siteMonitor: http://freedium-web/
 
+        - Reddit:
+            icon: reddit.png
+            href: https://reddit.com/
+            description: Reddit
+
     - Networking:
         # RPi service. Kept here to restore quickly if needed.
         # - Pi-hole:
@@ -323,8 +306,7 @@ config:
     #           kubernetes: false
     #           key: {{HOMEPAGE_VAR_PORTAINER_KEY}}
 
-    - Tools:
-
+    - Media Tools:
         - BentoPDF:
             icon: mdi-file-pdf-box
             href: https://pdf.nserbin.com/
@@ -332,17 +314,7 @@ config:
             description: PDF Tools
             server: k3s
 
-        - Karakeep:
-            icon: mdi-bookmark-multiple
-            href: https://bookmarks.nserbin.com/
-            siteMonitor: http://karakeep-karakeep:3000
-            description: Bookmarks
-            server: k3s
-            widget:
-              type: karakeep
-              url: http://karakeep-karakeep:3000
-              key: {{HOMEPAGE_VAR_KARAKEEP_APIKEY}}
-       
+    - Developer Tools:
         - IT Tools:
             icon: it-tools.svg
             href: https://tools.nserbin.com/
@@ -356,6 +328,21 @@ config:
             siteMonitor: http://libredb-studio/
             description: Database cockpit
             server: k3s
+
+        - GitHub:
+            icon: github-light.png
+            href: https://github.com/Nserbin
+            description: Github Repository
+
+        - GitLab:
+            icon: gitlab.png
+            href: https://gitlab.com/
+            description: Gitlab Repository
+
+        - GitGuardian:
+            icon: mdi-shield-bug
+            href: https://dashboard.gitguardian.com/
+            description: Repository secret scanning
 
     - AI:
         - MCP Gateway:
@@ -376,6 +363,17 @@ config:
             description: Gemini
 
     - Knowledge:
+        - Karakeep:
+            icon: mdi-bookmark-multiple
+            href: https://bookmarks.nserbin.com/
+            siteMonitor: http://karakeep-karakeep:3000
+            description: Bookmarks
+            server: k3s
+            widget:
+              type: karakeep
+              url: http://karakeep-karakeep:3000
+              key: {{HOMEPAGE_VAR_KARAKEEP_APIKEY}}
+
         - AppFlowy:
             icon: appflowy.svg
             href: https://wiki.nserbin.com/
