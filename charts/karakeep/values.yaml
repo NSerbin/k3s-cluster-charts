@@ -93,7 +93,7 @@ meilisearch:
   enabled: true
   image:
     repository: getmeili/meilisearch
-    tag: "v1.53.0"
+    tag: "v1.33.1"
     pullPolicy: IfNotPresent
   service:
     enabled: true
