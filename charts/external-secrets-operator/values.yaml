@@ -721,8 +721,8 @@ externalSecrets:
           engineVersion: v2
           mergePolicy: Merge
           data:
-            DATABASE_URL: 'postgres://{{ .POSTGRES_USER }}:{{ .POSTGRES_PASSWORD }}@sure-postgres:5432/{{ .POSTGRES_DB }}'
-            REDIS_URL: 'redis://default:{{ .REDIS_PASSWORD }}@sure-redis:6379/0'
+            DATABASE_URL: 'postgres://{{ .POSTGRES_USER | urlquery }}:{{ .POSTGRES_PASSWORD | urlquery }}@sure-postgres:5432/{{ .POSTGRES_DB | urlquery }}'
+            REDIS_URL: 'redis://default:{{ .REDIS_PASSWORD | urlquery }}@sure-redis:6379/0'
       dataFrom:
         - extract:
             key: k8s/tools/finance/sure/app

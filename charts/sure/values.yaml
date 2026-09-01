@@ -34,7 +34,7 @@ rails:
 
 email:
   enabled: true
-  tlsEnabled: "true"
+  tlsEnabled: "false"
   tlsSkipVerify: "false"
 
 oidc:
