@@ -1,0 +1,7 @@
+apiVersion: v2
+name: excalidraw
+description: Self-managed chart for Excalidraw whiteboard
+type: application
+version: 0.1.0
+appVersion: "latest"
+home: https://github.com/excalidraw/excalidraw/releases

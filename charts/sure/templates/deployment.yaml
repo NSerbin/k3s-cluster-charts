@@ -47,6 +47,47 @@ spec:
           resources:
             {{- toYaml .Values.migrations.resources | nindent 12 }}
         {{- end }}
+        {{- if and .Values.oidc.enabled .Values.oidc.dbSeed.enabled }}
+        - name: seed-sso-provider
+          image: {{ include "sure.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["bash", "-lc"]
+          args:
+            - |
+              bundle exec rails runner <<'RUBY'
+              provider = SsoProvider.find_or_initialize_by(name: ENV.fetch("SURE_OIDC_PROVIDER_NAME"))
+              settings = {
+                "default_role" => ENV.fetch("SURE_OIDC_DEFAULT_ROLE", "admin")
+              }
+
+              provider.assign_attributes(
+                strategy: "openid_connect",
+                label: ENV.fetch("OIDC_BUTTON_LABEL", "Authentik"),
+                icon: ENV["OIDC_BUTTON_ICON"].presence,
+                enabled: true,
+                issuer: ENV.fetch("OIDC_ISSUER"),
+                client_id: ENV.fetch("OIDC_CLIENT_ID"),
+                client_secret: ENV.fetch("OIDC_CLIENT_SECRET"),
+                redirect_uri: ENV.fetch("OIDC_REDIRECT_URI"),
+                settings: settings
+              )
+              provider.save!
+
+              Setting.onboarding_state = ENV.fetch("ONBOARDING_STATE", "closed")
+              ProviderLoader.clear_cache
+              puts "Seeded SSO provider #{provider.name}"
+              RUBY
+          env:
+            {{- include "sure.env" . | nindent 12 }}
+            - name: SURE_OIDC_PROVIDER_NAME
+              value: {{ .Values.oidc.dbSeed.providerName | quote }}
+            - name: SURE_OIDC_DEFAULT_ROLE
+              value: {{ .Values.oidc.dbSeed.defaultRole | quote }}
+          securityContext:
+            {{- toYaml .Values.securityContext | nindent 12 }}
+          resources:
+            {{- toYaml .Values.migrations.resources | nindent 12 }}
+        {{- end }}
       containers:
         - name: sure
           image: {{ include "sure.image" . | quote }}

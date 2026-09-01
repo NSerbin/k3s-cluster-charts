@@ -102,6 +102,11 @@ ingress:
     originRequest:
       httpHostHeader: "money.nserbin.com"
 
+  - hostname: "whiteboard.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "whiteboard.nserbin.com"
+
   - service: "http_status:404"
 
 resources:

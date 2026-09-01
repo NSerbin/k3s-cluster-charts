@@ -1,0 +1,56 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: "excalidraw"
+
+image:
+  repository: excalidraw/excalidraw
+  tag: "latest"
+  digest: "sha256:4542f30bea392b833822d0e7db4fa2220e6706ca962c082add2665159fa91758"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 80
+
+traefik:
+  ingressRoute:
+    enabled: true
+    host: whiteboard.nserbin.com
+    entryPoints:
+      - web
+    pathPrefixes:
+      - /
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+resources:
+  requests:
+    cpu: 25m
+    memory: 32Mi
+  limits:
+    cpu: 250m
+    memory: 128Mi
+
+podSecurityContext:
+  fsGroup: 101
+  fsGroupChangePolicy: OnRootMismatch
+
+automountServiceAccountToken: false
+
+securityContext:
+  runAsNonRoot: true
+  runAsUser: 101
+  runAsGroup: 101
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

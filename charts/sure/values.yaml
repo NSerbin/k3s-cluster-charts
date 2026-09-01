@@ -21,7 +21,7 @@ rails:
   logToStdout: "true"
   serveStaticFiles: "true"
   selfHosted: "true"
-  onboardingState: open
+  onboardingState: closed
   forceSsl: "true"
   assumeSsl: "true"
   requireEmailConfirmation: "true"
@@ -39,7 +39,7 @@ email:
 
 oidc:
   enabled: true
-  providersSource: yaml
+  providersSource: db
   localLoginEnabled: "true"
   localAdminOverrideEnabled: "true"
   passkeyLoginEnabled: "true"
@@ -48,6 +48,11 @@ oidc:
   redirectUri: https://money.nserbin.com/auth/openid_connect/callback
   buttonLabel: Authentik
   buttonIcon: key
+  dbSeed:
+    enabled: true
+    providerName: openid_connect
+    defaultRole: admin
+    roleMapping: {}
 
 storage:
   persistence:

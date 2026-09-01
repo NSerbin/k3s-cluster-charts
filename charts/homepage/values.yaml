@@ -384,6 +384,13 @@ config:
             description: Database cockpit
             server: k3s
 
+        - Excalidraw:
+            icon: mdi-draw
+            href: https://whiteboard.nserbin.com/
+            siteMonitor: http://excalidraw/
+            description: Whiteboard
+            server: k3s
+
         # RPi service. Kept here to restore quickly if needed.
         # - SSH:
         #     icon: shell.svg

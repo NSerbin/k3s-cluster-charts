@@ -1,0 +1,27 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: excalidraw
+  namespace: argocd
+spec:
+  revisionHistoryLimit: 5
+  project: default
+
+  source:
+    repoURL: "https://github.com/NSerbin/k3s-cluster-charts.git"
+    targetRevision: "main"
+    path: "charts/excalidraw"
+    helm:
+      valueFiles:
+        - values.yaml
+
+  destination:
+    server: "https://kubernetes.default.svc"
+    namespace: tools
+
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
