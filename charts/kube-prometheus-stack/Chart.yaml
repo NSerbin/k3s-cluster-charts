@@ -7,5 +7,5 @@ home: https://github.com/prometheus-community/helm-charts/releases
 
 dependencies:
   - name: kube-prometheus-stack
-    version: 88.5.4
+    version: 88.6.2
     repository: "https://prometheus-community.github.io/helm-charts"
