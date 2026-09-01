@@ -24,7 +24,7 @@ rails:
   onboardingState: closed
   forceSsl: "true"
   assumeSsl: "true"
-  requireEmailConfirmation: "true"
+  requireEmailConfirmation: "false"
   activeStorageService: local
   appHost: money.nserbin.com
   appDomain: money.nserbin.com
@@ -38,7 +38,7 @@ email:
   tlsSkipVerify: "false"
 
 oidc:
-  enabled: true
+  enabled: false
   providersSource: db
   localLoginEnabled: "true"
   localAdminOverrideEnabled: "true"
