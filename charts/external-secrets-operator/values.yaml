@@ -249,6 +249,20 @@ externalSecrets:
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
+        - secretKey: SURE_OIDC_CLIENT_ID
+          remoteRef:
+            key: k8s/tools/finance/sure/oidc
+            property: OIDC_CLIENT_ID
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SURE_OIDC_CLIENT_SECRET
+          remoteRef:
+            key: k8s/tools/finance/sure/oidc
+            property: OIDC_CLIENT_SECRET
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: crowdsec-secrets
       namespace: security
@@ -694,44 +708,67 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None
 
-    - name: monetr-secrets-app
+    - name: sure-secrets-app
       namespace: tools
       secretStoreRef:
         name: vault
         kind: ClusterSecretStore
       target:
-        name: monetr-secrets-app
+        name: sure-secrets-app
         creationPolicy: Owner
         deletionPolicy: Retain
+        template:
+          engineVersion: v2
+          mergePolicy: Merge
+          data:
+            DATABASE_URL: 'postgres://{{ .POSTGRES_USER }}:{{ .POSTGRES_PASSWORD }}@sure-postgres:5432/{{ .POSTGRES_DB }}'
+            REDIS_URL: 'redis://default:{{ .REDIS_PASSWORD }}@sure-redis:6379/0'
       dataFrom:
         - extract:
-            key: k8s/tools/finance/monetr/app
+            key: k8s/tools/finance/sure/app
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - extract:
+            key: k8s/tools/finance/sure/db
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - extract:
+            key: k8s/tools/finance/sure/oidc
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
       data:
-        - secretKey: MONETR_EMAIL_SMTP_USERNAME
+        - secretKey: SMTP_FROM
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_FROM
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_USERNAME
           remoteRef:
             key: k8s/core/tools/emails/smtp
             property: SMTP_USERNAME
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
-        - secretKey: MONETR_EMAIL_SMTP_PASSWORD
+        - secretKey: SMTP_PASSWORD
           remoteRef:
             key: k8s/core/tools/emails/smtp
             property: SMTP_PASSWORD
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
-        - secretKey: MONETR_EMAIL_SMTP_HOST
+        - secretKey: SMTP_HOST
           remoteRef:
             key: k8s/core/tools/emails/smtp
             property: SMTP_HOST
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
-        - secretKey: MONETR_EMAIL_SMTP_PORT
+        - secretKey: SMTP_PORT
           remoteRef:
             key: k8s/core/tools/emails/smtp
             property: SMTP_PORT

@@ -1,0 +1,8 @@
+apiVersion: v2
+name: sure
+description: Self-hosted Sure personal finance app with PostgreSQL, Redis, Traefik and ESO.
+type: application
+version: 0.1.0
+appVersion: "0.7.5-alpha.1"
+home: https://github.com/we-promise/sure/releases
+icon: https://github.com/we-promise.png

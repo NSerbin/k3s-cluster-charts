@@ -420,10 +420,10 @@ config:
             server: k3s
 
     - Finance:
-        - monetr:
+        - Sure:
             icon: mdi-cash-multiple
             href: https://money.nserbin.com/
-            siteMonitor: http://monetr:4000/api/health
+            siteMonitor: http://sure/up
             description: Personal finance
             server: k3s
 

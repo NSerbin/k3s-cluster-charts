@@ -2,10 +2,10 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ include "monetr.fullname" . }}
+  name: {{ include "sure.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "monetr.labels" . | nindent 4 }}
+    {{- include "sure.labels" . | nindent 4 }}
 spec:
   entryPoints:
     {{- toYaml .Values.traefik.ingressRoute.entryPoints | nindent 4 }}
@@ -22,7 +22,7 @@ spec:
         {{- end }}
       {{- end }}
       services:
-        - name: {{ include "monetr.fullname" . }}
+        - name: {{ include "sure.fullname" . }}
           port: {{ .Values.service.port }}
           scheme: http
   {{- if .Values.traefik.ingressRoute.tls.enabled }}

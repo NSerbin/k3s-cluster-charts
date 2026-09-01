@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "monetr.postgresName" . }}
+  name: {{ include "sure.postgresName" . }}
   labels:
-    {{- include "monetr.labels" . | nindent 4 }}
+    {{- include "sure.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
 spec:
-  serviceName: {{ include "monetr.postgresName" . }}
+  serviceName: {{ include "sure.postgresName" . }}
   replicas: 1
   selector:
     matchLabels:
-      {{- include "monetr.selectorLabels" . | nindent 6 }}
+      {{- include "sure.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: postgres
   template:
     metadata:
       labels:
-        {{- include "monetr.selectorLabels" . | nindent 8 }}
+        {{- include "sure.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: postgres
     spec:
       securityContext:
@@ -64,14 +64,14 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "monetr.postgresName" . }}-data
+            claimName: {{ include "sure.postgresName" . }}-data
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "monetr.postgresName" . }}
+  name: {{ include "sure.postgresName" . }}
   labels:
-    {{- include "monetr.labels" . | nindent 4 }}
+    {{- include "sure.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
 spec:
   type: ClusterIP
@@ -80,5 +80,5 @@ spec:
       port: {{ .Values.postgres.service.port }}
       targetPort: postgres
   selector:
-    {{- include "monetr.selectorLabels" . | nindent 4 }}
+    {{- include "sure.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: postgres

@@ -1,14 +1,14 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: monetr
+  name: sure
   namespace: argocd
 spec:
   project: default
   source:
     repoURL: https://github.com/NSerbin/k3s-cluster-charts.git
     targetRevision: main
-    path: charts/monetr
+    path: charts/sure
     helm:
       valueFiles:
         - values.yaml

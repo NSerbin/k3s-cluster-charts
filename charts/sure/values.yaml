@@ -1,0 +1,176 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: "sure"
+
+image:
+  repository: ghcr.io/we-promise/sure
+  tag: "0.7.5-alpha.1"
+  pullPolicy: IfNotPresent
+
+waitImage:
+  repository: busybox
+  tag: "1.36.1"
+  pullPolicy: IfNotPresent
+
+secrets:
+  existingSecret: sure-secrets-app
+
+rails:
+  env: production
+  logToStdout: "true"
+  serveStaticFiles: "true"
+  selfHosted: "true"
+  onboardingState: open
+  forceSsl: "true"
+  assumeSsl: "true"
+  requireEmailConfirmation: "true"
+  activeStorageService: local
+  appHost: money.nserbin.com
+  appDomain: money.nserbin.com
+  appProtocol: https
+  appUrl: https://money.nserbin.com
+  extraEnv: {}
+
+email:
+  enabled: true
+  tlsEnabled: "true"
+  tlsSkipVerify: "false"
+
+oidc:
+  enabled: true
+  providersSource: yaml
+  localLoginEnabled: "true"
+  localAdminOverrideEnabled: "true"
+  passkeyLoginEnabled: "true"
+  jitMode: create_and_link
+  allowedDomains: ""
+  redirectUri: https://money.nserbin.com/auth/openid_connect/callback
+  buttonLabel: Authentik
+  buttonIcon: key
+
+storage:
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+
+web:
+  replicas: 1
+  command: []
+  args: []
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+worker:
+  enabled: true
+  replicas: 1
+  command: ["bash", "-lc"]
+  args:
+    - bundle exec sidekiq -C config/sidekiq.yml
+  resources:
+    requests:
+      cpu: 100m
+      memory: 384Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+migrations:
+  enabled: true
+  command: ["bash", "-lc"]
+  args: |
+    until nc -z sure-postgres 5432; do echo "Waiting for Postgres..."; sleep 2; done
+    bundle exec rails db:prepare
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+postgres:
+  image:
+    repository: postgres
+    tag: "17-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+redis:
+  image:
+    repository: redis
+    tag: "7-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: false
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - web
+    host: money.nserbin.com
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
