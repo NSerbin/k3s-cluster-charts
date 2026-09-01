@@ -86,9 +86,7 @@ worker:
 migrations:
   enabled: true
   command: ["bash", "-lc"]
-  args: |
-    until nc -z sure-postgres 5432; do echo "Waiting for Postgres..."; sleep 2; done
-    bundle exec rails db:prepare
+  args: bundle exec rails db:prepare
   resources:
     requests:
       cpu: 50m
