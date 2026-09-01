@@ -50,6 +50,24 @@ securityContext:
   capabilities:
     drop:
       - ALL
+    add:
+      - NET_BIND_SERVICE
+
+extraVolumeMounts:
+  - name: nginx-cache
+    mountPath: /var/cache/nginx
+  - name: nginx-run
+    mountPath: /var/run
+  - name: tmp
+    mountPath: /tmp
+
+extraVolumes:
+  - name: nginx-cache
+    emptyDir: {}
+  - name: nginx-run
+    emptyDir: {}
+  - name: tmp
+    emptyDir: {}
 
 nodeSelector: {}
 tolerations: []
