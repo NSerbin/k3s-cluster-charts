@@ -1,0 +1,8 @@
+apiVersion: v2
+name: paperless-ngx
+description: Self-managed Paperless-ngx deployment with PostgreSQL, Redis, Traefik, ESO and Authentik OIDC.
+type: application
+version: 0.1.0
+appVersion: "3.1.2"
+home: https://github.com/paperless-ngx/paperless-ngx/releases
+icon: https://github.com/paperless-ngx.png

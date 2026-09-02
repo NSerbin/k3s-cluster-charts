@@ -1,0 +1,144 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: "paperless-ngx"
+
+image:
+  repository: ghcr.io/paperless-ngx/paperless-ngx
+  tag: "3.1.2"
+  pullPolicy: IfNotPresent
+
+waitImage:
+  repository: busybox
+  tag: "1.36.1"
+  pullPolicy: IfNotPresent
+
+secrets:
+  existingSecret: paperless-ngx-secrets-app
+
+config:
+  url: https://paperless.nserbin.com
+  timeZone: Europe/Lisbon
+  ocrLanguage: spa+eng+por
+  apps: allauth.socialaccount.providers.openid_connect
+  logoutRedirectUrl: https://auth.nserbin.com/application/o/paperless/end-session/
+  socialAutoSignup: "true"
+  socialAccountAllowSignups: "true"
+  socialAccountSyncGroups: "true"
+  disableRegularLogin: "false"
+  redirectLoginToSso: "false"
+  allowedHosts: paperless.nserbin.com,paperless-ngx,paperless-ngx.tools,paperless-ngx.tools.svc.cluster.local
+  trustedOrigins: https://paperless.nserbin.com
+  extraEnv: {}
+
+postgres:
+  image:
+    repository: postgres
+    tag: "17-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+redis:
+  image:
+    repository: redis
+    tag: "7-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+persistence:
+  data:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+  media:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 20Gi
+  export:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+  consume:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 5Gi
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 8000
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: false
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 768Mi
+  limits:
+    cpu: 2000m
+    memory: 2Gi
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - web
+    host: paperless.nserbin.com
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

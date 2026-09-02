@@ -107,6 +107,11 @@ ingress:
     originRequest:
       httpHostHeader: "whiteboard.nserbin.com"
 
+  - hostname: "paperless.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "paperless.nserbin.com"
+
   - service: "http_status:404"
 
 resources:

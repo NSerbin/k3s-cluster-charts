@@ -1,0 +1,13 @@
+Paperless-ngx expects this ESO-managed Kubernetes secret:
+
+  {{ .Values.secrets.existingSecret }}
+
+Vault paths:
+
+  kv/k8s/tools/documents/paperless/app
+  kv/k8s/tools/documents/paperless/db
+  kv/k8s/tools/documents/paperless/oidc
+
+Public URL:
+
+  https://{{ .Values.traefik.ingressRoute.host }}

@@ -388,6 +388,13 @@ config:
             description: Whiteboard
             server: k3s
 
+        - Paperless-ngx:
+            icon: paperless-ngx.svg
+            href: https://paperless.nserbin.com/
+            siteMonitor: http://paperless-ngx/
+            description: Document archive
+            server: k3s
+
     - Travel:
         - TREK:
             icon: mdi-map-marker-path
