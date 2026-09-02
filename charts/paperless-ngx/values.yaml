@@ -119,6 +119,12 @@ securityContext:
   capabilities:
     drop:
       - ALL
+    add:
+      - CHOWN
+      - DAC_OVERRIDE
+      - FOWNER
+      - SETGID
+      - SETUID
 
 resources:
   requests:
