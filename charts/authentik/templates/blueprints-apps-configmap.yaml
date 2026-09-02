@@ -66,7 +66,7 @@ data:
           signing_kp: !Find [authentik_crypto.certificatekeypair, [name, k3s-appflowy-saml]]
           verification_kp: !Find [authentik_crypto.certificatekeypair, [name, k3s-appflowy-saml]]
           name_id_mapping: !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/email]]
-          default_relay_state: https://wiki.nserbin.com/auth/callback
+          default_relay_state: https://wiki.nserbin.com/app
           sign_assertion: true
           sign_response: true
           digest_algorithm: http://www.w3.org/2001/04/xmlenc#sha256

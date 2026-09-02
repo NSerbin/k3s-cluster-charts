@@ -29,8 +29,6 @@ spec:
           envFrom:
             - configMapRef:
                 name: {{ include "appflowy.fullname" . }}-config
-            - secretRef:
-                name: {{ required "secrets.appSecretName is required" .Values.secrets.appSecretName }}
           env:
             - name: POSTGRES_USER
               valueFrom:
@@ -55,6 +53,63 @@ spec:
               value: {{ .Values.config.gotrueMailerAutoconfirm | quote }}
             - name: GOTRUE_MAILER_EXTERNAL_HOSTS
               value: {{ .Values.config.fqdn | quote }}
+            - name: GOTRUE_ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_ADMIN_EMAIL
+            - name: GOTRUE_ADMIN_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_ADMIN_PASSWORD
+            - name: GOTRUE_JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_JWT_SECRET
+            - name: GOTRUE_SMTP_HOST
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_SMTP_HOST
+                  optional: true
+            - name: GOTRUE_SMTP_PORT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_SMTP_PORT
+                  optional: true
+            - name: GOTRUE_SMTP_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_SMTP_USER
+                  optional: true
+            - name: GOTRUE_SMTP_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_SMTP_PASS
+                  optional: true
+            - name: GOTRUE_SMTP_ADMIN_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_SMTP_ADMIN_EMAIL
+                  optional: true
+            {{- if eq (toString .Values.config.samlEnabled) "true" }}
+            - name: GOTRUE_SAML_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: GOTRUE_SAML_PRIVATE_KEY
+            - name: AUTH_SAML_CERT
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.appSecretName }}
+                  key: AUTH_SAML_CERT
+            {{- end }}
           ports:
             - name: http
               containerPort: {{ .Values.gotrue.service.port }}
