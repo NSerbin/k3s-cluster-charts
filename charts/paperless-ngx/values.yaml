@@ -25,6 +25,8 @@ config:
   logoutRedirectUrl: https://auth.nserbin.com/application/o/paperless/end-session/
   socialAutoSignup: "true"
   socialAccountAllowSignups: "true"
+  socialAccountEmailAuthentication: "true"
+  socialAccountEmailAuthenticationAutoConnect: "true"
   socialAccountSyncGroups: "true"
   disableRegularLogin: "false"
   redirectLoginToSso: "false"

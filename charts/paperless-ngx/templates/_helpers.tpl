@@ -113,6 +113,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: {{ .Values.config.socialAutoSignup | quote }}
 - name: PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS
   value: {{ .Values.config.socialAccountAllowSignups | quote }}
+- name: PAPERLESS_SOCIALACCOUNT_EMAIL_AUTHENTICATION
+  value: {{ .Values.config.socialAccountEmailAuthentication | quote }}
+- name: PAPERLESS_SOCIALACCOUNT_EMAIL_AUTHENTICATION_AUTO_CONNECT
+  value: {{ .Values.config.socialAccountEmailAuthenticationAutoConnect | quote }}
 - name: PAPERLESS_SOCIAL_ACCOUNT_SYNC_GROUPS
   value: {{ .Values.config.socialAccountSyncGroups | quote }}
 - name: PAPERLESS_DISABLE_REGULAR_LOGIN
