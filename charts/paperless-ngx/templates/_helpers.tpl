@@ -103,6 +103,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: {{ .Values.config.timeZone | quote }}
 - name: PAPERLESS_OCR_LANGUAGE
   value: {{ .Values.config.ocrLanguage | quote }}
+- name: PAPERLESS_OCR_LANGUAGES
+  value: {{ .Values.config.ocrLanguages | quote }}
 - name: PAPERLESS_APPS
   value: {{ .Values.config.apps | quote }}
 - name: PAPERLESS_LOGOUT_REDIRECT_URL

@@ -20,6 +20,7 @@ config:
   url: https://paperless.nserbin.com
   timeZone: Europe/Lisbon
   ocrLanguage: spa+eng+por
+  ocrLanguages: por
   apps: allauth.socialaccount.providers.openid_connect
   logoutRedirectUrl: https://auth.nserbin.com/application/o/paperless/end-session/
   socialAutoSignup: "true"

@@ -48,6 +48,9 @@ spec:
             httpGet:
               path: /
               port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.traefik.ingressRoute.host | quote }}
             initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
@@ -56,6 +59,9 @@ spec:
             httpGet:
               path: /
               port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.traefik.ingressRoute.host | quote }}
             initialDelaySeconds: 90
             periodSeconds: 30
             timeoutSeconds: 5
