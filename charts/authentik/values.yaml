@@ -5,14 +5,14 @@ fullnameOverride: "authentik"
 
 image:
   repository: ghcr.io/goauthentik/server
-  tag: "2026.8.0"
+  tag: "2026.8.1"
   pullPolicy: IfNotPresent
 
 worker:
   replicaCount: 1
   image:
     repository: ghcr.io/goauthentik/server
-    tag: "2026.8.0"
+    tag: "2026.8.1"
     pullPolicy: IfNotPresent
 
 service:
