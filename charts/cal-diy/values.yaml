@@ -43,11 +43,11 @@ web:
   replicas: 1
   resources:
     requests:
-      cpu: 250m
-      memory: 768Mi
+      cpu: 75m
+      memory: 512Mi
     limits:
-      cpu: 1500m
-      memory: 2Gi
+      cpu: 1000m
+      memory: 1536Mi
 
 migrations:
   enabled: true
@@ -55,14 +55,14 @@ migrations:
   args: yarn workspace @calcom/prisma db-deploy
   resources:
     requests:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 50m
+      memory: 384Mi
     limits:
-      cpu: 1000m
+      cpu: 750m
       memory: 1Gi
 
 studio:
-  enabled: true
+  enabled: false
   replicas: 1
   service:
     type: ClusterIP
@@ -99,10 +99,10 @@ postgres:
     size: 10Gi
   resources:
     requests:
-      cpu: 100m
+      cpu: 50m
       memory: 256Mi
     limits:
-      cpu: 1000m
+      cpu: 750m
       memory: 1Gi
 
 redis:
@@ -120,10 +120,10 @@ redis:
     size: 2Gi
   resources:
     requests:
-      cpu: 50m
+      cpu: 25m
       memory: 128Mi
     limits:
-      cpu: 500m
+      cpu: 250m
       memory: 512Mi
 
 service:
