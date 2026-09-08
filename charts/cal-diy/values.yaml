@@ -62,7 +62,7 @@ migrations:
       memory: 1Gi
 
 studio:
-  enabled: true
+  enabled: false
   replicas: 1
   service:
     type: ClusterIP
