@@ -62,7 +62,7 @@ migrations:
       memory: 1Gi
 
 studio:
-  enabled: false
+  enabled: true
   replicas: 1
   service:
     type: ClusterIP
@@ -78,8 +78,8 @@ studio:
     - "5555"
   resources:
     requests:
-      cpu: 100m
-      memory: 512Mi
+      cpu: 25m
+      memory: 384Mi
     limits:
       cpu: 1000m
       memory: 1Gi
