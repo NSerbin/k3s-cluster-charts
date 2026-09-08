@@ -42,6 +42,13 @@ crowdsec:
     pullPolicy: IfNotPresent
 
   agent:
+    resources:
+      requests:
+        cpu: 35m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 250Mi
     metrics:
       enabled: true
       serviceMonitor:
@@ -73,6 +80,13 @@ crowdsec:
   lapi:
     replicas: 1
     storeCAPICredentialsInSecret: false
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 500m
+        memory: 500Mi
     metrics:
       enabled: true
       serviceMonitor:

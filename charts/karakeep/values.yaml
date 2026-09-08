@@ -83,8 +83,8 @@ chrome:
         - SYS_RESOURCE
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 25m
+      memory: 192Mi
     limits:
       cpu: 1000m
       memory: 1Gi
@@ -106,8 +106,8 @@ meilisearch:
     size: 5Gi
   resources:
     requests:
-      cpu: 100m
-      memory: 256Mi
+      cpu: 10m
+      memory: 64Mi
     limits:
       cpu: 1000m
       memory: 1Gi
@@ -127,7 +127,7 @@ traefik:
 
 resources:
   requests:
-    cpu: 100m
+    cpu: 75m
     memory: 256Mi
   limits:
     cpu: 1000m

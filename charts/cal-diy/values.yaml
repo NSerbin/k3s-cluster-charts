@@ -120,7 +120,7 @@ redis:
     size: 2Gi
   resources:
     requests:
-      cpu: 25m
+      cpu: 1m
       memory: 128Mi
     limits:
       cpu: 250m

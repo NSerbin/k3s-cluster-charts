@@ -27,15 +27,15 @@ containerPort: 1337
 resources:
   yopass:
     requests:
-      cpu: 100m
-      memory: 50Mi
+      cpu: 10m
+      memory: 32Mi
     limits:
       cpu: 100m
       memory: 50Mi
   memcached:
     requests:
-      cpu: 100m
-      memory: 100Mi
+      cpu: 10m
+      memory: 32Mi
     limits:
       cpu: 100m
       memory: 100Mi
