@@ -790,6 +790,70 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None
 
+    - name: cal-diy-secrets-app
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: cal-diy-secrets-app
+        creationPolicy: Owner
+        deletionPolicy: Retain
+        template:
+          engineVersion: v2
+          mergePolicy: Merge
+          data:
+            DATABASE_URL: 'postgresql://{{ .POSTGRES_USER | urlquery }}:{{ .POSTGRES_PASSWORD | urlquery }}@cal-diy-postgres:5432/{{ .POSTGRES_DB | urlquery }}'
+            DATABASE_DIRECT_URL: 'postgresql://{{ .POSTGRES_USER | urlquery }}:{{ .POSTGRES_PASSWORD | urlquery }}@cal-diy-postgres:5432/{{ .POSTGRES_DB | urlquery }}'
+            REDIS_URL: 'redis://default:{{ .REDIS_PASSWORD | urlquery }}@cal-diy-redis:6379/0'
+      dataFrom:
+        - extract:
+            key: k8s/tools/productivity/cal-diy/app
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - extract:
+            key: k8s/tools/productivity/cal-diy/db
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+      data:
+        - secretKey: SMTP_FROM
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_FROM
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_USERNAME
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_USERNAME
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_PASSWORD
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_HOST
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_HOST
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: SMTP_PORT
+          remoteRef:
+            key: k8s/core/tools/emails/smtp
+            property: SMTP_PORT
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
     - name: paperless-ngx-secrets-app
       namespace: tools
       secretStoreRef:

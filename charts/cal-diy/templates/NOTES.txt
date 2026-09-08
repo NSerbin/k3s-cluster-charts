@@ -1,0 +1,7 @@
+Cal.diy is configured at:
+- App: https://{{ .Values.traefik.ingressRoute.host }}
+{{- if .Values.studio.enabled }}
+- Prisma Studio: internal service {{ include "cal-diy.studioName" . }}:{{ .Values.studio.service.port }}
+{{- end }}
+
+Secrets are expected in Kubernetes secret {{ .Values.secrets.existingSecret }}.

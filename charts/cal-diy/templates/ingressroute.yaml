@@ -1,0 +1,69 @@
+{{- if .Values.traefik.ingressRoute.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "cal-diy.fullname" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cal-diy.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    {{- toYaml .Values.traefik.ingressRoute.entryPoints | nindent 4 }}
+  routes:
+    - match: Host(`{{ .Values.traefik.ingressRoute.host }}`) && PathPrefix(`/`)
+      kind: Rule
+      {{- if .Values.traefik.ingressRoute.middlewares }}
+      middlewares:
+        {{- range .Values.traefik.ingressRoute.middlewares }}
+        - name: {{ .name }}
+          {{- if .namespace }}
+          namespace: {{ .namespace }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      services:
+        - name: {{ include "cal-diy.fullname" . }}
+          port: {{ .Values.service.port }}
+          scheme: http
+  {{- if .Values.traefik.ingressRoute.tls.enabled }}
+  tls:
+    {{- if .Values.traefik.ingressRoute.tls.secretName }}
+    secretName: {{ .Values.traefik.ingressRoute.tls.secretName | quote }}
+    {{- end }}
+  {{- end }}
+{{- end }}
+---
+{{- if and .Values.studio.enabled .Values.traefik.studioIngressRoute.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "cal-diy.studioName" . }}
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "cal-diy.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    {{- toYaml .Values.traefik.studioIngressRoute.entryPoints | nindent 4 }}
+  routes:
+    - match: Host(`{{ .Values.traefik.studioIngressRoute.host }}`) && PathPrefix(`/`)
+      kind: Rule
+      {{- if .Values.traefik.studioIngressRoute.middlewares }}
+      middlewares:
+        {{- range .Values.traefik.studioIngressRoute.middlewares }}
+        - name: {{ .name }}
+          {{- if .namespace }}
+          namespace: {{ .namespace }}
+          {{- end }}
+        {{- end }}
+      {{- end }}
+      services:
+        - name: {{ include "cal-diy.studioName" . }}
+          port: {{ .Values.studio.service.port }}
+          scheme: http
+  {{- if .Values.traefik.studioIngressRoute.tls.enabled }}
+  tls:
+    {{- if .Values.traefik.studioIngressRoute.tls.secretName }}
+    secretName: {{ .Values.traefik.studioIngressRoute.tls.secretName | quote }}
+    {{- end }}
+  {{- end }}
+{{- end }}

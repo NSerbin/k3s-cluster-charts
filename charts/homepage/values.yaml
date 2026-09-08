@@ -381,6 +381,13 @@ config:
             description: Notes and workspace
             server: k3s
 
+        - Cal.diy:
+            icon: mdi-calendar-clock
+            href: https://calendar.nserbin.com/
+            siteMonitor: http://cal-diy/
+            description: Scheduling
+            server: k3s
+
         - Excalidraw:
             icon: mdi-draw
             href: https://whiteboard.nserbin.com/

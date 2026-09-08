@@ -1,0 +1,172 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: "cal-diy"
+
+image:
+  # Cal.diy docs reference calcom/cal.diy, but the v6.2.0 image is currently
+  # published under calcom/cal.com. Keep this pinned and revisit before upgrades.
+  repository: calcom/cal.com
+  tag: "v6.2.0"
+  pullPolicy: IfNotPresent
+
+waitImage:
+  repository: busybox
+  tag: "1.36.1"
+  pullPolicy: IfNotPresent
+
+secrets:
+  existingSecret: cal-diy-secrets-app
+
+app:
+  nodeEnv: production
+  webappUrl: https://calendar.nserbin.com
+  websiteUrl: https://calendar.nserbin.com
+  embedLibUrl: https://calendar.nserbin.com/embed/embed.js
+  apiV2Url: https://calendar.nserbin.com/api/v2
+  allowedHostnames: '"calendar.nserbin.com","cal-diy","cal-diy.tools","cal-diy.tools.svc","cal-diy.tools.svc.cluster.local"'
+  reservedSubdomains: '"app","auth","docs","design","console","go","status","api","saml","www","matrix","developer","cal","my","team","support","security","blog","learn","admin"'
+  telemetryDisabled: "1"
+  cronEnableAppSync: "false"
+  loggerLevel: "3"
+  licenseConsent: "agree"
+  appName: "Cal.diy"
+  companyName: "NSerbin"
+  supportEmail: "nicolas.serbin@gmail.com"
+  extraEnv: {}
+
+email:
+  enabled: true
+  fromName: "NSerbin Calendar"
+
+web:
+  replicas: 1
+  resources:
+    requests:
+      cpu: 250m
+      memory: 768Mi
+    limits:
+      cpu: 1500m
+      memory: 2Gi
+
+migrations:
+  enabled: true
+  command: ["sh", "-ec"]
+  args: yarn workspace @calcom/prisma db-deploy
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+studio:
+  enabled: true
+  replicas: 1
+  service:
+    type: ClusterIP
+    port: 5555
+    targetPort: 5555
+  command:
+    - npx
+    - prisma
+    - studio
+    - --hostname
+    - 0.0.0.0
+    - --port
+    - "5555"
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+postgres:
+  image:
+    repository: postgres
+    tag: "16-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+
+redis:
+  image:
+    repository: redis
+    tag: "7-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: false
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - web
+    host: calendar.nserbin.com
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+  studioIngressRoute:
+    enabled: false
+    entryPoints:
+      - web
+    host: calendar.nserbin.com
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

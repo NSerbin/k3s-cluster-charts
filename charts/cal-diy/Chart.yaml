@@ -1,0 +1,8 @@
+apiVersion: v2
+name: cal-diy
+description: Self-hosted Cal.diy scheduling app with PostgreSQL, Redis, Prisma Studio, Traefik and ESO.
+type: application
+version: 0.1.0
+appVersion: "v6.2.0"
+home: https://github.com/calcom/cal.diy
+icon: https://cal.com/android-chrome-192x192.png
