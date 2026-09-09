@@ -9,4 +9,4 @@ home: https://github.com/crowdsecurity/crowdsec/releases
 dependencies:
   - name: crowdsec
     repository: "https://crowdsecurity.github.io/helm-charts"
-    version: 0.24.0
+    version: 0.24.2
