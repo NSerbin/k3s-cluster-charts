@@ -21,15 +21,6 @@ data:
         attrs:
           is_superuser: false
 
-      - model: authentik_core.user
-        identifiers:
-          username: bebecita
-        attrs:
-          email: smunoz.lau@gmail.com
-          name: bebecita
-          groups:
-            - !KeyOf k3s-family-group
-
       - model: authentik_providers_oauth2.oauth2provider
         id: k3s-trek-provider
         identifiers:

@@ -18,7 +18,7 @@ config:
   postgresDatabase: appflowy
   accessControl: "true"
   gotrueDisableSignup: "false"
-  gotrueMailerAutoconfirm: "false"
+  gotrueMailerAutoconfirm: "true"
   gotrueJwtExp: "604800"
   samlEnabled: "true"
   aiEnabled: "false"
