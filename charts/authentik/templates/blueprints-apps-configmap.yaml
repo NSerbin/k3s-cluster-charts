@@ -14,6 +14,22 @@ data:
       labels:
         blueprints.goauthentik.io/instantiate: "true"
     entries:
+      - model: authentik_core.group
+        id: k3s-family-group
+        identifiers:
+          name: Family
+        attrs:
+          is_superuser: false
+
+      - model: authentik_core.user
+        identifiers:
+          username: bebecita
+        attrs:
+          email: smunoz.lau@gmail.com
+          name: bebecita
+          groups:
+            - !KeyOf k3s-family-group
+
       - model: authentik_providers_oauth2.oauth2provider
         id: k3s-trek-provider
         identifiers:
@@ -45,6 +61,20 @@ data:
           provider: !KeyOf k3s-trek-provider
           name: k3s-trek
           meta_launch_url: https://travels.nserbin.com
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, trek]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, trek]]
+          order: 2
+        attrs:
+          group: !KeyOf k3s-family-group
 
       - model: authentik_crypto.certificatekeypair
         identifiers:
@@ -84,6 +114,20 @@ data:
           name: k3s-appflowy
           meta_launch_url: https://wiki.nserbin.com
 
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, appflowy]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, appflowy]]
+          order: 2
+        attrs:
+          group: !KeyOf k3s-family-group
+
       - model: authentik_providers_oauth2.oauth2provider
         id: k3s-homepage-provider
         identifiers:
@@ -115,6 +159,13 @@ data:
           provider: !KeyOf k3s-homepage-provider
           name: k3s-homepage
           meta_launch_url: https://home.nserbin.com
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, homepage]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
 
       - model: authentik_providers_oauth2.scopemapping
         id: k3s-libredb-groups-scope
@@ -169,6 +220,13 @@ data:
           name: k3s-libredb
           meta_launch_url: https://libredb.nserbin.com
 
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, libredb]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
       - model: authentik_providers_oauth2.oauth2provider
         id: k3s-sure-provider
         identifiers:
@@ -201,6 +259,13 @@ data:
           name: k3s-sure
           meta_launch_url: https://money.nserbin.com
 
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, sure]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
       - model: authentik_providers_oauth2.oauth2provider
         id: k3s-paperless-provider
         identifiers:
@@ -232,4 +297,60 @@ data:
           provider: !KeyOf k3s-paperless-provider
           name: k3s-paperless
           meta_launch_url: https://paperless.nserbin.com
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, paperless]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, argocd]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, k3s-karakeep]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, k3s-mcp]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, monitor]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, rss]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, status]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, vault]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
 {{- end }}
