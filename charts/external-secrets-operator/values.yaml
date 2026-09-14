@@ -912,7 +912,7 @@ externalSecrets:
           engineVersion: v2
           mergePolicy: Merge
           data:
-            DATABASE_URL: 'postgres://{{ .POSTGRES_USER | urlquery }}:{{ .POSTGRES_PASSWORD | urlquery }}@outline-postgres:5432/{{ .POSTGRES_DB | urlquery }}'
+            DATABASE_URL: 'postgres://{{ .POSTGRES_USER | urlquery }}:{{ .POSTGRES_PASSWORD | urlquery }}@outline-postgres:5432/{{ .POSTGRES_DB | urlquery }}?sslmode=disable'
             REDIS_URL: 'redis://default:{{ .REDIS_PASSWORD | urlquery }}@outline-redis:6379/0'
       dataFrom:
         - extract:

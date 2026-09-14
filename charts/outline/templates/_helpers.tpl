@@ -58,6 +58,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: {{ .Values.config.forceHttps | quote }}
 - name: LOG_LEVEL
   value: {{ .Values.config.logLevel | quote }}
+- name: PGSSLMODE
+  value: disable
 - name: SECRET_KEY
   valueFrom:
     secretKeyRef:
