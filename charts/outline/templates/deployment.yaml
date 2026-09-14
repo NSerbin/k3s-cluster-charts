@@ -36,7 +36,7 @@ spec:
         - name: outline
           image: {{ include "outline.image" . | quote }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["sh", "-ec", "yarn db:migrate --env=production-ssl-disabled && yarn start --env=production-ssl-disabled"]
+          command: ["sh", "-ec", "npm run db:migrate -- --env=production-ssl-disabled && npm run start -- --env=production-ssl-disabled"]
           env:
             {{- include "outline.env" . | nindent 12 }}
           securityContext:
