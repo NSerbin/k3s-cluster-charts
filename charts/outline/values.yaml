@@ -1,0 +1,122 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: "outline"
+
+image:
+  repository: docker.getoutline.com/outlinewiki/outline
+  tag: "1.10.1"
+  pullPolicy: IfNotPresent
+
+waitImage:
+  repository: busybox
+  tag: "1.36.1"
+  pullPolicy: IfNotPresent
+
+secrets:
+  existingSecret: outline-secrets-app
+
+config:
+  url: https://docs.nserbin.com
+  port: "3000"
+  webConcurrency: "1"
+  forceHttps: "true"
+  logLevel: info
+  fileStorage: local
+  fileStorageLocalRootDir: /var/lib/outline/data
+  fileStorageUploadMaxSize: "262144000"
+  extraEnv: {}
+
+postgres:
+  image:
+    repository: postgres
+    tag: "17-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+  resources:
+    requests:
+      cpu: 75m
+      memory: 192Mi
+    limits:
+      cpu: 750m
+      memory: 768Mi
+
+redis:
+  image:
+    repository: redis
+    tag: "7-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 6379
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 1Gi
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+persistence:
+  data:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 10Gi
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 3000
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: false
+
+podSecurityContext:
+  fsGroup: 1001
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+resources:
+  requests:
+    cpu: 150m
+    memory: 512Mi
+  limits:
+    cpu: 1500m
+    memory: 1536Mi
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - web
+    host: docs.nserbin.com
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+nodeSelector: {}
+tolerations: []
+affinity: {}

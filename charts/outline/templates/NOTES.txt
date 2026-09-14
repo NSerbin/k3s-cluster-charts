@@ -1,0 +1,1 @@
+Outline is exposed through Traefik at {{ .Values.traefik.ingressRoute.host }}.

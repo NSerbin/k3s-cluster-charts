@@ -381,6 +381,13 @@ config:
             description: Notes and workspace
             server: k3s
 
+        - Outline:
+            icon: outline.svg
+            href: https://docs.nserbin.com/
+            siteMonitor: http://outline/
+            description: Shared docs
+            server: k3s
+
         - Cal.diy:
             icon: mdi-calendar-clock
             href: https://calendar.nserbin.com/
