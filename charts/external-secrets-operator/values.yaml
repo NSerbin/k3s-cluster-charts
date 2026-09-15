@@ -940,6 +940,17 @@ externalSecrets:
                     }
                   }
                 },
+                "mailer": {
+                  "SMTP": {
+                    "name": "docs.nserbin.com",
+                    "host": "{{ .SMTP_HOST }}",
+                    "port": {{ .SMTP_PORT }},
+                    "username": "{{ .SMTP_USERNAME }}",
+                    "password": "{{ .SMTP_PASSWORD }}",
+                    "sender": "AFFiNE <{{ .SMTP_FROM }}>",
+                    "ignoreTLS": false
+                  }
+                },
                 "copilot": {
                   "enabled": true,
                   "byok": {
@@ -970,6 +981,11 @@ externalSecrets:
             metadataPolicy: None
         - extract:
             key: k8s/tools/documents/affine/oidc
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - extract:
+            key: k8s/core/tools/emails/smtp
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
