@@ -2,9 +2,9 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "outline.postgresName" . }}-data
+  name: {{ include "affine.postgresName" . }}-data
   labels:
-    {{- include "outline.labels" . | nindent 4 }}
+    {{- include "affine.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
 spec:
   accessModes:
@@ -19,9 +19,9 @@ spec:
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "outline.redisName" . }}-data
+  name: {{ include "affine.redisName" . }}-data
   labels:
-    {{- include "outline.labels" . | nindent 4 }}
+    {{- include "affine.labels" . | nindent 4 }}
     app.kubernetes.io/component: redis
 spec:
   accessModes:
@@ -32,19 +32,19 @@ spec:
       storage: {{ .Values.redis.persistence.size | quote }}
 {{- end }}
 ---
-{{- if .Values.persistence.data.enabled }}
+{{- if .Values.persistence.storage.enabled }}
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: {{ include "outline.fullname" . }}-data
+  name: {{ include "affine.fullname" . }}-storage
   labels:
-    {{- include "outline.labels" . | nindent 4 }}
-    app.kubernetes.io/component: data
+    {{- include "affine.labels" . | nindent 4 }}
+    app.kubernetes.io/component: storage
 spec:
   accessModes:
-    {{- toYaml .Values.persistence.data.accessModes | nindent 4 }}
-  storageClassName: {{ .Values.persistence.data.storageClassName | quote }}
+    {{- toYaml .Values.persistence.storage.accessModes | nindent 4 }}
+  storageClassName: {{ .Values.persistence.storage.storageClassName | quote }}
   resources:
     requests:
-      storage: {{ .Values.persistence.data.size | quote }}
+      storage: {{ .Values.persistence.storage.size | quote }}
 {{- end }}

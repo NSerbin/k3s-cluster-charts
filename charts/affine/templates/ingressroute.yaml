@@ -2,10 +2,10 @@
 apiVersion: traefik.io/v1alpha1
 kind: IngressRoute
 metadata:
-  name: {{ include "outline.fullname" . }}
+  name: {{ include "affine.fullname" . }}
   namespace: {{ .Release.Namespace }}
   labels:
-    {{- include "outline.labels" . | nindent 4 }}
+    {{- include "affine.labels" . | nindent 4 }}
 spec:
   entryPoints:
     {{- toYaml .Values.traefik.ingressRoute.entryPoints | nindent 4 }}
@@ -22,7 +22,7 @@ spec:
         {{- end }}
       {{- end }}
       services:
-        - name: {{ include "outline.fullname" . }}
+        - name: {{ include "affine.fullname" . }}
           port: {{ .Values.service.port }}
           scheme: http
   {{- if .Values.traefik.ingressRoute.tls.enabled }}

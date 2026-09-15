@@ -1,0 +1,10 @@
+apiVersion: v2
+name: affine
+description: Self-managed chart for AFFiNE knowledge base
+type: application
+version: 0.1.0
+appVersion: "stable"
+home: https://github.com/toeverything/AFFiNE
+icon: https://github.com/toeverything.png
+sources:
+  - https://github.com/toeverything/AFFiNE

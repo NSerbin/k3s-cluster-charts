@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "outline.postgresName" . }}
+  name: {{ include "affine.postgresName" . }}
   labels:
-    {{- include "outline.labels" . | nindent 4 }}
+    {{- include "affine.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
 spec:
-  serviceName: {{ include "outline.postgresName" . }}
+  serviceName: {{ include "affine.postgresName" . }}
   replicas: 1
   selector:
     matchLabels:
-      {{- include "outline.selectorLabels" . | nindent 6 }}
+      {{- include "affine.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: postgres
   template:
     metadata:
       labels:
-        {{- include "outline.selectorLabels" . | nindent 8 }}
+        {{- include "affine.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: postgres
     spec:
       securityContext:
@@ -43,6 +43,8 @@ spec:
                   key: POSTGRES_DB
             - name: PGDATA
               value: /var/lib/postgresql/data/pgdata
+            - name: POSTGRES_INITDB_ARGS
+              value: "--data-checksums"
           ports:
             - name: postgres
               containerPort: {{ .Values.postgres.service.port }}
@@ -64,14 +66,14 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "outline.postgresName" . }}-data
+            claimName: {{ include "affine.postgresName" . }}-data
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "outline.postgresName" . }}
+  name: {{ include "affine.postgresName" . }}
   labels:
-    {{- include "outline.labels" . | nindent 4 }}
+    {{- include "affine.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
 spec:
   type: ClusterIP
@@ -80,5 +82,5 @@ spec:
       port: {{ .Values.postgres.service.port }}
       targetPort: postgres
   selector:
-    {{- include "outline.selectorLabels" . | nindent 4 }}
+    {{- include "affine.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: postgres

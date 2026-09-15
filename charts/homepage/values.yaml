@@ -381,11 +381,11 @@ config:
             description: Notes and workspace
             server: k3s
 
-        - Outline:
-            icon: outline.svg
+        - AFFiNE:
+            icon: affine.svg
             href: https://docs.nserbin.com/
-            siteMonitor: http://outline/
-            description: Shared docs
+            siteMonitor: http://affine/
+            description: Knowledge workspace
             server: k3s
 
         - Cal.diy:

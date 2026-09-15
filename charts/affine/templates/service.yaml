@@ -1,9 +1,9 @@
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "outline.fullname" . }}
+  name: {{ include "affine.fullname" . }}
   labels:
-    {{- include "outline.labels" . | nindent 4 }}
+    {{- include "affine.labels" . | nindent 4 }}
     app.kubernetes.io/component: web
 spec:
   type: {{ .Values.service.type }}
@@ -13,5 +13,5 @@ spec:
       targetPort: http
       protocol: TCP
   selector:
-    {{- include "outline.selectorLabels" . | nindent 4 }}
+    {{- include "affine.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: web

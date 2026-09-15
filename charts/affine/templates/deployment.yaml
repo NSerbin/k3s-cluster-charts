@@ -1,9 +1,9 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "outline.fullname" . }}
+  name: {{ include "affine.fullname" . }}
   labels:
-    {{- include "outline.labels" . | nindent 4 }}
+    {{- include "affine.labels" . | nindent 4 }}
     app.kubernetes.io/component: web
 spec:
   replicas: {{ .Values.replicaCount }}
@@ -11,34 +11,46 @@ spec:
     type: Recreate
   selector:
     matchLabels:
-      {{- include "outline.selectorLabels" . | nindent 6 }}
+      {{- include "affine.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: web
   template:
     metadata:
       labels:
-        {{- include "outline.selectorLabels" . | nindent 8 }}
+        {{- include "affine.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: web
     spec:
-      serviceAccountName: {{ include "outline.serviceAccountName" . }}
+      serviceAccountName: {{ include "affine.serviceAccountName" . }}
       automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: wait-postgres
-          image: {{ include "outline.waitImage" . | quote }}
+          image: {{ include "affine.waitImage" . | quote }}
           imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
-          command: ["sh", "-ec", "until nc -z {{ include "outline.postgresName" . }} {{ .Values.postgres.service.port }}; do sleep 2; done"]
+          command: ["sh", "-ec", "until nc -z {{ include "affine.postgresName" . }} {{ .Values.postgres.service.port }}; do sleep 2; done"]
         - name: wait-redis
-          image: {{ include "outline.waitImage" . | quote }}
+          image: {{ include "affine.waitImage" . | quote }}
           imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
-          command: ["sh", "-ec", "until nc -z {{ include "outline.redisName" . }} {{ .Values.redis.service.port }}; do sleep 2; done"]
-      containers:
-        - name: outline
-          image: {{ include "outline.image" . | quote }}
+          command: ["sh", "-ec", "until nc -z {{ include "affine.redisName" . }} {{ .Values.redis.service.port }}; do sleep 2; done"]
+        - name: migrate
+          image: {{ include "affine.image" . | quote }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["sh", "-ec", "npm run db:migrate -- --env=production-ssl-disabled && npm run start -- --env=production-ssl-disabled"]
+          command: ["sh", "-ec", "node ./scripts/self-host-predeploy.js"]
           env:
-            {{- include "outline.env" . | nindent 12 }}
+            {{- include "affine.env" . | nindent 12 }}
+          volumeMounts:
+            - name: storage
+              mountPath: {{ .Values.config.storagePath | quote }}
+            - name: config
+              mountPath: {{ printf "%s/config.json" .Values.config.configPath | quote }}
+              subPath: config.json
+              readOnly: true
+      containers:
+        - name: affine
+          image: {{ include "affine.image" . | quote }}
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- include "affine.env" . | nindent 12 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           ports:
@@ -70,16 +82,22 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            {{- if .Values.persistence.data.enabled }}
-            - name: data
-              mountPath: {{ .Values.config.fileStorageLocalRootDir | quote }}
-            {{- end }}
+            - name: storage
+              mountPath: {{ .Values.config.storagePath | quote }}
+            - name: config
+              mountPath: {{ printf "%s/config.json" .Values.config.configPath | quote }}
+              subPath: config.json
+              readOnly: true
       volumes:
-        {{- if .Values.persistence.data.enabled }}
-        - name: data
+        - name: storage
           persistentVolumeClaim:
-            claimName: {{ include "outline.fullname" . }}-data
-        {{- end }}
+            claimName: {{ include "affine.fullname" . }}-storage
+        - name: config
+          secret:
+            secretName: {{ .Values.secrets.existingSecret | quote }}
+            items:
+              - key: config.json
+                path: config.json
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

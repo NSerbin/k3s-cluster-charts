@@ -1,20 +1,20 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "outline.redisName" . }}
+  name: {{ include "affine.redisName" . }}
   labels:
-    {{- include "outline.labels" . | nindent 4 }}
+    {{- include "affine.labels" . | nindent 4 }}
     app.kubernetes.io/component: redis
 spec:
   replicas: 1
   selector:
     matchLabels:
-      {{- include "outline.selectorLabels" . | nindent 6 }}
+      {{- include "affine.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: redis
   template:
     metadata:
       labels:
-        {{- include "outline.selectorLabels" . | nindent 8 }}
+        {{- include "affine.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: redis
     spec:
       containers:
@@ -52,15 +52,15 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "outline.redisName" . }}-data
+            claimName: {{ include "affine.redisName" . }}-data
       {{- end }}
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "outline.redisName" . }}
+  name: {{ include "affine.redisName" . }}
   labels:
-    {{- include "outline.labels" . | nindent 4 }}
+    {{- include "affine.labels" . | nindent 4 }}
     app.kubernetes.io/component: redis
 spec:
   type: ClusterIP
@@ -69,5 +69,5 @@ spec:
       port: {{ .Values.redis.service.port }}
       targetPort: redis
   selector:
-    {{- include "outline.selectorLabels" . | nindent 4 }}
+    {{- include "affine.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: redis

@@ -1,11 +1,11 @@
 replicaCount: 1
 
 nameOverride: ""
-fullnameOverride: "outline"
+fullnameOverride: "affine"
 
 image:
-  repository: docker.getoutline.com/outlinewiki/outline
-  tag: "1.10.1"
+  repository: ghcr.io/toeverything/affine
+  tag: "stable"
   pullPolicy: IfNotPresent
 
 waitImage:
@@ -14,23 +14,22 @@ waitImage:
   pullPolicy: IfNotPresent
 
 secrets:
-  existingSecret: outline-secrets-app
+  existingSecret: affine-secrets-app
 
 config:
-  url: https://docs.nserbin.com
-  port: "3000"
-  webConcurrency: "1"
-  forceHttps: "true"
-  logLevel: info
-  fileStorage: local
-  fileStorageLocalRootDir: /var/lib/outline/data
-  fileStorageUploadMaxSize: "262144000"
+  externalUrl: https://docs.nserbin.com
+  host: docs.nserbin.com
+  https: "true"
+  port: "3010"
+  deploymentType: selfhosted
+  storagePath: /root/.affine/storage
+  configPath: /root/.affine/config
   extraEnv: {}
 
 postgres:
   image:
-    repository: postgres
-    tag: "17-alpine"
+    repository: pgvector/pgvector
+    tag: "pg16"
     pullPolicy: IfNotPresent
   service:
     port: 5432
@@ -39,7 +38,7 @@ postgres:
     storageClassName: local-path
     accessModes:
       - ReadWriteOnce
-    size: 8Gi
+    size: 10Gi
   resources:
     requests:
       cpu: 75m
@@ -70,7 +69,7 @@ redis:
       memory: 256Mi
 
 persistence:
-  data:
+  storage:
     enabled: true
     storageClassName: local-path
     accessModes:
@@ -80,7 +79,7 @@ persistence:
 service:
   type: ClusterIP
   port: 80
-  targetPort: 3000
+  targetPort: 3010
 
 serviceAccount:
   create: true
@@ -88,7 +87,7 @@ serviceAccount:
   automount: false
 
 podSecurityContext:
-  fsGroup: 1001
+  fsGroup: 1000
   fsGroupChangePolicy: OnRootMismatch
 
 securityContext:
@@ -100,11 +99,11 @@ securityContext:
 
 resources:
   requests:
-    cpu: 150m
-    memory: 512Mi
+    cpu: 250m
+    memory: 768Mi
   limits:
     cpu: 1500m
-    memory: 1536Mi
+    memory: 2Gi
 
 traefik:
   ingressRoute:

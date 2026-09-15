@@ -297,19 +297,19 @@ data:
           group: !Find [authentik_core.group, [name, authentik Admins]]
 
       - model: authentik_providers_oauth2.oauth2provider
-        id: k3s-outline-provider
+        id: k3s-affine-provider
         identifiers:
-          name: k3s-outline-provider
+          name: k3s-affine-provider
         attrs:
           authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
           invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
           issuer_mode: per_provider
           client_type: confidential
-          client_id: !Env OUTLINE_OIDC_CLIENT_ID
-          client_secret: !Env OUTLINE_OIDC_CLIENT_SECRET
+          client_id: !Env AFFINE_OIDC_CLIENT_ID
+          client_secret: !Env AFFINE_OIDC_CLIENT_SECRET
           redirect_uris:
             - matching_mode: strict
-              url: https://docs.nserbin.com/auth/oidc.callback
+              url: https://docs.nserbin.com/oauth/callback
               redirect_uri_type: authorization
           grant_types:
             - authorization_code
@@ -322,22 +322,22 @@ data:
 
       - model: authentik_core.application
         identifiers:
-          slug: outline
+          slug: affine
         attrs:
-          provider: !KeyOf k3s-outline-provider
-          name: k3s-outline
+          provider: !KeyOf k3s-affine-provider
+          name: k3s-affine
           meta_launch_url: https://docs.nserbin.com
 
       - model: authentik_policies.policybinding
         identifiers:
-          target: !Find [authentik_core.application, [slug, outline]]
+          target: !Find [authentik_core.application, [slug, affine]]
           order: 1
         attrs:
           group: !Find [authentik_core.group, [name, authentik Admins]]
 
       - model: authentik_policies.policybinding
         identifiers:
-          target: !Find [authentik_core.application, [slug, outline]]
+          target: !Find [authentik_core.application, [slug, affine]]
           order: 2
         attrs:
           group: !KeyOf k3s-family-group

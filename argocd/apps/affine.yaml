@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: outline
+  name: affine
   namespace: argocd
 spec:
   revisionHistoryLimit: 5
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: "https://github.com/NSerbin/k3s-cluster-charts.git"
     targetRevision: "main"
-    path: "charts/outline"
+    path: "charts/affine"
     helm:
       valueFiles:
         - values.yaml

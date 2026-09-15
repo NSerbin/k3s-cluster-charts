@@ -277,16 +277,16 @@ externalSecrets:
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
-        - secretKey: OUTLINE_OIDC_CLIENT_ID
+        - secretKey: AFFINE_OIDC_CLIENT_ID
           remoteRef:
-            key: k8s/tools/documents/outline/oidc
+            key: k8s/tools/documents/affine/oidc
             property: OIDC_CLIENT_ID
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
-        - secretKey: OUTLINE_OIDC_CLIENT_SECRET
+        - secretKey: AFFINE_OIDC_CLIENT_SECRET
           remoteRef:
-            key: k8s/tools/documents/outline/oidc
+            key: k8s/tools/documents/affine/oidc
             property: OIDC_CLIENT_SECRET
             conversionStrategy: Default
             decodingStrategy: None
@@ -899,39 +899,77 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None
 
-    - name: outline-secrets-app
+    - name: affine-secrets-app
       namespace: tools
       secretStoreRef:
         name: vault
         kind: ClusterSecretStore
       target:
-        name: outline-secrets-app
+        name: affine-secrets-app
         creationPolicy: Owner
         deletionPolicy: Retain
         template:
           engineVersion: v2
           mergePolicy: Merge
           data:
-            DATABASE_URL: 'postgres://{{ .POSTGRES_USER | urlquery }}:{{ .POSTGRES_PASSWORD | urlquery }}@outline-postgres:5432/{{ .POSTGRES_DB | urlquery }}?sslmode=disable'
-            REDIS_URL: 'redis://default:{{ .REDIS_PASSWORD | urlquery }}@outline-redis:6379/0'
+            DATABASE_URL: 'postgresql://{{ .POSTGRES_USER | urlquery }}:{{ .POSTGRES_PASSWORD | urlquery }}@affine-postgres:5432/{{ .POSTGRES_DB | urlquery }}?sslmode=disable'
+            config.json: |
+              {
+                "$schema": "https://github.com/toeverything/affine/releases/latest/download/config.schema.json",
+                "server": {
+                  "name": "AFFiNE",
+                  "externalUrl": "https://docs.nserbin.com"
+                },
+                "auth": {
+                  "allowSignup": true,
+                  "allowSignupForOauth": true,
+                  "requireEmailVerification": false
+                },
+                "oauth": {
+                  "providers.oidc": {
+                    "clientId": "{{ .OIDC_CLIENT_ID }}",
+                    "clientSecret": "{{ .OIDC_CLIENT_SECRET }}",
+                    "issuer": "{{ .OIDC_ISSUER }}",
+                    "allowPrivateNetwork": false,
+                    "args": {
+                      "scope": "openid email profile",
+                      "claim_id": "sub",
+                      "claim_email": "email",
+                      "claim_name": "name",
+                      "claim_email_verified": "email_verified"
+                    }
+                  }
+                },
+                "copilot": {
+                  "enabled": true,
+                  "byok": {
+                    "enabled": true,
+                    "allowCustomEndpoint": true
+                  }
+                },
+                "indexer": {
+                  "enabled": true,
+                  "provider.type": "embedded"
+                }
+              }
       dataFrom:
         - extract:
-            key: k8s/tools/documents/outline/app
+            key: k8s/tools/documents/affine/app
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
         - extract:
-            key: k8s/tools/documents/outline/db
+            key: k8s/tools/documents/affine/db
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
         - extract:
-            key: k8s/tools/documents/outline/redis
+            key: k8s/tools/documents/affine/redis
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
         - extract:
-            key: k8s/tools/documents/outline/oidc
+            key: k8s/tools/documents/affine/oidc
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
