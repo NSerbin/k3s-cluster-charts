@@ -196,8 +196,6 @@ patch kv/k8s/tools/documents/paperless/app \
     '{
     openid_connect: {
       OAUTH_PKCE_ENABLED: true,
-      EMAIL_AUTHENTICATION: true,
-      VERIFIED_EMAIL: true,
       APPS: [{
         provider_id: "authentik",
         name: "authentik",
@@ -205,22 +203,12 @@ patch kv/k8s/tools/documents/paperless/app \
         secret: $secret,
         settings: {
           server_url: $server_url,
-          fetch_userinfo: true,
-          email_authentication: true,
-          verified_email: true
+          fetch_userinfo: true
         }
       }],
       SCOPE: ["openid", "profile", "email"]
       }
     }')"
-
-affine_id="$(optional_existing_or_generated kv/k8s/tools/documents/affine/oidc OIDC_CLIENT_ID client_id affine)"
-affine_secret="$(optional_existing_or_generated kv/k8s/tools/documents/affine/oidc OIDC_CLIENT_SECRET secret)"
-patch kv/k8s/tools/documents/affine/oidc \
-  OIDC_CLIENT_ID="$affine_id" \
-  OIDC_CLIENT_SECRET="$affine_secret" \
-  OIDC_ISSUER="$base/application/o/affine/" \
-  OIDC_DISCOVERY_URL="$base/application/o/affine/.well-known/openid-configuration"
 
 if ! vault kv get -format=json kv/k8s/tools/productivity/appflowy/app 2>/dev/null | jq -e '.data.data.AUTH_SAML_CERT_PEM and .data.data.AUTH_SAML_PRIVATE_KEY_PEM and .data.data.AUTH_SAML_CERT and .data.data.GOTRUE_SAML_PRIVATE_KEY' >/dev/null; then
   tmpdir="$(mktemp -d)"

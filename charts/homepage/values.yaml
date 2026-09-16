@@ -381,11 +381,11 @@ config:
             description: Notes and workspace
             server: k3s
 
-        - AFFiNE:
-            icon: affine.svg
+        - Colanode:
+            icon: mdi-file-document-multiple
             href: https://docs.nserbin.com/
-            siteMonitor: http://affine/
-            description: Knowledge workspace
+            siteMonitor: http://colanode/
+            description: Local-first workspace
             server: k3s
 
         - Cal.diy:

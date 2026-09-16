@@ -1,7 +1,7 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: affine
+  name: colanode
   namespace: argocd
 spec:
   revisionHistoryLimit: 5
@@ -10,7 +10,7 @@ spec:
   source:
     repoURL: "https://github.com/NSerbin/k3s-cluster-charts.git"
     targetRevision: "main"
-    path: "charts/affine"
+    path: "charts/colanode"
     helm:
       valueFiles:
         - values.yaml

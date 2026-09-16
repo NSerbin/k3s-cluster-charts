@@ -1,56 +1,45 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "affine.fullname" . }}
+  name: {{ include "colanode.fullname" . }}
   labels:
-    {{- include "affine.labels" . | nindent 4 }}
-    app.kubernetes.io/component: web
+    {{- include "colanode.labels" . | nindent 4 }}
+    app.kubernetes.io/component: server
 spec:
   replicas: {{ .Values.replicaCount }}
   strategy:
     type: Recreate
   selector:
     matchLabels:
-      {{- include "affine.selectorLabels" . | nindent 6 }}
-      app.kubernetes.io/component: web
+      {{- include "colanode.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: server
   template:
     metadata:
+      annotations:
+        checksum/config: {{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}
       labels:
-        {{- include "affine.selectorLabels" . | nindent 8 }}
-        app.kubernetes.io/component: web
+        {{- include "colanode.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: server
     spec:
-      serviceAccountName: {{ include "affine.serviceAccountName" . }}
+      serviceAccountName: {{ include "colanode.serviceAccountName" . }}
       automountServiceAccountToken: {{ .Values.serviceAccount.automount }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: wait-postgres
-          image: {{ include "affine.waitImage" . | quote }}
+          image: {{ include "colanode.waitImage" . | quote }}
           imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
-          command: ["sh", "-ec", "until nc -z {{ include "affine.postgresName" . }} {{ .Values.postgres.service.port }}; do sleep 2; done"]
+          command: ["sh", "-ec", "until nc -z {{ include "colanode.postgresName" . }} {{ .Values.postgres.service.port }}; do sleep 2; done"]
         - name: wait-redis
-          image: {{ include "affine.waitImage" . | quote }}
+          image: {{ include "colanode.waitImage" . | quote }}
           imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
-          command: ["sh", "-ec", "until nc -z {{ include "affine.redisName" . }} {{ .Values.redis.service.port }}; do sleep 2; done"]
-        - name: migrate
-          image: {{ include "affine.image" . | quote }}
-          imagePullPolicy: {{ .Values.image.pullPolicy }}
-          command: ["sh", "-ec", "node ./scripts/self-host-predeploy.js"]
-          env:
-            {{- include "affine.env" . | nindent 12 }}
-          volumeMounts:
-            - name: storage
-              mountPath: {{ .Values.config.storagePath | quote }}
-            - name: config
-              mountPath: {{ printf "%s/config.json" .Values.config.configPath | quote }}
-              subPath: config.json
-              readOnly: true
+          command: ["sh", "-ec", "until nc -z {{ include "colanode.redisName" . }} {{ .Values.redis.service.port }}; do sleep 2; done"]
       containers:
-        - name: affine
-          image: {{ include "affine.image" . | quote }}
+        - name: colanode
+          image: {{ include "colanode.image" . | quote }}
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
-            {{- include "affine.env" . | nindent 12 }}
+            {{- include "colanode.env" . | nindent 12 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
           ports:
@@ -64,7 +53,7 @@ spec:
               httpHeaders:
                 - name: Host
                   value: {{ .Values.traefik.ingressRoute.host | quote }}
-            initialDelaySeconds: 30
+            initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 12
@@ -82,22 +71,19 @@ spec:
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
-            - name: storage
-              mountPath: {{ .Values.config.storagePath | quote }}
             - name: config
-              mountPath: {{ printf "%s/config.json" .Values.config.configPath | quote }}
+              mountPath: {{ .Values.config.configMountPath | quote }}
               subPath: config.json
               readOnly: true
+            - name: storage
+              mountPath: {{ .Values.config.storageDirectory | quote }}
       volumes:
+        - name: config
+          configMap:
+            name: {{ include "colanode.fullname" . }}-config
         - name: storage
           persistentVolumeClaim:
-            claimName: {{ include "affine.fullname" . }}-storage
-        - name: config
-          secret:
-            secretName: {{ .Values.secrets.existingSecret | quote }}
-            items:
-              - key: config.json
-                path: config.json
+            claimName: {{ include "colanode.fullname" . }}-storage
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -1,11 +1,11 @@
 replicaCount: 1
 
 nameOverride: ""
-fullnameOverride: "affine"
+fullnameOverride: "colanode"
 
 image:
-  repository: ghcr.io/toeverything/affine
-  tag: "stable"
+  repository: ghcr.io/colanode/server
+  tag: "latest"
   pullPolicy: IfNotPresent
 
 waitImage:
@@ -14,22 +14,26 @@ waitImage:
   pullPolicy: IfNotPresent
 
 secrets:
-  existingSecret: affine-secrets-app
+  existingSecret: colanode-secrets-app
 
 config:
-  externalUrl: https://docs.nserbin.com
-  host: docs.nserbin.com
-  https: "true"
-  port: "3010"
-  deploymentType: selfhosted
-  storagePath: /root/.affine/storage
-  configPath: /root/.affine/config
-  extraEnv: {}
+  name: "Colanode"
+  domain: docs.nserbin.com
+  origin: https://docs.nserbin.com
+  configMountPath: /config.json
+  storageDirectory: /var/lib/colanode/storage
+  account:
+    verificationType: automatic
+    otpTimeout: 600
+  workspace:
+    maxFileSize: "524288000"
+  logging:
+    level: info
 
 postgres:
   image:
-    repository: pgvector/pgvector
-    tag: "pg16"
+    repository: ghcr.io/colanode/postgresql
+    tag: "17"
     pullPolicy: IfNotPresent
   service:
     port: 5432
@@ -38,7 +42,7 @@ postgres:
     storageClassName: local-path
     accessModes:
       - ReadWriteOnce
-    size: 10Gi
+    size: 8Gi
   resources:
     requests:
       cpu: 75m
@@ -79,7 +83,7 @@ persistence:
 service:
   type: ClusterIP
   port: 80
-  targetPort: 3010
+  targetPort: 3000
 
 serviceAccount:
   create: true
@@ -99,11 +103,11 @@ securityContext:
 
 resources:
   requests:
-    cpu: 250m
-    memory: 768Mi
+    cpu: 150m
+    memory: 384Mi
   limits:
-    cpu: 1500m
-    memory: 2Gi
+    cpu: 1000m
+    memory: 1Gi
 
 traefik:
   ingressRoute:

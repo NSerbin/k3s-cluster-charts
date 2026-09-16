@@ -1,21 +1,21 @@
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: {{ include "affine.postgresName" . }}
+  name: {{ include "colanode.postgresName" . }}
   labels:
-    {{- include "affine.labels" . | nindent 4 }}
+    {{- include "colanode.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
 spec:
-  serviceName: {{ include "affine.postgresName" . }}
+  serviceName: {{ include "colanode.postgresName" . }}
   replicas: 1
   selector:
     matchLabels:
-      {{- include "affine.selectorLabels" . | nindent 6 }}
+      {{- include "colanode.selectorLabels" . | nindent 6 }}
       app.kubernetes.io/component: postgres
   template:
     metadata:
       labels:
-        {{- include "affine.selectorLabels" . | nindent 8 }}
+        {{- include "colanode.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: postgres
     spec:
       securityContext:
@@ -66,14 +66,14 @@ spec:
       volumes:
         - name: data
           persistentVolumeClaim:
-            claimName: {{ include "affine.postgresName" . }}-data
+            claimName: {{ include "colanode.postgresName" . }}-data
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "affine.postgresName" . }}
+  name: {{ include "colanode.postgresName" . }}
   labels:
-    {{- include "affine.labels" . | nindent 4 }}
+    {{- include "colanode.labels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
 spec:
   type: ClusterIP
@@ -82,5 +82,5 @@ spec:
       port: {{ .Values.postgres.service.port }}
       targetPort: postgres
   selector:
-    {{- include "affine.selectorLabels" . | nindent 4 }}
+    {{- include "colanode.selectorLabels" . | nindent 4 }}
     app.kubernetes.io/component: postgres
