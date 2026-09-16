@@ -31,13 +31,13 @@ existing_or_generated() {
   "$@"
 }
 
-POSTGRES_USER="${POSTGRES_USER:-colanode}"
+POSTGRES_USER="${POSTGRES_USER:-postgres}"
 POSTGRES_DB="${POSTGRES_DB:-colanode}"
 POSTGRES_PASSWORD="${POSTGRES_PASSWORD:-$(existing_or_generated "$APP_PATH" POSTGRES_PASSWORD openssl rand -hex 24)}"
 REDIS_PASSWORD="${REDIS_PASSWORD:-$(existing_or_generated "$APP_PATH" REDIS_PASSWORD openssl rand -hex 24)}"
 
-POSTGRES_URL="${POSTGRES_URL:-postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@colanode-postgres.tools.svc.cluster.local:5432/${POSTGRES_DB}}"
-REDIS_URL="${REDIS_URL:-redis://:${REDIS_PASSWORD}@colanode-redis.tools.svc.cluster.local:6379/0}"
+POSTGRES_URL="${POSTGRES_URL:-postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@colanode-postgres:5432/${POSTGRES_DB}}"
+REDIS_URL="${REDIS_URL:-redis://:${REDIS_PASSWORD}@colanode-redis:6379/0}"
 
 vault kv put "${APP_PATH}" \
   POSTGRES_USER="${POSTGRES_USER}" \
