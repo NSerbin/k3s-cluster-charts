@@ -19,7 +19,11 @@ secrets:
 config:
   name: "Colanode"
   domain: docs.nserbin.com
-  origin: https://docs.nserbin.com
+  origins:
+    - https://docs.nserbin.com
+    - https://app.colanode.com
+    - https://eu.colanode.com
+    - https://us.colanode.com
   configMountPath: /config.json
   storageDirectory: /var/lib/colanode/storage
   account:

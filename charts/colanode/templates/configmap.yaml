@@ -13,7 +13,7 @@ data:
       },
       "mode": "standalone",
       "cors": {
-        "origin": {{ .Values.config.origin | quote }},
+        "origin": {{ .Values.config.origins | toJson }},
         "maxAge": 7200
       },
       "account": {
