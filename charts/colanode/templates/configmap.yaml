@@ -26,12 +26,7 @@ data:
         }
       },
       "postgres": {
-        "url": "env://POSTGRES_URL",
-        "ssl": {
-          "ca": "env://POSTGRES_SSL_CA?",
-          "key": "env://POSTGRES_SSL_KEY?",
-          "cert": "env://POSTGRES_SSL_CERT?"
-        }
+        "url": "env://POSTGRES_URL"
       },
       "redis": {
         "url": "env://REDIS_URL",
