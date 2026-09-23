@@ -61,7 +61,7 @@ app.kubernetes.io/instance: {{ .Release.Name }}
 - name: NEXT_PUBLIC_EMBED_LIB_URL
   value: {{ .Values.app.embedLibUrl | quote }}
 - name: NEXTAUTH_URL
-  value: {{ .Values.app.webappUrl | quote }}
+  value: {{ .Values.app.nextauthUrl | quote }}
 - name: NEXTAUTH_URL_INTERNAL
   value: {{ .Values.app.nextauthUrlInternal | quote }}
 - name: WEB_APP_URL
