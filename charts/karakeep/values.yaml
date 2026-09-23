@@ -64,16 +64,16 @@ chrome:
       - name: ndots
         value: "1"
   image:
-    repository: gcr.io/zenika-hub/alpine-chrome
-    tag: "124"
+    repository: ghcr.io/karakeep-app/karakeep-chrome
+    tag: "release"
     pullPolicy: IfNotPresent
-  command:
-    - chromium-browser
+  command: []
   service:
     enabled: true
     port: 9222
   extraArgs:
-    - --enable-features=ConversionMeasurement,AttributionReportingCrossAppWeb
+    - --disable-blink-features=AutomationControlled
+    - --window-size=1440,900
     - --mute-audio
   securityContext:
     runAsUser: 0

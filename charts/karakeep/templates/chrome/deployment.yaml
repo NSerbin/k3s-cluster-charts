@@ -31,10 +31,13 @@ spec:
           securityContext:
             {{- toYaml . | nindent 12 }}
           {{ end }}
-          {{- $chromeArgs := list "--headless" "--no-sandbox" "--disable-gpu" "--disable-dev-shm-usage" (printf "--remote-debugging-address=%s" "0.0.0.0") (printf "--remote-debugging-port=%d" (.Values.chrome.service.port | int)) "--hide-scrollbars" -}}
+          {{- $chromeArgs := list "--disable-gpu" "--disable-dev-shm-usage" "--hide-scrollbars" -}}
           {{- $chromeArgs = concat $chromeArgs .Values.chrome.extraArgs -}}
+          {{- with .Values.chrome.command }}
           command:
-            {{- toYaml .Values.chrome.command | nindent 12 }}
+            {{- toYaml . | nindent 12 }}
+          {{- end }}
+          args:
             {{- range $chromeArgs }}
             - {{ . | quote }}
             {{- end }}
