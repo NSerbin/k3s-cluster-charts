@@ -66,6 +66,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: {{ .Values.app.nextauthUrlInternal | quote }}
 - name: WEB_APP_URL
   value: {{ .Values.app.webappUrl | quote }}
+- name: WEBAPP_URL
+  value: {{ .Values.app.webappUrl | quote }}
 - name: NEXT_PUBLIC_API_V2_URL
   value: {{ .Values.app.apiV2Url | quote }}
 - name: ALLOWED_HOSTNAMES
