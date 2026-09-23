@@ -27,11 +27,11 @@ spec:
         - name: wait-postgres
           image: {{ include "cal-diy.waitImage" . | quote }}
           imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
-          command: ["sh", "-ec", "until nc -z {{ include "cal-diy.postgresName" . }} {{ .Values.postgres.service.port }}; do sleep 2; done"]
+          command: ["sh", "-ec", "until nc -z {{ include "cal-diy.postgresName" . }}.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.postgres.service.port }}; do sleep 2; done"]
         - name: wait-redis
           image: {{ include "cal-diy.waitImage" . | quote }}
           imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
-          command: ["sh", "-ec", "until nc -z {{ include "cal-diy.redisName" . }} {{ .Values.redis.service.port }}; do sleep 2; done"]
+          command: ["sh", "-ec", "until nc -z {{ include "cal-diy.redisName" . }}.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.redis.service.port }}; do sleep 2; done"]
         {{- if .Values.migrations.enabled }}
         - name: migrations
           image: {{ include "cal-diy.image" . | quote }}
@@ -59,19 +59,25 @@ spec:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
-          readinessProbe:
-            httpGet:
-              path: /
-              port: http
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
-            failureThreshold: 12
-          livenessProbe:
+          startupProbe:
             httpGet:
               path: /
               port: http
             initialDelaySeconds: 90
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 6
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
             periodSeconds: 30
             timeoutSeconds: 5
             failureThreshold: 6
@@ -120,7 +126,7 @@ spec:
         - name: wait-postgres
           image: {{ include "cal-diy.waitImage" . | quote }}
           imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
-          command: ["sh", "-ec", "until nc -z {{ include "cal-diy.postgresName" . }} {{ .Values.postgres.service.port }}; do sleep 2; done"]
+          command: ["sh", "-ec", "until nc -z {{ include "cal-diy.postgresName" . }}.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.postgres.service.port }}; do sleep 2; done"]
       containers:
         - name: prisma-studio
           image: {{ include "cal-diy.image" . | quote }}
