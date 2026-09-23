@@ -42,6 +42,28 @@ crowdsec:
     pullPolicy: IfNotPresent
 
   agent:
+    startupProbe:
+      httpGet:
+        path: /metrics
+        port: metrics
+      initialDelaySeconds: 90
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 30
+    readinessProbe:
+      httpGet:
+        path: /metrics
+        port: metrics
+      periodSeconds: 10
+      timeoutSeconds: 5
+      failureThreshold: 6
+    livenessProbe:
+      httpGet:
+        path: /metrics
+        port: metrics
+      periodSeconds: 30
+      timeoutSeconds: 5
+      failureThreshold: 6
     resources:
       requests:
         cpu: 35m

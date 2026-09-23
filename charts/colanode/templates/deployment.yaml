@@ -46,6 +46,17 @@ spec:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+              httpHeaders:
+                - name: Host
+                  value: {{ .Values.traefik.ingressRoute.host | quote }}
+            initialDelaySeconds: 60
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
           readinessProbe:
             httpGet:
               path: /
@@ -53,10 +64,9 @@ spec:
               httpHeaders:
                 - name: Host
                   value: {{ .Values.traefik.ingressRoute.host | quote }}
-            initialDelaySeconds: 20
             periodSeconds: 10
             timeoutSeconds: 5
-            failureThreshold: 12
+            failureThreshold: 6
           livenessProbe:
             httpGet:
               path: /
@@ -64,7 +74,6 @@ spec:
               httpHeaders:
                 - name: Host
                   value: {{ .Values.traefik.ingressRoute.host | quote }}
-            initialDelaySeconds: 90
             periodSeconds: 30
             timeoutSeconds: 5
             failureThreshold: 6
