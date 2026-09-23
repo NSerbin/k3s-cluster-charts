@@ -79,11 +79,19 @@ spec:
               mountPath: /root/.ollama
           {{- end }}
 
+          startupProbe:
+            httpGet:
+              path: /
+              port: 11434
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 40
+
           livenessProbe:
             httpGet:
               path: /
               port: 11434
-            initialDelaySeconds: 30
             periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 6
@@ -92,7 +100,6 @@ spec:
             httpGet:
               path: /
               port: 11434
-            initialDelaySeconds: 15
             periodSeconds: 15
             timeoutSeconds: 5
             failureThreshold: 6

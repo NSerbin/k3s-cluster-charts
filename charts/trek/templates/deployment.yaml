@@ -80,11 +80,18 @@ spec:
               mountPath: /app/data
             - name: uploads
               mountPath: /app/uploads
+          startupProbe:
+            httpGet:
+              path: /api/health
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 18
           readinessProbe:
             httpGet:
               path: /api/health
               port: http
-            initialDelaySeconds: 5
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
@@ -92,7 +99,6 @@ spec:
             httpGet:
               path: /api/health
               port: http
-            initialDelaySeconds: 15
             periodSeconds: 30
             timeoutSeconds: 5
             failureThreshold: 6

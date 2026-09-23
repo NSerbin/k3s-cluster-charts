@@ -42,18 +42,24 @@ spec:
             - name: tmp
               mountPath: /tmp
 
-          livenessProbe:
+          startupProbe:
             httpGet:
               path: /
               port: http
             initialDelaySeconds: 10
+            periodSeconds: 5
+            failureThreshold: 18
+
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
             periodSeconds: 10
 
           readinessProbe:
             httpGet:
               path: /
               port: http
-            initialDelaySeconds: 5
             periodSeconds: 5
 
       volumes:

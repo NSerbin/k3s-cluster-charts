@@ -46,18 +46,24 @@ spec:
             - name: http
               containerPort: {{ .Values.mcp.port }}
               protocol: TCP
+          startupProbe:
+            httpGet:
+              path: {{ .Values.mcp.healthPath | quote }}
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 18
           readinessProbe:
             httpGet:
               path: {{ .Values.mcp.healthPath | quote }}
               port: http
-            initialDelaySeconds: 5
             periodSeconds: 10
             timeoutSeconds: 3
           livenessProbe:
             httpGet:
               path: {{ .Values.mcp.healthPath | quote }}
               port: http
-            initialDelaySeconds: 15
             periodSeconds: 20
             timeoutSeconds: 3
           resources:

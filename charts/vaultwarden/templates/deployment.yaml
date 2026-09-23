@@ -111,11 +111,19 @@ spec:
               containerPort: {{ .Values.service.targetPort }}
               protocol: TCP
 
+          startupProbe:
+            httpGet:
+              path: /alive
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 30
+
           readinessProbe:
             httpGet:
               path: /alive
               port: http
-            initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 3
             failureThreshold: 6
@@ -124,7 +132,6 @@ spec:
             httpGet:
               path: /alive
               port: http
-            initialDelaySeconds: 30
             periodSeconds: 20
             timeoutSeconds: 3
             failureThreshold: 6

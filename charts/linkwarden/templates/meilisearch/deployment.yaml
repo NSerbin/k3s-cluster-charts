@@ -43,11 +43,19 @@ spec:
               mountPath: /meili_data
           {{- end }}
 
-          livenessProbe:
+          startupProbe:
             httpGet:
               path: /health
               port: 7700
             initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 30
+
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: 7700
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6
@@ -56,7 +64,6 @@ spec:
             httpGet:
               path: /health
               port: 7700
-            initialDelaySeconds: 10
             periodSeconds: 10
             timeoutSeconds: 5
             failureThreshold: 6

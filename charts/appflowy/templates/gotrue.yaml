@@ -113,17 +113,22 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.gotrue.service.port }}
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 40
+            periodSeconds: 10
+            failureThreshold: 24
           readinessProbe:
             httpGet:
               path: /health
               port: http
-            initialDelaySeconds: 20
             periodSeconds: 10
           livenessProbe:
             httpGet:
               path: /health
               port: http
-            initialDelaySeconds: 60
             periodSeconds: 20
           resources:
             {{- toYaml .Values.gotrue.resources | nindent 12 }}

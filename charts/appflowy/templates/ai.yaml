@@ -90,11 +90,17 @@ spec:
           ports:
             - name: http
               containerPort: {{ .Values.ai.service.port }}
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            initialDelaySeconds: 60
+            periodSeconds: 20
+            failureThreshold: 18
           readinessProbe:
             httpGet:
               path: /health
               port: http
-            initialDelaySeconds: 40
             periodSeconds: 20
           resources:
             {{- toYaml .Values.ai.resources | nindent 12 }}
