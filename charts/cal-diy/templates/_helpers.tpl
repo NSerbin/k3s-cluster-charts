@@ -62,6 +62,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: {{ .Values.app.embedLibUrl | quote }}
 - name: NEXTAUTH_URL
   value: {{ .Values.app.webappUrl | quote }}
+- name: NEXTAUTH_URL_INTERNAL
+  value: {{ .Values.app.nextauthUrlInternal | quote }}
 - name: WEB_APP_URL
   value: {{ .Values.app.webappUrl | quote }}
 - name: NEXT_PUBLIC_API_V2_URL
@@ -84,6 +86,16 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: {{ .Values.app.companyName | quote }}
 - name: NEXT_PUBLIC_SUPPORT_MAIL_ADDRESS
   value: {{ .Values.app.supportEmail | quote }}
+- name: GOOGLE_LOGIN_ENABLED
+  value: {{ .Values.google.loginEnabled | quote }}
+{{- if .Values.google.calendar.enabled }}
+- name: GOOGLE_API_CREDENTIALS
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets.existingSecret | quote }}
+      key: {{ .Values.google.calendar.credentialsSecretKey | quote }}
+      optional: true
+{{- end }}
 - name: DATABASE_URL
   valueFrom:
     secretKeyRef:

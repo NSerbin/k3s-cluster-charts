@@ -24,6 +24,7 @@ app:
   websiteUrl: https://calendar.nserbin.com
   embedLibUrl: https://calendar.nserbin.com/embed/embed.js
   apiV2Url: https://calendar.nserbin.com/api/v2
+  nextauthUrlInternal: http://cal-diy.tools.svc.cluster.local
   allowedHostnames: '"calendar.nserbin.com","cal-diy","cal-diy.tools","cal-diy.tools.svc","cal-diy.tools.svc.cluster.local"'
   reservedSubdomains: '"app","auth","docs","design","console","go","status","api","saml","www","matrix","developer","cal","my","team","support","security","blog","learn","admin"'
   telemetryDisabled: "1"
@@ -34,6 +35,12 @@ app:
   companyName: "NSerbin"
   supportEmail: "nicolas.serbin@gmail.com"
   extraEnv: {}
+
+google:
+  loginEnabled: "false"
+  calendar:
+    enabled: true
+    credentialsSecretKey: GOOGLE_API_CREDENTIALS
 
 email:
   enabled: true
