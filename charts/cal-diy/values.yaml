@@ -24,9 +24,9 @@ app:
   websiteUrl: https://calendar.nserbin.com
   embedLibUrl: https://calendar.nserbin.com/embed/embed.js
   apiV2Url: https://calendar.nserbin.com/api/v2
-  nextauthUrl: http://127.0.0.1:3000
+  nextauthUrl: https://calendar.nserbin.com
   nextauthUrlInternal: http://127.0.0.1:3000
-  allowedHostnames: '"https://calendar.nserbin.com","nserbin.com","calendar.nserbin.com","cal-diy","cal-diy.tools","cal-diy.tools.svc","cal-diy.tools.svc.cluster.local"'
+  allowedHostnames: '"nserbin.com","calendar.nserbin.com","cal-diy","cal-diy.tools","cal-diy.tools.svc","cal-diy.tools.svc.cluster.local"'
   reservedSubdomains: '"app","auth","docs","design","console","go","status","api","saml","www","matrix","developer","cal","my","team","support","security","blog","learn","admin"'
   telemetryDisabled: "1"
   cronEnableAppSync: "false"
