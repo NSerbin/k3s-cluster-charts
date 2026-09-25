@@ -92,7 +92,7 @@ config:
         icon: mdi-school
       Travel:
         icon: mdi-airplane
-      Media Tools:
+      Media:
         icon: mdi-multimedia
       Developer Tools:
         icon: mdi-tools
@@ -306,12 +306,19 @@ config:
     #           kubernetes: false
     #           key: {{HOMEPAGE_VAR_PORTAINER_KEY}}
 
-    - Media Tools:
+    - Media:
         - BentoPDF:
             icon: mdi-file-pdf-box
             href: https://pdf.nserbin.com/
             siteMonitor: http://bentopdf:8080
             description: PDF Tools
+            server: k3s
+
+        - Paperless-ngx:
+            icon: paperless-ngx.svg
+            href: https://paperless.nserbin.com/
+            siteMonitor: http://paperless-ngx/
+            description: Document archive
             server: k3s
 
     - Developer Tools:
@@ -400,13 +407,6 @@ config:
             href: https://whiteboard.nserbin.com/
             siteMonitor: http://excalidraw/
             description: Whiteboard
-            server: k3s
-
-        - Paperless-ngx:
-            icon: paperless-ngx.svg
-            href: https://paperless.nserbin.com/
-            siteMonitor: http://paperless-ngx/
-            description: Document archive
             server: k3s
 
     - Travel:
