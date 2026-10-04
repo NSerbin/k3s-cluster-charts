@@ -321,6 +321,13 @@ config:
             description: Document archive
             server: k3s
 
+        - Excalidraw:
+            icon: mdi-draw
+            href: https://whiteboard.nserbin.com/
+            siteMonitor: http://excalidraw/
+            description: Whiteboard
+            server: k3s
+
     - Developer Tools:
         - IT Tools:
             icon: it-tools.svg
@@ -402,13 +409,6 @@ config:
             description: Scheduling
             server: k3s
 
-        - Excalidraw:
-            icon: mdi-draw
-            href: https://whiteboard.nserbin.com/
-            siteMonitor: http://excalidraw/
-            description: Whiteboard
-            server: k3s
-
     - Travel:
         - TREK:
             icon: mdi-map-marker-path
@@ -452,6 +452,13 @@ config:
             description: Secure secret sharing
             server: k3s
 
+        - Bitwarden:
+            icon: bitwarden.svg
+            href: https://btw.nserbin.com
+            siteMonitor: http://vaultwarden-vaultwarden.tools/
+            description: Bitwarden
+            server: k3s
+
     - Finance:
         - Sure:
             icon: mdi-cash-multiple
@@ -472,13 +479,6 @@ config:
               url: http://authentik-server.tools:9000
               key: {{HOMEPAGE_VAR_AUTHENTIK_KEY}}
               version: 2 
-
-        - Bitwarden:
-            icon: bitwarden.svg
-            href: https://btw.nserbin.com
-            siteMonitor: http://vaultwarden-vaultwarden.tools/
-            description: Bitwarden
-            server: k3s
 
   widgetsYaml: |
     - kubernetes:
