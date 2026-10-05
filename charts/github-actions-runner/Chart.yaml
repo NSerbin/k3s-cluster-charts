@@ -8,11 +8,11 @@ home: https://github.com/actions/actions-runner-controller/releases
 dependencies:
   - name: gha-runner-scale-set-controller
     alias: controller
-    version: 0.14.2
+    version: 0.15.0
     repository: oci://ghcr.io/actions/actions-runner-controller-charts
     condition: controller.enabled
   - name: gha-runner-scale-set
     alias: runnerScaleSet
-    version: 0.14.2
+    version: 0.15.0
     repository: oci://ghcr.io/actions/actions-runner-controller-charts
     condition: runnerScaleSet.enabled
