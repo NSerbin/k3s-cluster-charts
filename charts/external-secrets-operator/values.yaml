@@ -885,6 +885,22 @@ externalSecrets:
             decodingStrategy: None
             metadataPolicy: None
 
+    - name: n8n-secrets-app
+      namespace: tools
+      secretStoreRef:
+        name: vault
+        kind: ClusterSecretStore
+      target:
+        name: n8n-secrets-app
+        creationPolicy: Owner
+        deletionPolicy: Retain
+      dataFrom:
+        - extract:
+            key: k8s/core/productivity/n8n/app
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+
     - name: colanode-secrets-app
       namespace: tools
       secretStoreRef:

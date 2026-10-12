@@ -409,6 +409,13 @@ config:
             description: Scheduling
             server: k3s
 
+        - n8n:
+            icon: n8n.svg
+            href: https://n8n.nserbin.com/
+            siteMonitor: http://n8n/
+            description: Workflow automation
+            server: k3s
+
     - Travel:
         - TREK:
             icon: mdi-map-marker-path

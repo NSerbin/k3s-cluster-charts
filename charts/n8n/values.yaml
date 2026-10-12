@@ -1,0 +1,101 @@
+replicaCount: 1
+
+nameOverride: ""
+fullnameOverride: "n8n"
+
+image:
+  repository: n8nio/n8n
+  tag: "1.114.4"
+  pullPolicy: IfNotPresent
+
+waitImage:
+  repository: busybox
+  tag: "1.36.1"
+  pullPolicy: IfNotPresent
+
+secrets:
+  existingSecret: n8n-secrets-app
+
+app:
+  host: n8n.nserbin.com
+  protocol: https
+  timezone: Europe/Lisbon
+  diagnosticsEnabled: "false"
+  runnersEnabled: "true"
+  enforceSettingsFilePermissions: "true"
+  secureCookie: "true"
+
+postgres:
+  image:
+    repository: postgres
+    tag: "17-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  persistence:
+    enabled: true
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 8Gi
+  resources:
+    requests:
+      cpu: 75m
+      memory: 192Mi
+    limits:
+      cpu: 750m
+      memory: 768Mi
+
+persistence:
+  enabled: true
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  size: 10Gi
+
+service:
+  type: ClusterIP
+  port: 80
+  targetPort: 5678
+
+serviceAccount:
+  create: true
+  name: ""
+  automount: false
+
+podSecurityContext:
+  fsGroup: 1000
+  fsGroupChangePolicy: OnRootMismatch
+
+securityContext:
+  allowPrivilegeEscalation: false
+  readOnlyRootFilesystem: false
+  capabilities:
+    drop:
+      - ALL
+
+resources:
+  requests:
+    cpu: 150m
+    memory: 384Mi
+  limits:
+    cpu: 1000m
+    memory: 1Gi
+
+traefik:
+  ingressRoute:
+    enabled: true
+    entryPoints:
+      - web
+    host: n8n.nserbin.com
+    middlewares: []
+    tls:
+      enabled: false
+      secretName: ""
+
+nodeSelector:
+  kubernetes.io/hostname: k3s-worker-3
+
+tolerations: []
+affinity: {}
+

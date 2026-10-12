@@ -1,0 +1,6 @@
+n8n will be available at:
+  https://{{ .Values.traefik.ingressRoute.host }}
+
+Required secret:
+  {{ .Values.secrets.existingSecret }}
+
