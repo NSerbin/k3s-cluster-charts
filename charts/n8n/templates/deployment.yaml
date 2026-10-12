@@ -25,9 +25,20 @@ spec:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
       initContainers:
         - name: wait-postgres
-          image: {{ include "n8n.waitImage" . | quote }}
-          imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
-          command: ["sh", "-ec", "until nc -z {{ include "n8n.postgresName" . }}.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.postgres.service.port }}; do sleep 2; done"]
+          image: "{{ .Values.postgres.image.repository }}:{{ .Values.postgres.image.tag }}"
+          imagePullPolicy: {{ .Values.postgres.image.pullPolicy }}
+          command: ["sh", "-ec", "until pg_isready -h {{ include "n8n.postgresName" . }}.{{ .Release.Namespace }}.svc.cluster.local -p {{ .Values.postgres.service.port }} -U \"$POSTGRES_USER\" -d \"$POSTGRES_DB\"; do sleep 2; done"]
+          env:
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret | quote }}
+                  key: POSTGRES_USER
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret | quote }}
+                  key: POSTGRES_DB
       containers:
         - name: n8n
           image: {{ include "n8n.image" . | quote }}
