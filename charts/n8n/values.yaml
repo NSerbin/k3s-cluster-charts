@@ -24,6 +24,8 @@ app:
   runnersEnabled: "true"
   enforceSettingsFilePermissions: "true"
   secureCookie: "true"
+  blockEnvAccessInNode: "false"
+  gitNodeDisableBareRepos: "true"
 
 postgres:
   image:

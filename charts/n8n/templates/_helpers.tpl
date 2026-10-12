@@ -66,6 +66,10 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: {{ .Values.app.enforceSettingsFilePermissions | quote }}
 - name: N8N_SECURE_COOKIE
   value: {{ .Values.app.secureCookie | quote }}
+- name: N8N_BLOCK_ENV_ACCESS_IN_NODE
+  value: {{ .Values.app.blockEnvAccessInNode | quote }}
+- name: N8N_GIT_NODE_DISABLE_BARE_REPOS
+  value: {{ .Values.app.gitNodeDisableBareRepos | quote }}
 - name: N8N_PROXY_HOPS
   value: "1"
 - name: DB_TYPE
