@@ -37,7 +37,6 @@ mcp:
     - --disable-proxied
     - --disable-pyroscope
     - --disable-rendering
-    - --disable-sift
     - --disable-snapshot
     - --disable-annotations
     - --disable-provisioning
