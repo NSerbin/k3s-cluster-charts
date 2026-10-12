@@ -412,7 +412,7 @@ config:
         - n8n:
             icon: n8n.svg
             href: https://n8n.nserbin.com/
-            siteMonitor: http://n8n/
+            siteMonitor: http://n8n-main:5678/healthz
             description: Workflow automation
             server: k3s
 

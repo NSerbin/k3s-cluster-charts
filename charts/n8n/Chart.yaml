@@ -1,7 +1,14 @@
 apiVersion: v2
-name: n8n
-description: n8n workflow automation with PostgreSQL and Traefik IngressRoute
+name: n8n-stack
+description: Wrapper chart for official n8n with PostgreSQL and Traefik IngressRoute
 type: application
-version: 0.1.0
-appVersion: "1.114.4"
+version: 0.2.0
+appVersion: "stable"
+home: https://github.com/n8n-io/n8n-hosting
+icon: https://raw.githubusercontent.com/n8n-io/n8n/master/packages/editor-ui/public/images/n8n-logo.png
+
+dependencies:
+  - name: n8n
+    repository: oci://ghcr.io/n8n-io/n8n-helm-chart
+    version: 1.11.0
 
