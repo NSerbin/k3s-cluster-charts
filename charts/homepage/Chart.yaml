@@ -3,5 +3,5 @@ name: homepage
 description: Self-managed chart for gethomepage/homepage (Traefik + Cloudflared friendly)
 type: application
 version: 0.1.1
-appVersion: "v2.1.2"
+appVersion: "v2.5.0"
 home: https://github.com/gethomepage/homepage/releases

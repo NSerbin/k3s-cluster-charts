@@ -3,7 +3,7 @@ name: github-actions-runner
 description: GitHub Actions Runner Controller with a managed runner scale set
 type: application
 version: 0.1.0
-appVersion: "0.14.2"
+appVersion: "0.15.0"
 home: https://github.com/actions/actions-runner-controller/releases
 dependencies:
   - name: gha-runner-scale-set-controller

@@ -3,5 +3,5 @@ name: it-tools
 description: IT-Tools (sharevb fork) behind Traefik
 type: application
 version: 0.1.0
-appVersion: "v2026.7.11"
+appVersion: "v2026.9.27"
 home: https://github.com/ShareVB/it-tools/releases
