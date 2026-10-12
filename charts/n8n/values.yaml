@@ -61,6 +61,13 @@ n8n:
 
   replicaCount: 1
 
+  # Resolve public OAuth endpoints before Kubernetes search suffixes.
+  dnsPolicy: ClusterFirst
+  dnsConfig:
+    options:
+      - name: ndots
+        value: "1"
+
   service:
     type: ClusterIP
     port: 5678
