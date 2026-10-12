@@ -54,8 +54,6 @@ PAPERLESS_SOCIALACCOUNT_PROVIDERS="$(
     '{
     openid_connect: {
       OAUTH_PKCE_ENABLED: true,
-      EMAIL_AUTHENTICATION: true,
-      VERIFIED_EMAIL: true,
       APPS: [{
         provider_id: "authentik",
         name: "authentik",
@@ -63,9 +61,7 @@ PAPERLESS_SOCIALACCOUNT_PROVIDERS="$(
         secret: $secret,
         settings: {
           server_url: $server_url,
-          fetch_userinfo: true,
-          email_authentication: true,
-          verified_email: true
+          fetch_userinfo: true
         }
       }],
       SCOPE: ["openid", "profile", "email"]
