@@ -3,7 +3,7 @@ name: n8n-stack
 description: Wrapper chart for official n8n with PostgreSQL and Traefik IngressRoute
 type: application
 version: 0.2.0
-appVersion: "stable"
+appVersion: "2.44.0"
 home: https://github.com/n8n-io/n8n-hosting
 icon: https://raw.githubusercontent.com/n8n-io/n8n/master/packages/editor-ui/public/images/n8n-logo.png
 
