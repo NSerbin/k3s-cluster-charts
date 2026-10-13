@@ -50,3 +50,7 @@ spec:
         - name: creds
           secret:
             secretName: {{ required "tunnel.credentialsSecretName is required" .Values.tunnel.credentialsSecretName }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}

@@ -191,6 +191,8 @@ traefik:
 studio:
   fullnameOverride: libredb-studio
   replicaCount: 1
+  nodeSelector:
+    workload.nserbin.com/general: "true"
 
   image:
     repository: ghcr.io/libredb/libredb-studio

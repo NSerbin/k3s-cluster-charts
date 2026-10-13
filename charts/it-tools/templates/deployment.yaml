@@ -69,3 +69,7 @@ spec:
           emptyDir: {}
         - name: tmp
           emptyDir: {}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+      {{- end }}

@@ -137,6 +137,9 @@ resources:
     cpu: 250m
     memory: 256Mi
 
+nodeSelector:
+  workload.nserbin.com/general: "true"
+
 securityContext:
   runAsNonRoot: true
   runAsUser: 65532

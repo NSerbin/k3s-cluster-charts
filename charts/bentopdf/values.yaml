@@ -71,6 +71,7 @@ securityContext:
     drop:
       - ALL
 
-nodeSelector: {}
+nodeSelector:
+  workload.nserbin.com/general: "true"
 tolerations: []
 affinity: {}
