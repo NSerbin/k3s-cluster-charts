@@ -8,6 +8,12 @@ metallb:
 
   speaker:
     enabled: true
+    # Keep L2 announcements active on dedicated AI workers after a restart.
+    tolerations:
+      - key: workload
+        operator: Equal
+        value: ai
+        effect: NoSchedule
 
   prometheus:
     rbacPrometheus: true

@@ -160,6 +160,11 @@ n8n:
   nodeSelector:
     kubernetes.io/hostname: k3s-worker-3
 
-  tolerations: []
+  # N8N stays here temporarily because both local-path PVCs are bound to this node.
+  tolerations:
+    - key: workload
+      operator: Equal
+      value: ai
+      effect: NoSchedule
   affinity: {}
 

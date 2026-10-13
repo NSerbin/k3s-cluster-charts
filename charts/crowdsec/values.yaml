@@ -42,6 +42,12 @@ crowdsec:
     pullPolicy: IfNotPresent
 
   agent:
+    # The node-level security agent must also run on dedicated AI workers.
+    tolerations:
+      - key: workload
+        operator: Equal
+        value: ai
+        effect: NoSchedule
     startupProbe:
       httpGet:
         path: /metrics
