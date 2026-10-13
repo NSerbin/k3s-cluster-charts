@@ -1,0 +1,7 @@
+apiVersion: v2
+name: llama-cpp
+description: Internal OpenAI-compatible local inference service
+type: application
+version: 0.1.0
+appVersion: "server"
+home: https://github.com/ggml-org/llama.cpp
