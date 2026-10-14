@@ -24,12 +24,6 @@ traefik:
     kubernetesIngress:
       enabled: true
 
-  experimental:
-    plugins:
-      bouncer:
-        moduleName: github.com/maxlerebourg/crowdsec-bouncer-traefik-plugin
-        version: v1.6.0
-
   ports:
     web:
       port: 80
@@ -79,8 +73,8 @@ traefik:
     - "--ping=true"
     - "--entryPoints.web.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
     - "--entryPoints.websecure.forwardedHeaders.trustedIPs=10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-    - "--entrypoints.web.http.middlewares=traefik-crowdsec-bouncer@kubernetescrd"
-    - "--entrypoints.websecure.http.middlewares=traefik-crowdsec-bouncer@kubernetescrd"
+    - "--entrypoints.web.http.middlewares=traefik-public-rate-limit@kubernetescrd"
+    - "--entrypoints.websecure.http.middlewares=traefik-public-rate-limit@kubernetescrd"
     - "--entrypoints.traefik.address=:9000"
 
   securityContext:
@@ -94,46 +88,17 @@ traefik:
   persistence:
     enabled: false
 
-  volumes:
-    - name: crowdsec-bouncer-secrets
-      type: secret
-      mountPath: /etc/traefik/secrets/crowdsec-bouncer
-
-
 dashboard:
   enabled: true
   host: "traefik.nserbin.com"
   #entryPoint: "websecure"
   entryPoint: "web"
 
-crowdsecBouncer:
+publicRateLimit:
   enabled: true
-
-  secrets:
-    existingSecret: crowdsec-bouncer-secrets
-    keyField: BOUNCER_KEY_traefik
-    mountPath: /etc/traefik/secrets/crowdsec-bouncer
-
-  middleware:
-    enabled: true
-    name: crowdsec-bouncer
-    attachToDashboard: false
-    crowdsecMode: stream
-    crowdsecLapiHost: crowdsec-service.security.svc.cluster.local:8080
-    crowdsecLapiScheme: http
-    forwardedHeadersTrustedIPs:
-      - 10.0.0.0/8
-      - 172.16.0.0/12
-      - 192.168.0.0/16
-    clientTrustedIPs:
-      - 2.82.121.66/32
-    updateIntervalSeconds: 60
-    metricsUpdateIntervalSeconds: 60
-    remediationStatusCode: 403
-    httpTimeoutSeconds: 10
-    crowdsecAppsecEnabled: false
-    crowdsecAppsecHost: crowdsec-appsec-service.security.svc.cluster.local:7422
-    crowdsecAppsecPath: /
-    crowdsecAppsecFailureBlock: false
-    crowdsecAppsecUnreachableBlock: false
-    crowdsecAppsecBodyLimit: 10485760
+  average: 20
+  period: 1s
+  burst: 40
+  sourceCriterion:
+    ipStrategy:
+      depth: 1

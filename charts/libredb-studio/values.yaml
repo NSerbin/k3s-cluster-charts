@@ -78,15 +78,6 @@ seedConnections:
         user: "${GRAFANA_POSTGRES_USER}"
         password: "${GRAFANA_POSTGRES_PASSWORD}"
         roles: ["admin"]
-      - id: crowdsec-postgres
-        name: CrowdSec
-        type: postgres
-        host: crowdsec-postgres.security.svc.cluster.local
-        port: 5432
-        database: "${CROWDSEC_POSTGRES_DB}"
-        user: "${CROWDSEC_POSTGRES_USER}"
-        password: "${CROWDSEC_POSTGRES_PASSWORD}"
-        roles: ["admin"]
       - id: appflowy-postgres
         name: AppFlowy
         type: postgres

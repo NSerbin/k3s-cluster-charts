@@ -1,0 +1,14 @@
+{{- if .Values.publicRateLimit.enabled }}
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: traefik-public-rate-limit
+  namespace: traefik
+spec:
+  rateLimit:
+    average: {{ .Values.publicRateLimit.average }}
+    period: {{ .Values.publicRateLimit.period | quote }}
+    burst: {{ .Values.publicRateLimit.burst }}
+    sourceCriterion:
+{{ toYaml .Values.publicRateLimit.sourceCriterion | indent 6 }}
+{{- end }}
