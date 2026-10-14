@@ -2,7 +2,7 @@
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
 metadata:
-  name: traefik-public-rate-limit
+  name: public-rate-limit
   namespace: traefik
 spec:
   rateLimit:
