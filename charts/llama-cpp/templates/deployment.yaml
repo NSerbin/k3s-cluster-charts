@@ -39,6 +39,8 @@ spec:
             - {{ .Values.server.parallel | quote }}
             - --threads
             - {{ .Values.server.threads | quote }}
+            - --reasoning
+            - {{ .Values.server.reasoning | quote }}
             - --api-key
             - $(LLAMA_API_KEY)
             - --alias

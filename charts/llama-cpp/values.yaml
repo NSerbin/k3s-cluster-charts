@@ -42,3 +42,5 @@ server:
   contextSize: 4096
   parallel: 1
   threads: 2
+  # This endpoint serves structured automation, where hidden reasoning only adds latency.
+  reasoning: "off"
