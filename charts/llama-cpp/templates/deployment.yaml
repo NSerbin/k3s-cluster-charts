@@ -44,7 +44,7 @@ spec:
             - --api-key
             - $(LLAMA_API_KEY)
             - --alias
-            - qwen3-1.7b
+            - {{ .Values.model.alias | quote }}
           env:
             - name: LLAMA_API_KEY
               valueFrom:

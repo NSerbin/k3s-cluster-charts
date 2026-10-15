@@ -6,8 +6,10 @@ image:
   pullPolicy: IfNotPresent
 
 model:
-  repository: bartowski/Qwen_Qwen3-1.7B-GGUF
+  # A fast multilingual model for short, structured automation tasks on 2 vCPU.
+  repository: bartowski/Qwen_Qwen3-0.6B-GGUF
   quantization: Q4_K_M
+  alias: qwen3-0.6b
   cachePath: /root/.cache
 
 service:
@@ -39,7 +41,7 @@ tolerations:
     effect: NoSchedule
 
 server:
-  contextSize: 4096
+  contextSize: 2048
   parallel: 1
   threads: 2
   # This endpoint serves structured automation, where hidden reasoning only adds latency.
