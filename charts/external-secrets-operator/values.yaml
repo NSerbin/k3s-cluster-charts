@@ -42,21 +42,6 @@ externalSecrets:
   refreshInterval: 1h
   items:
 
-    - name: llama-cpp-secrets-app
-      namespace: tools
-      secretStoreRef:
-        name: vault
-        kind: ClusterSecretStore
-      target:
-        name: llama-cpp-secrets-app
-        creationPolicy: Owner
-        deletionPolicy: Retain
-      data:
-        - secretKey: LLAMA_API_KEY
-          remoteRef:
-            key: k8s/tools/ai/llama-cpp/app
-            property: LLAMA_API_KEY
-
     - name: cloudflared-secrets
       namespace: traefik
       secretStoreRef:
