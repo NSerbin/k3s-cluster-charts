@@ -139,6 +139,11 @@ n8n:
         value: "false"
       - name: N8N_SMTP_STARTTLS
         value: "true"
+      - name: OPENROUTER_API_KEY
+        valueFrom:
+          secretKeyRef:
+            name: n8n-secrets-app
+            key: OPENROUTER_API_KEY
 
   webhook:
     enabled: true
