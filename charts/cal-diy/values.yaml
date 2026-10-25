@@ -183,6 +183,9 @@ traefik:
       enabled: false
       secretName: ""
 
-nodeSelector: {}
+# Keep the large Cal.com image and its startup-time bundle rewrite off the
+# recovering USB-backed worker until its container cache has settled.
+nodeSelector:
+  kubernetes.io/hostname: k3s-master
 tolerations: []
 affinity: {}
