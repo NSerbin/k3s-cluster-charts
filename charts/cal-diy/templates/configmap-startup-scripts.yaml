@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "cal-diy.fullname" . }}-startup-scripts
+  labels:
+    {{- include "cal-diy.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+data:
+  replace-placeholder.sh: |
+    #!/bin/sh
+    set -eu
+
+    from=$1
+    to=$2
+
+    if [ "$from" = "$to" ]; then
+      exit 0
+    fi
+
+    # Public Next.js values are emitted into client assets. Excluding the
+    # bundled server dependencies avoids a full recursive scan of node_modules
+    # at every startup on persistent storage.
+    for root in apps/web/.next/static apps/web/public; do
+      [ -d "$root" ] || continue
+      grep -r -l -- "$from" "$root" 2>/dev/null || true
+    done | while IFS= read -r file; do
+      sed -i -e "s|$from|$to|g" "$file"
+    done

@@ -55,6 +55,11 @@ spec:
             {{- include "cal-diy.env" . | nindent 12 }}
           securityContext:
             {{- toYaml .Values.securityContext | nindent 12 }}
+          volumeMounts:
+            - name: startup-scripts
+              mountPath: /calcom/scripts/replace-placeholder.sh
+              subPath: replace-placeholder.sh
+              readOnly: true
           ports:
             - name: http
               containerPort: {{ .Values.service.targetPort }}
@@ -83,6 +88,11 @@ spec:
             failureThreshold: 6
           resources:
             {{- toYaml .Values.web.resources | nindent 12 }}
+      volumes:
+        - name: startup-scripts
+          configMap:
+            name: {{ include "cal-diy.fullname" . }}-startup-scripts
+            defaultMode: 0755
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
