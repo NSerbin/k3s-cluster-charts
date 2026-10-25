@@ -183,9 +183,9 @@ traefik:
       enabled: false
       secretName: ""
 
-# Keep the large Cal.com image and its startup-time bundle rewrite off the
-# recovering USB-backed worker until its container cache has settled.
+# Cal is stateless; keep it off the control-plane node so database recovery
+# and API traffic cannot starve the Kubernetes control plane.
 nodeSelector:
-  kubernetes.io/hostname: k3s-master
+  kubernetes.io/hostname: k3s-node-2
 tolerations: []
 affinity: {}
