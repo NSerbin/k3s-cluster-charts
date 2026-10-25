@@ -49,6 +49,14 @@ email:
 
 web:
   replicas: 1
+  # The upstream entrypoint rewrites the pre-built web bundle before it opens
+  # port 3000. On the cluster's persistent storage this can take several
+  # minutes, so the startup probe must not restart it midway through.
+  startupProbe:
+    initialDelaySeconds: 30
+    periodSeconds: 10
+    timeoutSeconds: 5
+    failureThreshold: 120
   resources:
     requests:
       cpu: 75m
