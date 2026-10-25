@@ -64,6 +64,8 @@ app.kubernetes.io/instance: {{ .Release.Name }}
   value: {{ .Values.app.nextauthUrl | quote }}
 - name: NEXTAUTH_URL_INTERNAL
   value: {{ .Values.app.nextauthUrlInternal | quote }}
+- name: DATABASE_HOST
+  value: {{ printf "%s:%v" (include "cal-diy.postgresName" .) .Values.postgres.service.port | quote }}
 - name: WEB_APP_URL
   value: {{ .Values.app.webappUrl | quote }}
 - name: WEBAPP_URL
