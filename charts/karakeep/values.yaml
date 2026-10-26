@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/karakeep-app/karakeep
-  tag: "0.33.2"
+  tag: "0.34.1"
   pullPolicy: IfNotPresent
 
 service:
@@ -93,7 +93,7 @@ meilisearch:
   enabled: true
   image:
     repository: getmeili/meilisearch
-    tag: "v1.41.0"
+    tag: "v1.55.0"
     pullPolicy: IfNotPresent
   service:
     enabled: true
