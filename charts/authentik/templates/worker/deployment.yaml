@@ -19,6 +19,10 @@ spec:
         app.kubernetes.io/component: worker
         {{- include "authentik.selectorLabels" . | nindent 8 }}
     spec:
+      {{- with .Values.worker.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: authentik
           image: "{{ .Values.worker.image.repository }}:{{ .Values.worker.image.tag }}"

@@ -14,6 +14,8 @@ worker:
     repository: ghcr.io/goauthentik/server
     tag: "2026.8.5"
     pullPolicy: IfNotPresent
+  nodeSelector:
+    kubernetes.io/hostname: k3s-node-2
 
 service:
   type: ClusterIP
