@@ -8,6 +8,12 @@ vault:
     serviceType: ClusterIP
 
   server:
+    # Vault data is a local-path volume bound to the cordoned control-plane node.
+    tolerations:
+      - key: node.kubernetes.io/unschedulable
+        operator: Exists
+        effect: NoSchedule
+
     standalone:
       enabled: false
 
