@@ -17,6 +17,10 @@ spec:
         {{- include "scrutiny.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: web
     spec:
+      {{- with .Values.web.initContainers }}
+      initContainers:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       containers:
         - name: scrutiny
           image: "{{ .Values.web.image.repository }}:{{ .Values.web.image.tag }}"
