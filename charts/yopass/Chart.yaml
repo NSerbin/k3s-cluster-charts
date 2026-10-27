@@ -3,7 +3,7 @@ name: yopass
 description: YoPass exposed via Traefik IngressRoute
 type: application
 version: 0.1.0
-appVersion: "15.0.0"
+appVersion: "16.0.1"
 home: https://github.com/jhaals/yopass/releases
 sources:
   - https://github.com/jhaals/yopass

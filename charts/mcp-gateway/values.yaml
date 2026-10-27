@@ -9,7 +9,7 @@ image:
 
 runtime:
   packages:
-    - "mcp-contextforge-gateway[redis]==1.0.7"
+    - "mcp-contextforge-gateway[redis]==1.1.0"
     - "psycopg[binary]==3.3.4"
   installPath: /tmp/contextforge
 

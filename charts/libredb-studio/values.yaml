@@ -188,7 +188,7 @@ studio:
   image:
     repository: ghcr.io/libredb/libredb-studio
     pullPolicy: IfNotPresent
-    tag: "0.13.4"
+    tag: "1.1.0"
 
   authProvider: oidc
 
