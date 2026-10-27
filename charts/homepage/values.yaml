@@ -178,6 +178,13 @@ config:
         #     description: cAdvisor Dashboard
         #     server: rpi
 
+        - Scrutiny:
+            icon: mdi-harddisk
+            href: https://disks.nserbin.com
+            siteMonitor: http://scrutiny.tools:8080/api/health
+            description: Proxmox SMART disk health
+            server: k3s
+
         - Grafana:
             icon: grafana.png
             href: https://monitor.nserbin.com
