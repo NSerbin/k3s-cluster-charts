@@ -87,11 +87,6 @@ ingress:
     originRequest:
       httpHostHeader: "pdf.nserbin.com"
 
-  - hostname: "mcp.nserbin.com"
-    service: "http://traefik.traefik.svc.cluster.local:80"
-    originRequest:
-      httpHostHeader: "mcp.nserbin.com"
-
   - hostname: "libredb.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
     originRequest:

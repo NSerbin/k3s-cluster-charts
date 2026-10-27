@@ -1,8 +1,0 @@
-apiVersion: v2
-name: mcp-gateway
-description: ContextForge MCP gateway for internal MCP servers
-type: application
-version: 0.1.0
-appVersion: "v1.1.0"
-home: https://github.com/IBM/mcp-context-forge/releases
-

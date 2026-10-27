@@ -366,13 +366,6 @@ config:
             description: Repository secret scanning
 
     - AI:
-        - MCP Gateway:
-            icon: mdi-hub
-            href: https://mcp.nserbin.com/
-            siteMonitor: http://mcp-gateway/
-            description: ContextForge
-            server: k3s
-
         - ChatGPT:
             icon: chatgpt.svg
             href: https://chat.openai.com/

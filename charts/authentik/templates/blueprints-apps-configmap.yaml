@@ -312,13 +312,6 @@ data:
 
       - model: authentik_policies.policybinding
         identifiers:
-          target: !Find [authentik_core.application, [slug, k3s-mcp]]
-          order: 1
-        attrs:
-          group: !Find [authentik_core.group, [name, authentik Admins]]
-
-      - model: authentik_policies.policybinding
-        identifiers:
           target: !Find [authentik_core.application, [slug, monitor]]
           order: 1
         attrs:

@@ -105,15 +105,6 @@ seedConnections:
         user: "${FREEDIUM_POSTGRES_USER}"
         password: "${FREEDIUM_POSTGRES_PASSWORD}"
         roles: ["admin"]
-      - id: mcp-gateway-postgres
-        name: MCP Gateway
-        type: postgres
-        host: mcp-gateway-postgres.tools.svc.cluster.local
-        port: 5432
-        database: mcpgateway
-        user: "${MCP_GATEWAY_POSTGRES_USER}"
-        password: "${MCP_GATEWAY_POSTGRES_PASSWORD}"
-        roles: ["admin"]
       - id: libredb-studio-postgres
         name: LibreDB Studio Storage
         type: postgres
@@ -159,13 +150,6 @@ seedConnections:
         host: freedium-redis.tools.svc.cluster.local
         port: 6379
         roles: ["admin"]
-      - id: mcp-gateway-redis
-        name: MCP Gateway Redis
-        type: redis
-        host: mcp-gateway-redis.tools.svc.cluster.local
-        port: 6379
-        roles: ["admin"]
-
 traefik:
   ingressRoute:
     enabled: true

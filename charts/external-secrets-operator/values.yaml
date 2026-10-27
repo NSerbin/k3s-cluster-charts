@@ -165,20 +165,6 @@ externalSecrets:
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
-        - secretKey: MCP_GATEWAY_OIDC_CLIENT_ID
-          remoteRef:
-            key: k8s/core/security/mcp-gateway/app
-            property: SSO_GENERIC_CLIENT_ID
-            conversionStrategy: Default
-            decodingStrategy: None
-            metadataPolicy: None
-        - secretKey: MCP_GATEWAY_OIDC_CLIENT_SECRET
-          remoteRef:
-            key: k8s/core/security/mcp-gateway/app
-            property: SSO_GENERIC_CLIENT_SECRET
-            conversionStrategy: Default
-            decodingStrategy: None
-            metadataPolicy: None
         - secretKey: VAULT_OIDC_CLIENT_ID
           remoteRef:
             key: k8s/core/security/vault/oidc
@@ -415,38 +401,6 @@ externalSecrets:
       dataFrom:
         - extract:
             key: k8s/core/cicd/argocd/mcp
-            conversionStrategy: Default
-            decodingStrategy: None
-            metadataPolicy: None
-
-    - name: mcp-gateway-secrets-app
-      namespace: tools
-      secretStoreRef:
-        name: vault
-        kind: ClusterSecretStore
-      target:
-        name: mcp-gateway-secrets-app
-        creationPolicy: Owner
-        deletionPolicy: Retain
-      dataFrom:
-        - extract:
-            key: k8s/core/security/mcp-gateway/app
-            conversionStrategy: Default
-            decodingStrategy: None
-            metadataPolicy: None
-
-    - name: mcp-gateway-secrets-db
-      namespace: tools
-      secretStoreRef:
-        name: vault
-        kind: ClusterSecretStore
-      target:
-        name: mcp-gateway-secrets-db
-        creationPolicy: Owner
-        deletionPolicy: Retain
-      dataFrom:
-        - extract:
-            key: k8s/core/security/mcp-gateway/db
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
@@ -989,20 +943,6 @@ externalSecrets:
         - secretKey: FREEDIUM_POSTGRES_PASSWORD
           remoteRef:
             key: k8s/tools/web/freedium/db
-            property: POSTGRES_PASSWORD
-            conversionStrategy: Default
-            decodingStrategy: None
-            metadataPolicy: None
-        - secretKey: MCP_GATEWAY_POSTGRES_USER
-          remoteRef:
-            key: k8s/core/security/mcp-gateway/db
-            property: POSTGRES_USER
-            conversionStrategy: Default
-            decodingStrategy: None
-            metadataPolicy: None
-        - secretKey: MCP_GATEWAY_POSTGRES_PASSWORD
-          remoteRef:
-            key: k8s/core/security/mcp-gateway/db
             property: POSTGRES_PASSWORD
             conversionStrategy: Default
             decodingStrategy: None
