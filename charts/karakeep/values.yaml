@@ -146,6 +146,8 @@ securityContext:
   capabilities:
     drop:
       - ALL
+    add:
+      - CHOWN
 
 nodeSelector: {}
 tolerations: []

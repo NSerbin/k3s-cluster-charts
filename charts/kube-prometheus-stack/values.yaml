@@ -75,6 +75,13 @@ kube-prometheus-stack:
       - volkovlabs-echarts-panel
       - yesoreyeram-infinity-datasource
 
+    # Grafana loads and validates bundled plugins before opening :3000.
+    livenessProbe:
+      initialDelaySeconds: 300
+      timeoutSeconds: 5
+      periodSeconds: 10
+      failureThreshold: 3
+
     securityContext:
       runAsNonRoot: true
       runAsUser: 472
