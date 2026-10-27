@@ -1,0 +1,61 @@
+fullnameOverride: scrutiny
+
+web:
+  replicaCount: 1
+  image:
+    repository: ghcr.io/analogj/scrutiny
+    tag: v0.9.5-web
+    pullPolicy: IfNotPresent
+  service:
+    type: ClusterIP
+    port: 8080
+  persistence:
+    storageClassName: local-path
+    size: 1Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+influxdb:
+  image:
+    repository: influxdb
+    tag: "2.8"
+    pullPolicy: IfNotPresent
+  service:
+    port: 8086
+  persistence:
+    storageClassName: local-path
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: "1"
+      memory: 1Gi
+
+# This private LoadBalancer is only for the Proxmox host collector. The browser
+# UI remains reachable exclusively through Cloudflare Access and Traefik.
+collectorService:
+  enabled: true
+  type: LoadBalancer
+  port: 8080
+  loadBalancerSourceRanges:
+    - 192.168.0.9/32
+
+traefik:
+  ingressRoute:
+    enabled: true
+    host: disks.nserbin.com
+    entryPoints:
+      - web
+
+nodeSelector:
+  workload.nserbin.com/general: "true"
+
+tolerations: []
+affinity: {}

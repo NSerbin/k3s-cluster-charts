@@ -1,0 +1,89 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "scrutiny.fullname" . }}-influxdb
+  labels:
+    {{- include "scrutiny.labels" . | nindent 4 }}
+    app.kubernetes.io/component: influxdb
+spec:
+  selector:
+    {{- include "scrutiny.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: influxdb
+  ports:
+    - name: http
+      port: {{ .Values.influxdb.service.port }}
+      targetPort: http
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: {{ include "scrutiny.fullname" . }}-influxdb
+  labels:
+    {{- include "scrutiny.labels" . | nindent 4 }}
+    app.kubernetes.io/component: influxdb
+spec:
+  serviceName: {{ include "scrutiny.fullname" . }}-influxdb
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "scrutiny.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: influxdb
+  template:
+    metadata:
+      labels:
+        {{- include "scrutiny.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: influxdb
+    spec:
+      containers:
+        - name: influxdb
+          image: "{{ .Values.influxdb.image.repository }}:{{ .Values.influxdb.image.tag }}"
+          imagePullPolicy: {{ .Values.influxdb.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.influxdb.service.port }}
+          volumeMounts:
+            - name: data
+              mountPath: /var/lib/influxdb2
+          startupProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 30
+          readinessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /health
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 3
+          resources:
+            {{- toYaml .Values.influxdb.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+  volumeClaimTemplates:
+    - metadata:
+        name: data
+      spec:
+        accessModes:
+          - ReadWriteOnce
+        storageClassName: {{ .Values.influxdb.persistence.storageClassName | quote }}
+        resources:
+          requests:
+            storage: {{ .Values.influxdb.persistence.size | quote }}

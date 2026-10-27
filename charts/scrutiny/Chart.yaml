@@ -1,0 +1,7 @@
+apiVersion: v2
+name: scrutiny
+description: Scrutiny SMART monitoring hub with persistent InfluxDB storage
+type: application
+version: 0.1.0
+appVersion: "v0.9.5"
+home: https://github.com/AnalogJ/scrutiny/releases
