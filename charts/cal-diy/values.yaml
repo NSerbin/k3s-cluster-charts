@@ -187,5 +187,9 @@ traefik:
 # and API traffic cannot starve the Kubernetes control plane.
 nodeSelector:
   kubernetes.io/hostname: k3s-node-2
-tolerations: []
+tolerations:
+  # Existing local-path volumes for Cal are bound to cluster nodes.
+  - key: node.kubernetes.io/unschedulable
+    operator: Exists
+    effect: NoSchedule
 affinity: {}

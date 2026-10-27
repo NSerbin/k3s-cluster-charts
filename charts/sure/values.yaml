@@ -175,5 +175,9 @@ traefik:
       secretName: ""
 
 nodeSelector: {}
-tolerations: []
+tolerations:
+  # Existing local-path volumes for Sure are bound to cluster nodes.
+  - key: node.kubernetes.io/unschedulable
+    operator: Exists
+    effect: NoSchedule
 affinity: {}

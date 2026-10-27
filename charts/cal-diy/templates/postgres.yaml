@@ -18,6 +18,10 @@ spec:
         {{- include "cal-diy.selectorLabels" . | nindent 8 }}
         app.kubernetes.io/component: postgres
     spec:
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
       securityContext:
         fsGroup: 999
         fsGroupChangePolicy: OnRootMismatch
