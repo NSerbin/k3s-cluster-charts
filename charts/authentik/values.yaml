@@ -57,7 +57,8 @@ blueprints:
 
 postgresql:
   enabled: true
-  image: "postgres:16.3-alpine3.20"
+  # Keep the PostgreSQL 16 data format while using the maintained 16 Alpine tag.
+  image: "postgres:16-alpine"
   serviceName: "authentik-postgres"
   port: 5432
   storage:
