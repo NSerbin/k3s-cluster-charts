@@ -47,7 +47,7 @@ spec:
               containerPort: 853
               protocol: TCP
             - name: http
-              containerPort: 3000
+              containerPort: 80
               protocol: TCP
           readinessProbe:
             httpGet:

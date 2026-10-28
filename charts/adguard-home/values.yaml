@@ -16,7 +16,7 @@ dnsService:
 
 webService:
   type: ClusterIP
-  port: 3000
+  port: 80
 
 persistence:
   storageClassName: local-path

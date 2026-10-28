@@ -173,7 +173,7 @@ config:
         - AdGuard Home:
             icon: adguard-home.png
             href: https://adguard.nserbin.com
-            siteMonitor: http://adguard-home.tools:3000
+            siteMonitor: http://adguard-home.tools:80
             description: Private DNS filtering
             server: k3s
 
