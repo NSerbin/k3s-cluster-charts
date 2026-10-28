@@ -170,13 +170,6 @@ config:
               key: {{HOMEPAGE_VAR_ARGOCD_KEY}}
 
     - Monitoring:
-        - AdGuard Home:
-            icon: adguard-home.png
-            href: https://adguard.nserbin.com
-            siteMonitor: http://adguard-home.tools:80
-            description: Private DNS filtering
-            server: k3s
-
         # RPi service. Kept here to restore quickly if needed.
         # - cAdvisor:
         #     icon: cadvisor.png
@@ -261,6 +254,13 @@ config:
             description: Reddit
 
     - Networking:
+        - AdGuard Home:
+            icon: adguard-home.png
+            href: https://adguard.nserbin.com
+            siteMonitor: http://adguard-home.tools:80
+            description: Private DNS filtering
+            server: k3s
+
         # RPi service. Kept here to restore quickly if needed.
         # - Pi-hole:
         #     icon: pi-hole.svg
