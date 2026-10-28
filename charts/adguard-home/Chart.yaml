@@ -1,0 +1,6 @@
+apiVersion: v2
+name: adguard-home
+description: Private LAN DNS filtering with AdGuard Home
+type: application
+version: 0.1.0
+appVersion: "0.107.79"

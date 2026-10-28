@@ -1,0 +1,44 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "adguard-home.fullname" . }}-dns
+  labels:
+    {{- include "adguard-home.labels" . | nindent 4 }}
+    app.kubernetes.io/component: dns
+spec:
+  type: {{ .Values.dnsService.type }}
+  loadBalancerIP: {{ .Values.dnsService.loadBalancerIP }}
+  loadBalancerSourceRanges:
+    {{- toYaml .Values.dnsService.loadBalancerSourceRanges | nindent 4 }}
+  selector:
+    {{- include "adguard-home.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: dns-tcp
+      port: {{ .Values.dnsService.ports.dns }}
+      targetPort: dns-tcp
+      protocol: TCP
+    - name: dns-udp
+      port: {{ .Values.dnsService.ports.dns }}
+      targetPort: dns-udp
+      protocol: UDP
+    - name: dot
+      port: {{ .Values.dnsService.ports.dot }}
+      targetPort: dot
+      protocol: TCP
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "adguard-home.fullname" . }}
+  labels:
+    {{- include "adguard-home.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web
+spec:
+  type: {{ .Values.webService.type }}
+  selector:
+    {{- include "adguard-home.selectorLabels" . | nindent 4 }}
+  ports:
+    - name: http
+      port: {{ .Values.webService.port }}
+      targetPort: http
+      protocol: TCP

@@ -127,6 +127,11 @@ ingress:
     originRequest:
       httpHostHeader: "disks.nserbin.com"
 
+  - hostname: "adguard.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "adguard.nserbin.com"
+
   - service: "http_status:404"
 
 resources:
