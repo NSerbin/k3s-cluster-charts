@@ -96,6 +96,10 @@ config:
         icon: mdi-multimedia
       Developer Tools:
         icon: mdi-tools
+      Web Tools:
+        icon: mdi-web
+      Automation:
+        icon: mdi-robot-outline
       Cluster:
         icon: mdi-kubernetes
 
@@ -343,13 +347,6 @@ config:
             server: k3s
 
     - Developer Tools:
-        - IT Tools:
-            icon: it-tools.svg
-            href: https://tools.nserbin.com/
-            siteMonitor: http://it-tools:8080/
-            description: Multiple Tools
-            server: k3s
-
         - LibreDB Studio:
             icon: mdi-database-search
             href: https://libredb.nserbin.com/
@@ -383,6 +380,41 @@ config:
             href: https://gemini.google.com/
             description: Gemini
 
+        - OpenRouter:
+            icon: openrouter.svg
+            href: https://openrouter.ai/
+            description: AI model gateway
+
+    - Web Tools:
+        - IT Tools:
+            icon: it-tools.svg
+            href: https://tools.nserbin.com/
+            siteMonitor: http://it-tools:8080/
+            description: Multiple Tools
+            server: k3s
+
+        - Shlink:
+            icon: mdi-link-variant
+            href: https://shorty-admin.nserbin.com/
+            siteMonitor: http://shlink-web-client.tools:8080/
+            description: URL shortener
+            server: k3s
+
+        - Cal.diy:
+            icon: mdi-calendar-clock
+            href: https://calendar.nserbin.com/
+            siteMonitor: http://cal-diy/
+            description: Scheduling
+            server: k3s
+
+    - Automation:
+        - n8n:
+            icon: n8n.svg
+            href: https://n8n.nserbin.com/
+            siteMonitor: http://n8n-main:5678/healthz
+            description: Workflow automation
+            server: k3s
+
     - Knowledge:
         - Karakeep:
             icon: mdi-bookmark-multiple
@@ -407,27 +439,6 @@ config:
             href: https://docs.nserbin.com/
             siteMonitor: http://colanode/
             description: Local-first workspace
-            server: k3s
-
-        - Cal.diy:
-            icon: mdi-calendar-clock
-            href: https://calendar.nserbin.com/
-            siteMonitor: http://cal-diy/
-            description: Scheduling
-            server: k3s
-
-        - n8n:
-            icon: n8n.svg
-            href: https://n8n.nserbin.com/
-            siteMonitor: http://n8n-main:5678/healthz
-            description: Workflow automation
-            server: k3s
-
-        - Shlink:
-            icon: mdi-link-variant
-            href: https://shorty-admin.nserbin.com/
-            siteMonitor: http://shlink-web-client.tools:8080/
-            description: URL shortener
             server: k3s
 
     - Travel:
