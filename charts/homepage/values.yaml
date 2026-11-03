@@ -45,15 +45,17 @@ config:
     traefik: true
 
   settingsYaml: |
-    title: My Homepage Dashboard
+    title: Nserbin Home
     theme: dark
     iconStyle: theme
     color: slate
     language: en
 
-    headerStyle: underlined
-
-
+    headerStyle: clean
+    cardStyle: hairline
+    blockStyle: refined
+    font: plexData
+    fullWidth: true
 
     logpath: /app/config/logs
 
@@ -71,50 +73,104 @@ config:
     showStats: true
 
     layout:
-      # RPi-only category. Kept here to restore quickly if needed.
-      # Management:
-      #   icon: mdi-view-dashboard
-      Monitoring:
-        icon: mdi-monitor-eye
-      Networking:
-        icon: mdi-wan
-      News:
-        icon: mdi-newspaper
-      Security:
-        icon: mdi-security
-      Secrets:
-        icon: mdi-shield-key
-      Finance:
-        icon: mdi-cash-multiple
       AI:
         icon: mdi-creation
-      Knowledge:
-        icon: mdi-school
-      Travel:
-        icon: mdi-airplane
-      Media:
-        icon: mdi-multimedia
-      Developer Tools:
-        icon: mdi-tools
-      Web Tools:
-        icon: mdi-web
+        tab: Workspace
+        style: row
+        columns: 3
       Automation:
         icon: mdi-robot-outline
+        tab: Workspace
+        style: row
+        columns: 3
+      Developer Tools:
+        icon: mdi-tools
+        tab: Workspace
+        style: row
+        columns: 3
+      Knowledge:
+        icon: mdi-school
+        tab: Workspace
+        style: row
+        columns: 3
+      Web Tools:
+        icon: mdi-web
+        tab: Workspace
+        style: row
+        columns: 3
       Cluster:
         icon: mdi-kubernetes
+        tab: Infrastructure
+        style: row
+        columns: 3
+      Monitoring:
+        icon: mdi-monitor-eye
+        tab: Infrastructure
+        style: row
+        columns: 3
+      Networking:
+        icon: mdi-wan
+        tab: Infrastructure
+        style: row
+        columns: 3
+      Secrets:
+        icon: mdi-shield-key
+        tab: Infrastructure
+        style: row
+        columns: 3
+      Security:
+        icon: mdi-security
+        tab: Infrastructure
+        style: row
+        columns: 3
+      Finance:
+        icon: mdi-cash-multiple
+        tab: Personal
+        style: row
+        columns: 3
+      Media:
+        icon: mdi-multimedia
+        tab: Personal
+        style: row
+        columns: 3
+      News:
+        icon: mdi-newspaper
+        tab: Personal
+        style: row
+        columns: 3
+      Travel:
+        icon: mdi-airplane
+        tab: Personal
+        style: row
+        columns: 3
+      Courses:
+        icon: mdi-school-outline
+        tab: Links
+        style: row
+        columns: 4
+      Entertainment:
+        icon: mdi-play-circle-outline
+        tab: Links
+        style: row
+        columns: 4
+      Marketplace:
+        icon: mdi-shopping-outline
+        tab: Links
+        style: row
+        columns: 4
 
   bookmarksYaml: |
     - Courses:
-        - Udemy:
-            - icon: udemy.png
-              abbr: U
-              href: https://www.udemy.com/
-              description: Udemy
         - TutorialsDojo:
             - icon: ""
               abbr: TD
               href: https://tutorialsdojo.com/
               description: Tutorials Dojo
+        - Udemy:
+            - icon: udemy.png
+              abbr: U
+              href: https://www.udemy.com/
+              description: Udemy
 
     - Entertainment:
         - Amazon Music:
@@ -122,21 +178,21 @@ config:
               abbr: AMM
               href: https://music.amazon.com
               description: Amazon Music
-        - YouTube:
-            - icon: youtube.png
-              abbr: YT
-              href: https://youtube.com/
-              description: YouTube
-        - SoundCloud:
-            - icon: mdi-soundcloud
-              abbr: SC
-              href: https://soundcloud.com
-              description: SoundCloud
         - Netflix:
             - icon: netflix.png
               abbr: NF
               href: https://netflix.com
               description: Netflix
+        - SoundCloud:
+            - icon: mdi-soundcloud
+              abbr: SC
+              href: https://soundcloud.com
+              description: SoundCloud
+        - YouTube:
+            - icon: youtube.png
+              abbr: YT
+              href: https://youtube.com/
+              description: YouTube
 
     - Marketplace:
         - Amazon:
@@ -182,15 +238,12 @@ config:
         #     description: cAdvisor Dashboard
         #     server: rpi
 
-        - Scrutiny:
-            icon: mdi-harddisk
-            href: https://disks.nserbin.com
-            siteMonitor: http://scrutiny.tools:8080/api/health
-            description: Proxmox SMART disk health
+        - Alertmanager:
+            icon: alertmanager.png
+            href: https://alerts.nserbin.com
+            siteMonitor: http://kube-prometheus-stack-alertmanager.monitoring:9093/-/healthy
+            description: Alertmanager
             server: k3s
-            widget:
-              type: scrutiny
-              url: http://scrutiny.tools:8080
 
         - Grafana:
             icon: grafana.png
@@ -216,12 +269,15 @@ config:
               type: prometheus
               url: http://kube-prometheus-stack-prometheus.monitoring:9090
 
-        - Alertmanager:
-            icon: alertmanager.png
-            href: https://alerts.nserbin.com
-            siteMonitor: http://kube-prometheus-stack-alertmanager.monitoring:9093/-/healthy
-            description: Alertmanager
+        - Scrutiny:
+            icon: mdi-harddisk
+            href: https://disks.nserbin.com
+            siteMonitor: http://scrutiny.tools:8080/api/health
+            description: Proxmox SMART disk health
             server: k3s
+            widget:
+              type: scrutiny
+              url: http://scrutiny.tools:8080
 
         # RPi service. Kept here to restore quickly if needed.
         # - Uptime Kuma:
@@ -236,6 +292,13 @@ config:
         #       slug: default
 
     - News:
+        - Freedium:
+            icon: mdi-web-sync
+            href: http://free.nserbin.com
+            description: Freedium Web Fork
+            server: k3s
+            siteMonitor: http://freedium-web/
+
         - FreshRSS:
             icon: freshrss.svg
             href: http://rss.nserbin.com
@@ -247,13 +310,6 @@ config:
               url: http://freshrss-freshrss.tools/
               username: {{HOMEPAGE_VAR_FRESHRSS_USERNAME}}
               password: {{HOMEPAGE_VAR_FRESHRSS_PASSWORD}}
-
-        - Freedium:
-            icon: mdi-web-sync
-            href: http://free.nserbin.com
-            description: Freedium Web Fork
-            server: k3s
-            siteMonitor: http://freedium-web/
 
         - Reddit:
             icon: reddit.png
@@ -281,16 +337,6 @@ config:
         #       version: 6
         #       key: {{HOMEPAGE_VAR_PIHOLE_KEY}}
               
-        - Traefik:
-            icon: traefik.svg
-            href: https://traefik.nserbin.com/dashboard/
-            siteMonitor: http://traefik.traefik:9000/ping
-            description: Traefik
-            server: k3s
-            widget:
-              type: traefik
-              url: http://traefik.traefik:9000
-        
         # RPi service. Kept here to restore quickly if needed.
         # - RPI Cloudflare Tunnel:
         #     icon: cloudflare.svg
@@ -311,6 +357,16 @@ config:
               accountid: {{HOMEPAGE_VAR_CLOUDFLARE_ACCOUNT}}
               tunnelid: {{HOMEPAGE_VAR_CLOUDFLARE_K3S_TUNNEL_ID}}
               key: {{HOMEPAGE_VAR_CLOUDFLARE_TOKEN}}
+
+        - Traefik:
+            icon: traefik.svg
+            href: https://traefik.nserbin.com/dashboard/
+            siteMonitor: http://traefik.traefik:9000/ping
+            description: Traefik
+            server: k3s
+            widget:
+              type: traefik
+              url: http://traefik.traefik:9000
 
     # RPi-only category. Kept here to restore quickly if needed.
     # - Management:
@@ -335,6 +391,13 @@ config:
             description: PDF Tools
             server: k3s
 
+        - Excalidraw:
+            icon: mdi-draw
+            href: https://whiteboard.nserbin.com/
+            siteMonitor: http://excalidraw/
+            description: Whiteboard
+            server: k3s
+
         - Paperless-ngx:
             icon: paperless-ngx.svg
             href: https://paperless.nserbin.com/
@@ -347,20 +410,11 @@ config:
               username: {{HOMEPAGE_VAR_PAPERLESS_USERNAME}}
               password: {{HOMEPAGE_VAR_PAPERLESS_PASSWORD}}
 
-        - Excalidraw:
-            icon: mdi-draw
-            href: https://whiteboard.nserbin.com/
-            siteMonitor: http://excalidraw/
-            description: Whiteboard
-            server: k3s
-
     - Developer Tools:
-        - LibreDB Studio:
-            icon: mdi-database-search
-            href: https://libredb.nserbin.com/
-            siteMonitor: http://libredb-studio/
-            description: Database cockpit
-            server: k3s
+        - GitGuardian:
+            icon: mdi-shield-bug
+            href: https://dashboard.gitguardian.com/
+            description: Repository secret scanning
 
         - GitHub:
             icon: github-light.png
@@ -372,10 +426,12 @@ config:
             href: https://gitlab.com/
             description: Gitlab Repository
 
-        - GitGuardian:
-            icon: mdi-shield-bug
-            href: https://dashboard.gitguardian.com/
-            description: Repository secret scanning
+        - LibreDB Studio:
+            icon: mdi-database-search
+            href: https://libredb.nserbin.com/
+            siteMonitor: http://libredb-studio/
+            description: Database cockpit
+            server: k3s
 
     - AI:
         - ChatGPT:
@@ -394,6 +450,13 @@ config:
             description: AI model gateway
 
     - Web Tools:
+        - Cal.diy:
+            icon: mdi-calendar-clock
+            href: https://calendar.nserbin.com/
+            siteMonitor: http://cal-diy/
+            description: Scheduling
+            server: k3s
+
         - IT Tools:
             icon: it-tools.svg
             href: https://tools.nserbin.com/
@@ -408,13 +471,6 @@ config:
             description: URL shortener
             server: k3s
 
-        - Cal.diy:
-            icon: mdi-calendar-clock
-            href: https://calendar.nserbin.com/
-            siteMonitor: http://cal-diy/
-            description: Scheduling
-            server: k3s
-
     - Automation:
         - n8n:
             icon: n8n.svg
@@ -424,17 +480,6 @@ config:
             server: k3s
 
     - Knowledge:
-        - Karakeep:
-            icon: mdi-bookmark-multiple
-            href: https://bookmarks.nserbin.com/
-            siteMonitor: http://karakeep-karakeep:3000
-            description: Bookmarks
-            server: k3s
-            widget:
-              type: karakeep
-              url: http://karakeep-karakeep:3000
-              key: {{HOMEPAGE_VAR_KARAKEEP_APIKEY}}
-
         - AppFlowy:
             icon: appflowy.svg
             href: https://wiki.nserbin.com/
@@ -448,6 +493,17 @@ config:
             siteMonitor: http://colanode/
             description: Local-first workspace
             server: k3s
+
+        - Karakeep:
+            icon: mdi-bookmark-multiple
+            href: https://bookmarks.nserbin.com/
+            siteMonitor: http://karakeep-karakeep:3000
+            description: Bookmarks
+            server: k3s
+            widget:
+              type: karakeep
+              url: http://karakeep-karakeep:3000
+              key: {{HOMEPAGE_VAR_KARAKEEP_APIKEY}}
 
     - Travel:
         - TREK:
@@ -478,11 +534,11 @@ config:
         #       username: {{HOMEPAGE_VAR_FILEBROWSER_USERNAME}}
         #       password: {{HOMEPAGE_VAR_FILEBROWSER_PASSWORD}}
 
-        - Vault:
-            icon: vault.svg
-            href: https://secrets.nserbin.com/
-            siteMonitor: http://vault-ui:8200/v1/sys/health?standbyok=true
-            description: Secrets management
+        - Bitwarden:
+            icon: bitwarden.svg
+            href: https://btw.nserbin.com
+            siteMonitor: http://vaultwarden-vaultwarden.tools/
+            description: Bitwarden
             server: k3s
 
         - Share:
@@ -492,11 +548,11 @@ config:
             description: Secure secret sharing
             server: k3s
 
-        - Bitwarden:
-            icon: bitwarden.svg
-            href: https://btw.nserbin.com
-            siteMonitor: http://vaultwarden-vaultwarden.tools/
-            description: Bitwarden
+        - Vault:
+            icon: vault.svg
+            href: https://secrets.nserbin.com/
+            siteMonitor: http://vault-ui:8200/v1/sys/health?standbyok=true
+            description: Secrets management
             server: k3s
 
     - Finance:
