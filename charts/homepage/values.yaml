@@ -607,15 +607,36 @@ config:
 
   dockerYaml: ""
   customCss: |
-    #layout-groups > .services-group {
+    #layout-groups > .services-group,
+    #layout-groups > .bookmark-group {
       margin-bottom: 1.25rem;
     }
 
     @media (min-width: 768px) {
-      #layout-groups > .services-group {
+      #layout-groups > .services-group,
+      #layout-groups > .bookmark-group {
         flex: 0 0 50% !important;
         max-width: 50%;
       }
+    }
+
+    #tabs {
+      max-width: 56rem;
+      margin: 1rem auto 0 !important;
+    }
+
+    #tabs > ul {
+      padding: 0.25rem;
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      box-shadow: 0 8px 20px rgba(15, 23, 42, 0.18);
+    }
+
+    #tabs li {
+      height: 2.75rem;
+    }
+
+    #tabs button {
+      font-weight: 500;
     }
   customJs: ""
 
