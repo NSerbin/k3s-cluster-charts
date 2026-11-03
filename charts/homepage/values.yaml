@@ -606,7 +606,10 @@ config:
         target: _blank
 
   dockerYaml: ""
-  customCss: ""
+  customCss: |
+    #layout-groups > .services-group {
+      margin-bottom: 1.25rem;
+    }
   customJs: ""
 
 persistence:
