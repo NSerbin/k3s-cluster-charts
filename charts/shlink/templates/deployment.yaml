@@ -1,0 +1,102 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shlink.fullname" . }}
+  labels:
+    {{- include "shlink.labels" . | nindent 4 }}
+    app.kubernetes.io/component: api
+spec:
+  replicas: 1
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "shlink.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: api
+  template:
+    metadata:
+      labels:
+        {{- include "shlink.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: api
+    spec:
+      initContainers:
+        - name: wait-postgres
+          image: busybox:1.37.0
+          command:
+            - /bin/sh
+            - -ec
+            - until nc -z {{ include "shlink.postgresName" . }}.{{ .Release.Namespace }}.svc.cluster.local {{ .Values.postgres.service.port }}; do sleep 2; done
+      containers:
+        - name: shlink
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+          env:
+            - name: DEFAULT_DOMAIN
+              value: {{ .Values.shlink.defaultDomain | quote }}
+            - name: IS_HTTPS_ENABLED
+              value: {{ .Values.shlink.isHttpsEnabled | quote }}
+            - name: SKIP_INITIAL_GEOLITE_DOWNLOAD
+              value: {{ .Values.shlink.skipInitialGeoLiteDownload | quote }}
+            - name: DB_DRIVER
+              value: postgres
+            - name: DB_HOST
+              value: {{ include "shlink.postgresName" . | quote }}
+            - name: DB_PORT
+              value: {{ .Values.postgres.service.port | quote }}
+            - name: DB_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret | quote }}
+                  key: POSTGRES_DB
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret | quote }}
+                  key: POSTGRES_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret | quote }}
+                  key: POSTGRES_PASSWORD
+            - name: INITIAL_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.existingSecret | quote }}
+                  key: INITIAL_API_KEY
+          startupProbe:
+            httpGet:
+              path: /rest/health
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 36
+          readinessProbe:
+            httpGet:
+              path: /rest/health
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /rest/health
+              port: http
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.shlink.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}

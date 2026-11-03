@@ -1,0 +1,7 @@
+apiVersion: v2
+name: shlink
+description: Shlink URL shortener with PostgreSQL persistence
+type: application
+version: 0.1.0
+appVersion: "5.1.8"
+home: https://github.com/shlinkio/shlink/releases

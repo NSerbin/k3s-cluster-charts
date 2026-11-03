@@ -1,0 +1,59 @@
+fullnameOverride: shlink
+
+image:
+  repository: shlinkio/shlink
+  tag: "5.1.8"
+  pullPolicy: IfNotPresent
+
+secrets:
+  existingSecret: shlink-secrets-app
+
+service:
+  type: ClusterIP
+  port: 8080
+
+postgres:
+  image:
+    repository: postgres
+    tag: "17-alpine"
+    pullPolicy: IfNotPresent
+  service:
+    port: 5432
+  persistence:
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+shlink:
+  defaultDomain: shorty.nserbin.com
+  isHttpsEnabled: true
+  # GeoIP enrichment requires a MaxMind license. Basic redirect analytics works without it.
+  skipInitialGeoLiteDownload: true
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+traefik:
+  ingressRoute:
+    enabled: true
+    host: shorty.nserbin.com
+    entryPoints:
+      - web
+
+nodeSelector:
+  workload.nserbin.com/general: "true"
+
+tolerations: []
+affinity: {}
