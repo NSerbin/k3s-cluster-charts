@@ -18,3 +18,24 @@ spec:
         - name: {{ include "shlink.fullname" . }}
           port: {{ .Values.service.port }}
 {{- end }}
+{{- if .Values.traefik.webClientIngressRoute.enabled }}
+---
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "shlink.fullname" . }}-web-client
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "shlink.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    {{- range .Values.traefik.webClientIngressRoute.entryPoints }}
+    - {{ . | quote }}
+    {{- end }}
+  routes:
+    - match: Host(`{{ .Values.traefik.webClientIngressRoute.host }}`)
+      kind: Rule
+      services:
+        - name: {{ include "shlink.fullname" . }}-web-client
+          port: {{ .Values.webClient.service.port }}
+{{- end }}

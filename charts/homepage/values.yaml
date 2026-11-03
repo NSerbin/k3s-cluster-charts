@@ -423,6 +423,13 @@ config:
             description: Workflow automation
             server: k3s
 
+        - Shlink:
+            icon: mdi-link-variant
+            href: https://links.nserbin.com/
+            siteMonitor: http://shlink-web-client.tools:8080/
+            description: URL shortener
+            server: k3s
+
     - Travel:
         - TREK:
             icon: mdi-map-marker-path

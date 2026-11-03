@@ -1,0 +1,73 @@
+{{- if .Values.webClient.enabled }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "shlink.fullname" . }}-web-client
+  labels:
+    {{- include "shlink.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web-client
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      {{- include "shlink.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: web-client
+  template:
+    metadata:
+      labels:
+        {{- include "shlink.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: web-client
+    spec:
+      containers:
+        - name: web-client
+          image: "{{ .Values.webClient.image.repository }}:{{ .Values.webClient.image.tag }}"
+          imagePullPolicy: {{ .Values.webClient.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.webClient.service.port }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 20
+            timeoutSeconds: 3
+          resources:
+            {{- toYaml .Values.webClient.resources | nindent 12 }}
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ include "shlink.fullname" . }}-web-client
+  labels:
+    {{- include "shlink.labels" . | nindent 4 }}
+    app.kubernetes.io/component: web-client
+spec:
+  type: {{ .Values.webClient.service.type }}
+  ports:
+    - name: http
+      port: {{ .Values.webClient.service.port }}
+      targetPort: http
+  selector:
+    {{- include "shlink.selectorLabels" . | nindent 4 }}
+    app.kubernetes.io/component: web-client
+{{- end }}
