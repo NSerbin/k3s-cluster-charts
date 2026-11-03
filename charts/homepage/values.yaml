@@ -425,7 +425,7 @@ config:
 
         - Shlink:
             icon: mdi-link-variant
-            href: https://links.nserbin.com/
+            href: https://shorty-admin.nserbin.com/
             siteMonitor: http://shlink-web-client.tools:8080/
             description: URL shortener
             server: k3s

@@ -70,7 +70,7 @@ traefik:
       - web
   webClientIngressRoute:
     enabled: true
-    host: links.nserbin.com
+    host: shorty-admin.nserbin.com
     entryPoints:
       - web
 

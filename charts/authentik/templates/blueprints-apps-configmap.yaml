@@ -310,6 +310,40 @@ data:
         attrs:
           group: !Find [authentik_core.group, [name, authentik Admins]]
 
+      - model: authentik_providers_proxy.proxyprovider
+        id: k3s-shlink-proxy-provider
+        identifiers:
+          name: k3s-shlink-proxy-provider
+        attrs:
+          authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
+          invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
+          external_host: https://shorty-admin.nserbin.com/
+          internal_host: http://shlink-web-client.tools.svc.cluster.local:8080
+          internal_host_ssl_validation: false
+          mode: forward_single
+
+      - model: authentik_core.application
+        identifiers:
+          slug: shlink
+        attrs:
+          provider: !KeyOf k3s-shlink-proxy-provider
+          name: Shlink
+          meta_launch_url: https://shorty-admin.nserbin.com
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, shlink]]
+          order: 1
+        attrs:
+          group: !Find [authentik_core.group, [name, authentik Admins]]
+
+      - model: authentik_policies.policybinding
+        identifiers:
+          target: !Find [authentik_core.application, [slug, shlink]]
+          order: 2
+        attrs:
+          group: !KeyOf k3s-family-group
+
       - model: authentik_policies.policybinding
         identifiers:
           target: !Find [authentik_core.application, [slug, argocd]]
