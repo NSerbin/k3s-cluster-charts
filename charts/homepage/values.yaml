@@ -444,7 +444,7 @@ config:
             description: Gemini
 
         - OpenRouter:
-            icon: openrouter.svg
+            icon: si-openrouter
             href: https://openrouter.ai/
             description: AI model gateway
 
@@ -609,6 +609,13 @@ config:
   customCss: |
     #layout-groups > .services-group {
       margin-bottom: 1.25rem;
+    }
+
+    @media (min-width: 768px) {
+      #layout-groups > .services-group {
+        flex: 0 0 50% !important;
+        max-width: 50%;
+      }
     }
   customJs: ""
 
