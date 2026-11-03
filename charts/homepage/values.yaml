@@ -55,7 +55,6 @@ config:
     cardStyle: hairline
     blockStyle: refined
     font: plexData
-    fullWidth: true
 
     logpath: /app/config/logs
 
