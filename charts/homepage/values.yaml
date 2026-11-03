@@ -589,10 +589,6 @@ config:
           memory: true
           showLabel: true
 
-    - resources:
-        label: Uptime
-        uptime: true
-
     - datetime:
         text_size: l
         locale: es
@@ -650,6 +646,7 @@ config:
     }
 
     .information-widget-kubernetes {
+      order: 2;
       width: 100%;
       padding: 0.25rem 0.75rem;
       border: 1px solid rgba(148, 163, 184, 0.18);
@@ -658,10 +655,10 @@ config:
     }
 
     #information-widgets-right {
+      order: 1;
       display: grid;
       grid-template-areas:
-        "search datetime"
-        "uptime uptime";
+        "search datetime";
       grid-template-columns: minmax(16rem, 1fr) auto;
       width: 100%;
       margin: 0;
@@ -671,13 +668,6 @@ config:
       border: 1px solid rgba(148, 163, 184, 0.18);
       border-radius: 0.5rem;
       background: rgba(255, 255, 255, 0.035);
-    }
-
-    #information-widgets-right > :first-child {
-      grid-area: uptime;
-      justify-self: start;
-      border-top: 1px solid rgba(148, 163, 184, 0.14);
-      padding-top: 0.35rem;
     }
 
     #information-widgets-right .information-widget-datetime {
@@ -698,8 +688,7 @@ config:
       #information-widgets-right {
         grid-template-areas:
           "search"
-          "datetime"
-          "uptime";
+          "datetime";
         grid-template-columns: 1fr;
       }
     }
