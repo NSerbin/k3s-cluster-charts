@@ -8,7 +8,7 @@ metadata:
     {{- include "authentik.labels" . | nindent 4 }}
 data:
   {{ .Values.blueprints.apps.fileName | default "apps.yaml" }}: |
-    version: 1
+    version: 2
     metadata:
       name: K3s - Authentik managed applications
       labels:
