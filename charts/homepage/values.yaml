@@ -607,14 +607,59 @@ config:
 
   dockerYaml: ""
   customCss: |
-    #layout-groups > .services-group {
+    #layout-groups > .services-group,
+    #layout-groups > .bookmark-group {
       margin-bottom: 1.25rem;
     }
 
     @media (min-width: 768px) {
-      #layout-groups > .services-group {
+      #layout-groups > .services-group,
+      #layout-groups > .bookmark-group {
         flex: 0 0 50% !important;
         max-width: 50%;
+      }
+    }
+
+    #widgets-wrap {
+      align-items: stretch;
+      gap: 0.75rem;
+    }
+
+    .information-widget-kubernetes,
+    #information-widgets-right {
+      border: 1px solid rgba(148, 163, 184, 0.18);
+      border-radius: 0.5rem;
+      background: rgba(255, 255, 255, 0.035);
+    }
+
+    .information-widget-kubernetes {
+      flex: 1 1 42rem;
+      min-width: 0;
+      padding: 0.25rem 0.75rem;
+    }
+
+    #information-widgets-right {
+      flex: 1 1 28rem;
+      min-width: 0;
+      margin: 0;
+      padding: 0.25rem 0.75rem;
+      align-items: center;
+    }
+
+    #information-widgets-right .information-widget-search {
+      flex: 1 1 16rem;
+      min-width: 14rem;
+    }
+
+    #information-widgets-right .information-widget-search > div {
+      margin-top: 0.25rem;
+      margin-bottom: 0.25rem;
+    }
+
+    @media (max-width: 1023px) {
+      .information-widget-kubernetes,
+      #information-widgets-right {
+        flex-basis: 100%;
       }
     }
   customJs: ""
