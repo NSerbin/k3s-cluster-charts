@@ -33,17 +33,8 @@ spec:
     - {{ . | quote }}
     {{- end }}
   routes:
-    - match: Host(`{{ .Values.traefik.webClientIngressRoute.host }}`) && PathPrefix(`/outpost.goauthentik.io/`)
-      kind: Rule
-      priority: 100
-      services:
-        - name: {{ .Values.authentik.service.name }}
-          namespace: {{ .Values.authentik.service.namespace }}
-          port: {{ .Values.authentik.service.port }}
     - match: Host(`{{ .Values.traefik.webClientIngressRoute.host }}`)
       kind: Rule
-      middlewares:
-        - name: {{ include "shlink.fullname" . }}-authentik
       services:
         - name: {{ include "shlink.fullname" . }}-web-client
           port: {{ .Values.webClient.service.port }}
