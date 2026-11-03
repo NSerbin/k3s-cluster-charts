@@ -62,6 +62,14 @@ webClient:
       cpu: 200m
       memory: 128Mi
 
+authentik:
+  enabled: true
+  forwardAuthAddress: http://authentik-server.tools.svc.cluster.local:9000/outpost.goauthentik.io/auth/traefik
+  service:
+    name: authentik-server
+    namespace: tools
+    port: 9000
+
 traefik:
   ingressRoute:
     enabled: true
