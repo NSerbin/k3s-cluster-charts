@@ -492,6 +492,20 @@ externalSecrets:
             conversionStrategy: Default
             decodingStrategy: None
             metadataPolicy: None
+        - secretKey: HOMEPAGE_VAR_PAPERLESS_USERNAME
+          remoteRef:
+            key: k8s/tools/documents/paperless/app
+            property: PAPERLESS_ADMIN_USER
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
+        - secretKey: HOMEPAGE_VAR_PAPERLESS_PASSWORD
+          remoteRef:
+            key: k8s/tools/documents/paperless/app
+            property: PAPERLESS_ADMIN_PASSWORD
+            conversionStrategy: Default
+            decodingStrategy: None
+            metadataPolicy: None
 
     - name: linkwarden-secrets-db
       namespace: tools

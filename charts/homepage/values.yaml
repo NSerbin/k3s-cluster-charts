@@ -188,6 +188,9 @@ config:
             siteMonitor: http://scrutiny.tools:8080/api/health
             description: Proxmox SMART disk health
             server: k3s
+            widget:
+              type: scrutiny
+              url: http://scrutiny.tools:8080
 
         - Grafana:
             icon: grafana.png
@@ -338,6 +341,11 @@ config:
             siteMonitor: http://paperless-ngx/
             description: Document archive
             server: k3s
+            widget:
+              type: paperlessngx
+              url: http://paperless-ngx
+              username: {{HOMEPAGE_VAR_PAPERLESS_USERNAME}}
+              password: {{HOMEPAGE_VAR_PAPERLESS_PASSWORD}}
 
         - Excalidraw:
             icon: mdi-draw
