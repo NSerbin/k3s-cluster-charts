@@ -1,0 +1,9 @@
+apiVersion: v2
+name: affine
+description: Self-hosted AFFiNE workspace
+type: application
+version: 0.1.0
+appVersion: "stable"
+home: https://github.com/toeverything/AFFiNE
+sources:
+  - https://github.com/toeverything/AFFiNE

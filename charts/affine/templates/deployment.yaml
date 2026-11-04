@@ -1,0 +1,92 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "affine.fullname" . }}
+  labels:
+    {{- include "affine.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "affine.selectorLabels" . | nindent 6 }}
+      app.kubernetes.io/component: web
+  template:
+    metadata:
+      labels:
+        {{- include "affine.selectorLabels" . | nindent 8 }}
+        app.kubernetes.io/component: web
+    spec:
+      securityContext:
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+      initContainers:
+        - name: wait-postgres
+          image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
+          command:
+            - sh
+            - -ec
+            - until nc -z {{ include "affine.postgresName" . }} 5432; do sleep 2; done
+        - name: wait-redis
+          image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
+          command:
+            - sh
+            - -ec
+            - until nc -z {{ include "affine.redisName" . }} 6379; do sleep 2; done
+        - name: migrate
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command: ["sh", "-ec", "node ./scripts/self-host-predeploy.js"]
+          env:
+            {{- include "affine.env" . | nindent 12 }}
+          volumeMounts:
+            - name: storage
+              mountPath: {{ .Values.config.storagePath }}
+            - name: config
+              mountPath: {{ .Values.config.configPath }}/config.json
+              subPath: config.json
+              readOnly: true
+      containers:
+        - name: affine
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            {{- include "affine.env" . | nindent 12 }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.targetPort }}
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 20
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 90
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 6
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: storage
+              mountPath: {{ .Values.config.storagePath }}
+            - name: config
+              mountPath: {{ .Values.config.configPath }}/config.json
+              subPath: config.json
+              readOnly: true
+      nodeSelector:
+        {{- toYaml .Values.nodeSelector | nindent 8 }}
+      volumes:
+        - name: storage
+          persistentVolumeClaim:
+            claimName: {{ include "affine.fullname" . }}-storage
+        - name: config
+          configMap:
+            name: {{ include "affine.fullname" . }}-config

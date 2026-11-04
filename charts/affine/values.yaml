@@ -1,0 +1,77 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/toeverything/affine
+  tag: stable
+  pullPolicy: IfNotPresent
+
+waitImage:
+  repository: busybox
+  tag: "1.36.1"
+  pullPolicy: IfNotPresent
+
+secrets:
+  existingSecret: affine-secrets-app
+  vaultPath: k8s/tools/knowledge/affine/app
+
+config:
+  externalUrl: https://affine.nserbin.com
+  host: affine.nserbin.com
+  port: "3010"
+  deploymentType: selfhosted
+  storagePath: /root/.affine/storage
+  configPath: /root/.affine/config
+
+postgres:
+  image:
+    repository: pgvector/pgvector
+    tag: pg16
+    pullPolicy: IfNotPresent
+  persistence:
+    storageClassName: local-path
+    size: 10Gi
+  resources:
+    requests:
+      cpu: 75m
+      memory: 192Mi
+    limits:
+      cpu: 750m
+      memory: 768Mi
+
+redis:
+  image:
+    repository: redis
+    tag: 7-alpine
+    pullPolicy: IfNotPresent
+  persistence:
+    storageClassName: local-path
+    size: 1Gi
+  resources:
+    requests:
+      cpu: 25m
+      memory: 64Mi
+    limits:
+      cpu: 250m
+      memory: 256Mi
+
+persistence:
+  storageClassName: local-path
+  size: 10Gi
+
+service:
+  port: 80
+  targetPort: 3010
+
+resources:
+  requests:
+    cpu: 250m
+    memory: 768Mi
+  limits:
+    cpu: 1500m
+    memory: 2Gi
+
+traefik:
+  host: affine.nserbin.com
+
+nodeSelector:
+  workload.nserbin.com/general: "true"

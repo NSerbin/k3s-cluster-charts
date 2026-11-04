@@ -1,0 +1,15 @@
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: {{ include "affine.fullname" . }}
+  labels:
+    {{- include "affine.labels" . | nindent 4 }}
+spec:
+  entryPoints:
+    - web
+  routes:
+    - match: Host(`{{ .Values.traefik.host }}`) && PathPrefix(`/`)
+      kind: Rule
+      services:
+        - name: {{ include "affine.fullname" . }}
+          port: {{ .Values.service.port }}
