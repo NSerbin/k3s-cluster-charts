@@ -486,11 +486,11 @@ config:
             description: Notes and workspace
             server: k3s
 
-        - Colanode:
-            icon: mdi-file-document-multiple
+        - AFFiNE:
+            icon: affine.svg
             href: https://docs.nserbin.com/
-            siteMonitor: http://colanode/
-            description: Local-first workspace
+            siteMonitor: http://affine/
+            description: Docs, whiteboards and databases
             server: k3s
 
         - Karakeep:
