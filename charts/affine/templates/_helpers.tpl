@@ -52,4 +52,31 @@ app.kubernetes.io/instance: {{ .Release.Name }}
     secretKeyRef:
       name: {{ .Values.secrets.existingSecret | quote }}
       key: AFFINE_PRIVATE_KEY
+- name: MAILER_HOST
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets.existingSecret | quote }}
+      key: MAILER_HOST
+- name: MAILER_PORT
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets.existingSecret | quote }}
+      key: MAILER_PORT
+- name: MAILER_USER
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets.existingSecret | quote }}
+      key: MAILER_USER
+- name: MAILER_PASSWORD
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets.existingSecret | quote }}
+      key: MAILER_PASSWORD
+- name: MAILER_SENDER
+  valueFrom:
+    secretKeyRef:
+      name: {{ .Values.secrets.existingSecret | quote }}
+      key: MAILER_SENDER
+- name: MAILER_SERVERNAME
+  value: {{ .Values.config.host | quote }}
 {{- end -}}
