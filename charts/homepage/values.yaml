@@ -161,12 +161,12 @@ config:
   bookmarksYaml: |
     - Courses:
         - TutorialsDojo:
-            - icon: https://td-mainsite-cdn.tutorialsdojo.com/wp-content/uploads/2018/09/cropped-tutorialsdojo_logo.008-1-192x192.png
+            - icon: https://api.iconify.design/mdi/school-outline.svg?color=%23ffffff
               abbr: TD
               href: https://tutorialsdojo.com/
               description: Tutorials Dojo
         - Udemy:
-            - icon: https://cdn.simpleicons.org/udemy
+            - icon: https://cdn.simpleicons.org/udemy/ffffff
               abbr: U
               href: https://www.udemy.com/
               description: Udemy
@@ -200,17 +200,17 @@ config:
               href: https://amazon.es
               description: Amazon
         - Hagglezone:
-            - icon: https://www.hagglezon.com/favicon.png
+            - icon: https://api.iconify.design/mdi/tag-search-outline.svg?color=%23ffffff
               abbr: HG
               href: https://www.hagglezon.com/
               description: Hagglezon
         - OLX:
-            - icon: https://upload.wikimedia.org/wikipedia/commons/9/91/Logotyp_OLX_.png
+            - icon: https://api.iconify.design/arcticons/olx.svg?color=%23ffffff
               abbr: OLX
               href: https://olx.pt
               description: Classifieds marketplace
         - Vinted:
-            - icon: https://cdn.simpleicons.org/vinted
+            - icon: https://cdn.simpleicons.org/vinted/ffffff
               abbr: V
               href: https://vinted.pt
               description: Vinted
