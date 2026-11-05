@@ -188,7 +188,7 @@ config:
               href: https://soundcloud.com
               description: SoundCloud
         - YouTube:
-            - icon: youtube.png
+            - icon: https://cdn.simpleicons.org/youtube/ffffff
               abbr: YT
               href: https://youtube.com/
               description: YouTube
@@ -311,13 +311,13 @@ config:
               password: {{HOMEPAGE_VAR_FRESHRSS_PASSWORD}}
 
         - Reddit:
-            icon: reddit.png
+            icon: https://cdn.simpleicons.org/reddit/ffffff
             href: https://reddit.com/
             description: Reddit
 
     - Networking:
         - AdGuard Home:
-            icon: adguard-home.png
+            icon: https://cdn.simpleicons.org/adguard/ffffff
             href: https://adguard.nserbin.com
             siteMonitor: http://adguard-home.tools:80
             description: Private DNS filtering
@@ -434,7 +434,7 @@ config:
 
     - AI:
         - ChatGPT:
-            icon: chatgpt.svg
+            icon: https://api.iconify.design/simple-icons/openai.svg?color=%23ffffff
             href: https://chat.openai.com/
             description: ChatGPT
 
@@ -527,7 +527,7 @@ config:
         #       password: {{HOMEPAGE_VAR_FILEBROWSER_PASSWORD}}
 
         - Bitwarden:
-            icon: bitwarden.svg
+            icon: https://cdn.simpleicons.org/bitwarden/ffffff
             href: https://btw.nserbin.com
             siteMonitor: http://vaultwarden-vaultwarden.tools/
             description: Bitwarden
@@ -541,7 +541,7 @@ config:
             server: k3s
 
         - Vault:
-            icon: vault.svg
+            icon: https://cdn.simpleicons.org/vault/ffffff
             href: https://secrets.nserbin.com/
             siteMonitor: http://vault-ui:8200/v1/sys/health?standbyok=true
             description: Secrets management
