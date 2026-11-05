@@ -161,12 +161,12 @@ config:
   bookmarksYaml: |
     - Courses:
         - TutorialsDojo:
-            - icon: ""
+            - icon: https://td-mainsite-cdn.tutorialsdojo.com/wp-content/uploads/2018/09/cropped-tutorialsdojo_logo.008-1-192x192.png
               abbr: TD
               href: https://tutorialsdojo.com/
               description: Tutorials Dojo
         - Udemy:
-            - icon: udemy.png
+            - icon: https://cdn.simpleicons.org/udemy
               abbr: U
               href: https://www.udemy.com/
               description: Udemy
@@ -200,17 +200,17 @@ config:
               href: https://amazon.es
               description: Amazon
         - Hagglezone:
-            - icon: 
+            - icon: https://www.hagglezon.com/favicon.png
               abbr: HG
               href: https://www.hagglezon.com/
               description: Hagglezon
         - OLX:
-            - icon: 
+            - icon: https://upload.wikimedia.org/wikipedia/commons/9/91/Logotyp_OLX_.png
               abbr: OLX
               href: https://olx.pt
-              description: SoundCloud
+              description: Classifieds marketplace
         - Vinted:
-            - icon: 
+            - icon: https://cdn.simpleicons.org/vinted
               abbr: V
               href: https://vinted.pt
               description: Vinted
@@ -463,6 +463,17 @@ config:
             description: Multiple Tools
             server: k3s
 
+        - Karakeep:
+            icon: mdi-bookmark-multiple
+            href: https://bookmarks.nserbin.com/
+            siteMonitor: http://karakeep-karakeep:3000
+            description: Bookmarks
+            server: k3s
+            widget:
+              type: karakeep
+              url: http://karakeep-karakeep:3000
+              key: {{HOMEPAGE_VAR_KARAKEEP_APIKEY}}
+
         - Shlink:
             icon: mdi-link-variant
             href: https://shorty-admin.nserbin.com/
@@ -485,17 +496,6 @@ config:
             siteMonitor: http://affine/
             description: Docs, whiteboards and databases
             server: k3s
-
-        - Karakeep:
-            icon: mdi-bookmark-multiple
-            href: https://bookmarks.nserbin.com/
-            siteMonitor: http://karakeep-karakeep:3000
-            description: Bookmarks
-            server: k3s
-            widget:
-              type: karakeep
-              url: http://karakeep-karakeep:3000
-              key: {{HOMEPAGE_VAR_KARAKEEP_APIKEY}}
 
     - Travel:
         - TREK:
