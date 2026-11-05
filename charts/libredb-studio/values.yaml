@@ -78,15 +78,6 @@ seedConnections:
         user: "${GRAFANA_POSTGRES_USER}"
         password: "${GRAFANA_POSTGRES_PASSWORD}"
         roles: ["admin"]
-      - id: appflowy-postgres
-        name: AppFlowy
-        type: postgres
-        host: appflowy-postgres.tools.svc.cluster.local
-        port: 5432
-        database: "${APPFLOWY_POSTGRES_DB}"
-        user: "${APPFLOWY_POSTGRES_USER}"
-        password: "${APPFLOWY_POSTGRES_PASSWORD}"
-        roles: ["admin"]
       - id: authentik-postgres
         name: Authentik
         type: postgres
@@ -136,12 +127,6 @@ seedConnections:
         name: Argo CD Redis
         type: redis
         host: argocd-redis.argocd.svc.cluster.local
-        port: 6379
-        roles: ["admin"]
-      - id: appflowy-redis
-        name: AppFlowy Redis
-        type: redis
-        host: appflowy-redis.tools.svc.cluster.local
         port: 6379
         roles: ["admin"]
       - id: freedium-redis

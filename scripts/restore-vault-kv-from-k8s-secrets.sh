@@ -162,4 +162,3 @@ restore_secret infra      terraform-shared-backend-secrets-db         k8s/core/t
 echo "==> Done."
 echo "==> Secrets that were not present in Kubernetes must be recreated manually:"
 echo "    - kv/k8s/core/cicd/github-actions-runner/github-app"
-echo "    - kv/k8s/tools/productivity/appflowy/app"

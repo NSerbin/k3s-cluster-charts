@@ -81,58 +81,6 @@ data:
         attrs:
           group: !KeyOf k3s-family-group
 
-      - model: authentik_crypto.certificatekeypair
-        identifiers:
-          name: k3s-appflowy-saml
-        attrs:
-          certificate_data: !Env APPFLOWY_SAML_CERT
-          key_data: !Env APPFLOWY_SAML_PRIVATE_KEY
-
-      - model: authentik_providers_saml.samlprovider
-        id: k3s-appflowy-provider
-        identifiers:
-          name: k3s-appflowy-provider
-        attrs:
-          authorization_flow: !Find [authentik_flows.flow, [slug, default-provider-authorization-implicit-consent]]
-          invalidation_flow: !Find [authentik_flows.flow, [slug, default-provider-invalidation-flow]]
-          acs_url: https://wiki.nserbin.com/gotrue/sso/saml/acs
-          audience: https://wiki.nserbin.com/gotrue/sso/saml/metadata
-          sp_binding: post
-          signing_kp: !Find [authentik_crypto.certificatekeypair, [name, k3s-appflowy-saml]]
-          verification_kp: !Find [authentik_crypto.certificatekeypair, [name, k3s-appflowy-saml]]
-          name_id_mapping: !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/email]]
-          default_relay_state: https://wiki.nserbin.com/app
-          sign_assertion: true
-          sign_response: true
-          digest_algorithm: http://www.w3.org/2001/04/xmlenc#sha256
-          signature_algorithm: http://www.w3.org/2001/04/xmldsig-more#rsa-sha256
-          property_mappings:
-            - !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/email]]
-            - !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/name]]
-            - !Find [authentik_providers_saml.samlpropertymapping, [managed, goauthentik.io/providers/saml/username]]
-
-      - model: authentik_core.application
-        identifiers:
-          slug: appflowy
-        attrs:
-          provider: !KeyOf k3s-appflowy-provider
-          name: k3s-appflowy
-          meta_launch_url: https://wiki.nserbin.com
-
-      - model: authentik_policies.policybinding
-        identifiers:
-          target: !Find [authentik_core.application, [slug, appflowy]]
-          order: 1
-        attrs:
-          group: !Find [authentik_core.group, [name, authentik Admins]]
-
-      - model: authentik_policies.policybinding
-        identifiers:
-          target: !Find [authentik_core.application, [slug, appflowy]]
-          order: 2
-        attrs:
-          group: !KeyOf k3s-family-group
-
       - model: authentik_providers_oauth2.oauth2provider
         id: k3s-homepage-provider
         identifiers:

@@ -210,34 +210,5 @@ patch kv/k8s/tools/documents/paperless/app \
       }
     }')"
 
-if ! vault kv get -format=json kv/k8s/tools/productivity/appflowy/app 2>/dev/null | jq -e '.data.data.AUTH_SAML_CERT_PEM and .data.data.AUTH_SAML_PRIVATE_KEY_PEM and .data.data.AUTH_SAML_CERT and .data.data.GOTRUE_SAML_PRIVATE_KEY' >/dev/null; then
-  tmpdir="$(mktemp -d)"
-  trap 'rm -rf "$tmpdir"' EXIT
-  openssl genrsa -traditional -out "$tmpdir/appflowy-saml.key" 2048 >/dev/null 2>&1
-  openssl req -x509 -new \
-    -key "$tmpdir/appflowy-saml.key" \
-    -out "$tmpdir/appflowy-saml.crt" \
-    -days 3650 \
-    -subj "/CN=k3s-appflowy-saml" >/dev/null 2>&1
-  patch kv/k8s/tools/productivity/appflowy/app \
-    AUTH_SAML_CERT_PEM="$(cat "$tmpdir/appflowy-saml.crt")" \
-    AUTH_SAML_PRIVATE_KEY_PEM="$(cat "$tmpdir/appflowy-saml.key")" \
-    AUTH_SAML_CERT="$(awk 'NF && $0 !~ /-----/ {printf "%s", $0}' "$tmpdir/appflowy-saml.crt")" \
-    GOTRUE_SAML_PRIVATE_KEY="$(awk 'NF && $0 !~ /-----/ {printf "%s", $0}' "$tmpdir/appflowy-saml.key")" \
-    AUTH_SAML_ENABLED="true" \
-    GOTRUE_SAML_ENABLED="true" \
-    AUTH_SAML_ENTRY_POINT="$base/application/saml/appflowy/" \
-    AUTH_SAML_ISSUER="$base/application/saml/appflowy/metadata/" \
-    AUTH_SAML_CALLBACK_URL="https://wiki.nserbin.com/gotrue/sso/saml/acs" \
-    AUTH_SAML_DEFAULT_REDIRECT_URL="https://wiki.nserbin.com/auth/callback"
-else
-  patch kv/k8s/tools/productivity/appflowy/app \
-    AUTH_SAML_ENABLED="true" \
-    GOTRUE_SAML_ENABLED="true" \
-    AUTH_SAML_ENTRY_POINT="$base/application/saml/appflowy/" \
-    AUTH_SAML_ISSUER="$base/application/saml/appflowy/metadata/" \
-    AUTH_SAML_CALLBACK_URL="https://wiki.nserbin.com/gotrue/sso/saml/acs" \
-    AUTH_SAML_DEFAULT_REDIRECT_URL="https://wiki.nserbin.com/auth/callback"
-fi
 
 echo "done"

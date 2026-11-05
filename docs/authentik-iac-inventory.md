@@ -76,7 +76,6 @@ This was read from the live cluster via `ak shell`. Client secrets were intentio
 | k3s-vault | `vault` | `k3s-vault-provider` | OAuth2 | `https://secrets.nserbin.com` | Active |
 | k3s-kuma | `status` | `k3s-kuma-provider` | OAuth2 + Proxy | `https://status.nserbin.com/` | Legacy/candidate for removal |
 | k3s-trek | `trek` | `k3s-trek-provider` | OAuth2/OIDC | `https://travels.nserbin.com` | Added as Helm blueprint |
-| k3s-appflowy | `appflowy` | `k3s-appflowy-provider` | SAML | `https://wiki.nserbin.com` | Added as Helm blueprint |
 | k3s-homepage | `homepage` | `k3s-homepage-provider` | OAuth2/OIDC | `https://home.nserbin.com` | Added as Helm blueprint |
 | k3s-sure | `sure` | `k3s-sure-provider` | OAuth2/OIDC | `https://money.nserbin.com` | Added as Helm blueprint |
 
@@ -202,17 +201,6 @@ Chart supports OIDC env vars. The Authentik provider/application is now declared
 - Authorization callback: `https://travels.nserbin.com/api/auth/oidc/callback`
 - Scope: `openid email profile groups`
 - Client ID/secret: from Vault path `k8s/tools/web/trek`
-
-### AppFlowy
-
-Authentik's official AppFlowy integration uses SAML, not OIDC. The Authentik provider/application is now declared through the `authentik` Helm chart blueprint.
-
-- Application slug: `appflowy`
-- Launch URL: `https://wiki.nserbin.com`
-- SAML ACS URL: `https://wiki.nserbin.com/gotrue/sso/saml/acs`
-- SAML audience: `https://wiki.nserbin.com/gotrue/sso/saml/metadata`
-- SAML metadata/issuer URL: `https://auth.nserbin.com/application/saml/appflowy/metadata/`
-- Certificate/private key: from Vault path `k8s/tools/productivity/appflowy/app`
 
 ### Homepage
 

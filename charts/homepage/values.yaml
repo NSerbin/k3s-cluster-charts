@@ -479,13 +479,6 @@ config:
             server: k3s
 
     - Knowledge:
-        - AppFlowy:
-            icon: appflowy.svg
-            href: https://wiki.nserbin.com/
-            siteMonitor: http://appflowy-web/
-            description: Notes and workspace
-            server: k3s
-
         - AFFiNE:
             icon: affine.svg
             href: https://docs.nserbin.com/
