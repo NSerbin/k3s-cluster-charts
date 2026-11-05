@@ -596,6 +596,11 @@ config:
 
   dockerYaml: ""
   customCss: |
+    .service-icon img,
+    .bookmark-icon img {
+      filter: grayscale(1) brightness(0) invert(1);
+    }
+
     #layout-groups > .services-group {
       margin-bottom: 1.25rem;
     }
