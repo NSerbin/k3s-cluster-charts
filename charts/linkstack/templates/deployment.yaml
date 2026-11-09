@@ -181,25 +181,28 @@ spec:
             - secretRef:
                 name: {{ .Values.secrets.dbSecretName }}
           startupProbe:
-            httpGet:
-              path: /
-              port: http
-              host: {{ .Values.config.publicHost }}
+            exec:
+              command:
+                - sh
+                - -ec
+                - wget -q --header="Host: {{ .Values.config.publicHost }}" -O /dev/null http://127.0.0.1/
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 24
           readinessProbe:
-            httpGet:
-              path: /
-              port: http
-              host: {{ .Values.config.publicHost }}
+            exec:
+              command:
+                - sh
+                - -ec
+                - wget -q --header="Host: {{ .Values.config.publicHost }}" -O /dev/null http://127.0.0.1/
             periodSeconds: 10
             timeoutSeconds: 3
           livenessProbe:
-            httpGet:
-              path: /
-              port: http
-              host: {{ .Values.config.publicHost }}
+            exec:
+              command:
+                - sh
+                - -ec
+                - wget -q --header="Host: {{ .Values.config.publicHost }}" -O /dev/null http://127.0.0.1/
             initialDelaySeconds: 30
             periodSeconds: 20
             timeoutSeconds: 3
