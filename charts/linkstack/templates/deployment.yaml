@@ -52,7 +52,7 @@ spec:
           command:
             - sh
             - -ec
-            - php artisan migrate --force --no-interaction
+            - php83 artisan migrate --force --no-interaction
           env:
             - name: DB_CONNECTION
               value: mysql
