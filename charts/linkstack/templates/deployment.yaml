@@ -184,6 +184,7 @@ spec:
             httpGet:
               path: /
               port: http
+              host: {{ .Values.config.publicHost }}
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 24
@@ -191,12 +192,14 @@ spec:
             httpGet:
               path: /
               port: http
+              host: {{ .Values.config.publicHost }}
             periodSeconds: 10
             timeoutSeconds: 3
           livenessProbe:
             httpGet:
               path: /
               port: http
+              host: {{ .Values.config.publicHost }}
             initialDelaySeconds: 30
             periodSeconds: 20
             timeoutSeconds: 3
