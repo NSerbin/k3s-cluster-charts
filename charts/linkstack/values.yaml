@@ -45,6 +45,11 @@ mysql:
       memory: 768Mi
   nodeSelector:
     workload.nserbin.com/ai: "true"
+  tolerations:
+    - key: workload
+      operator: Equal
+      value: ai
+      effect: NoSchedule
 
 config:
   timezone: Europe/Lisbon
