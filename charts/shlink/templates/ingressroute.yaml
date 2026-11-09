@@ -17,6 +17,13 @@ spec:
       services:
         - name: {{ include "shlink.fullname" . }}
           port: {{ .Values.service.port }}
+    {{- range .Values.traefik.ingressRoute.aliases | default (list) }}
+    - match: Host(`{{ . }}`)
+      kind: Rule
+      services:
+        - name: {{ include "shlink.fullname" $ }}
+          port: {{ $.Values.service.port }}
+    {{- end }}
 {{- end }}
 {{- if .Values.traefik.webClientIngressRoute.enabled }}
 ---

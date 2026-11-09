@@ -49,8 +49,8 @@ mysql:
 config:
   timezone: Europe/Lisbon
   serverAdmin: nicolas.serbin@gmail.com
-  publicHost: links.nserbin.com
-  adminHost: links-admin.nserbin.com
+  publicHost: bio.nserbin.com
+  adminHost: bio-admin.nserbin.com
   phpMemoryLimit: 256M
   uploadMaxFilesize: 16M
 

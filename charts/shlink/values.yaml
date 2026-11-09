@@ -66,6 +66,8 @@ traefik:
   ingressRoute:
     enabled: true
     host: shorty.nserbin.com
+    aliases:
+      - links.nserbin.com
     entryPoints:
       - web
   webClientIngressRoute:

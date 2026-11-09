@@ -147,10 +147,15 @@ ingress:
     originRequest:
       httpHostHeader: "links.nserbin.com"
 
-  - hostname: "links-admin.nserbin.com"
+  - hostname: "bio.nserbin.com"
     service: "http://traefik.traefik.svc.cluster.local:80"
     originRequest:
-      httpHostHeader: "links-admin.nserbin.com"
+      httpHostHeader: "bio.nserbin.com"
+
+  - hostname: "bio-admin.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "bio-admin.nserbin.com"
 
   - service: "http_status:404"
 
