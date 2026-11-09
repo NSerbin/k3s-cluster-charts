@@ -5,6 +5,11 @@ image:
   tag: "v4.8.8"
   pullPolicy: IfNotPresent
 
+waitImage:
+  repository: busybox
+  tag: "1.37.0"
+  pullPolicy: IfNotPresent
+
 service:
   type: ClusterIP
   port: 80
@@ -14,6 +19,30 @@ persistence:
   accessModes:
     - ReadWriteOnce
   size: 2Gi
+
+secrets:
+  dbSecretName: linkstack-secrets-db
+  vaultPath: k8s/tools/web/linkstack/db
+
+mysql:
+  image:
+    repository: mysql
+    tag: "8.4"
+    pullPolicy: IfNotPresent
+  service:
+    port: 3306
+  persistence:
+    storageClassName: local-path
+    accessModes:
+      - ReadWriteOnce
+    size: 2Gi
+  resources:
+    requests:
+      cpu: 75m
+      memory: 256Mi
+    limits:
+      cpu: 750m
+      memory: 768Mi
 
 config:
   timezone: Europe/Lisbon

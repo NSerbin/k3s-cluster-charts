@@ -20,8 +20,15 @@ spec:
         fsGroup: 48
         fsGroupChangePolicy: OnRootMismatch
       initContainers:
+        - name: wait-mysql
+          image: "{{ .Values.waitImage.repository }}:{{ .Values.waitImage.tag }}"
+          imagePullPolicy: {{ .Values.waitImage.pullPolicy }}
+          command:
+            - sh
+            - -ec
+            - until nc -z {{ include "linkstack.fullname" . }}-mysql {{ .Values.mysql.service.port }}; do sleep 2; done
         # A Kubernetes PVC hides the image's /htdocs tree. Seed it once, then
-        # preserve LinkStack's SQLite database, themes and uploaded assets.
+        # preserve LinkStack configuration, themes and uploaded assets.
         - name: seed-data
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
@@ -47,6 +54,31 @@ spec:
             - name: http
               containerPort: 80
           env:
+            - name: DB_CONNECTION
+              value: mysql
+            - name: DB_HOST
+              value: {{ include "linkstack.fullname" . }}-mysql
+            - name: DB_PORT
+              value: {{ .Values.mysql.service.port | quote }}
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName }}
+                  key: MYSQL_DATABASE
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName }}
+                  key: MYSQL_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName }}
+                  key: MYSQL_PASSWORD
+            - name: MAIL_MAILER
+              value: smtp
+            - name: MAIL_FROM_NAME
+              value: LinkStack
             - name: TZ
               value: {{ .Values.config.timezone | quote }}
             - name: SERVER_ADMIN
@@ -59,6 +91,9 @@ spec:
               value: {{ .Values.config.phpMemoryLimit | quote }}
             - name: UPLOAD_MAX_FILESIZE
               value: {{ .Values.config.uploadMaxFilesize | quote }}
+          envFrom:
+            - secretRef:
+                name: {{ .Values.secrets.dbSecretName }}
           startupProbe:
             httpGet:
               path: /
