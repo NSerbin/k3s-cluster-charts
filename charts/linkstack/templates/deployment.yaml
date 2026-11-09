@@ -46,6 +46,59 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+        - name: configure-mysql
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -ec
+            - |
+              php83 -r '
+              $path = "/htdocs/.env";
+              $contents = file_get_contents($path);
+              $values = [
+                "APP_URL" => "https://{{ .Values.config.publicHost }}",
+                "APP_ENV" => "production",
+                "APP_DEBUG" => "false",
+                "DB_CONNECTION" => getenv("DB_CONNECTION"),
+                "DB_HOST" => getenv("DB_HOST"),
+                "DB_PORT" => getenv("DB_PORT"),
+                "DB_DATABASE" => getenv("DB_DATABASE"),
+                "DB_USERNAME" => getenv("DB_USERNAME"),
+                "DB_PASSWORD" => getenv("DB_PASSWORD"),
+              ];
+              foreach ($values as $key => $value) {
+                $line = $key . "=\"" . $value . "\"";
+                $pattern = "/^" . preg_quote($key, "/") . "=.*/m";
+                $contents = preg_match($pattern, $contents) ? preg_replace($pattern, $line, $contents) : $contents . "\\n" . $line . "\\n";
+              }
+              file_put_contents($path, $contents);
+              '
+          env:
+            - name: DB_CONNECTION
+              value: mysql
+            - name: DB_HOST
+              value: {{ include "linkstack.fullname" . }}-mysql
+            - name: DB_PORT
+              value: {{ .Values.mysql.service.port | quote }}
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName }}
+                  key: MYSQL_DATABASE
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName }}
+                  key: MYSQL_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName }}
+                  key: MYSQL_PASSWORD
+          volumeMounts:
+            - name: data
+              mountPath: /htdocs
         - name: migrate-mysql
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
