@@ -142,6 +142,16 @@ ingress:
     originRequest:
       httpHostHeader: "shorty-admin.nserbin.com"
 
+  - hostname: "links.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "links.nserbin.com"
+
+  - hostname: "links-admin.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "links-admin.nserbin.com"
+
   - service: "http_status:404"
 
 resources:

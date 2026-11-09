@@ -1,0 +1,42 @@
+replicaCount: 1
+
+image:
+  repository: linkstackorg/linkstack
+  tag: "v4.8.8"
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+persistence:
+  storageClassName: local-path
+  accessModes:
+    - ReadWriteOnce
+  size: 2Gi
+
+config:
+  timezone: Europe/Lisbon
+  serverAdmin: nicolas.serbin@gmail.com
+  publicHost: links.nserbin.com
+  adminHost: links-admin.nserbin.com
+  phpMemoryLimit: 256M
+  uploadMaxFilesize: 16M
+
+resources:
+  requests:
+    cpu: 50m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+traefik:
+  entryPoints:
+    - web
+
+nodeSelector:
+  workload.nserbin.com/general: "true"
+
+tolerations: []
+affinity: {}

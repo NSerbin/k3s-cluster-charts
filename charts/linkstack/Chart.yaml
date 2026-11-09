@@ -1,0 +1,7 @@
+apiVersion: v2
+name: linkstack
+description: Public LinkStack profiles with a private administration endpoint
+type: application
+version: 0.1.0
+appVersion: "4.8.8"
+home: https://github.com/LinkStackOrg/LinkStack

@@ -1,0 +1,103 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "linkstack.fullname" . }}
+  labels:
+    {{- include "linkstack.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  strategy:
+    type: Recreate
+  selector:
+    matchLabels:
+      {{- include "linkstack.selectorLabels" . | nindent 6 }}
+  template:
+    metadata:
+      labels:
+        {{- include "linkstack.selectorLabels" . | nindent 8 }}
+    spec:
+      securityContext:
+        fsGroup: 48
+        fsGroupChangePolicy: OnRootMismatch
+      initContainers:
+        # A Kubernetes PVC hides the image's /htdocs tree. Seed it once, then
+        # preserve LinkStack's SQLite database, themes and uploaded assets.
+        - name: seed-data
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -ec
+            - |
+              if [ ! -f /data/version.json ]; then
+                cp -a /htdocs/. /data/
+                chown -R 48:48 /data
+              fi
+          securityContext:
+            runAsUser: 0
+            runAsGroup: 0
+          volumeMounts:
+            - name: data
+              mountPath: /data
+      containers:
+        - name: linkstack
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+          env:
+            - name: TZ
+              value: {{ .Values.config.timezone | quote }}
+            - name: SERVER_ADMIN
+              value: {{ .Values.config.serverAdmin | quote }}
+            - name: HTTP_SERVER_NAME
+              value: {{ .Values.config.publicHost | quote }}
+            - name: HTTPS_SERVER_NAME
+              value: {{ .Values.config.publicHost | quote }}
+            - name: PHP_MEMORY_LIMIT
+              value: {{ .Values.config.phpMemoryLimit | quote }}
+            - name: UPLOAD_MAX_FILESIZE
+              value: {{ .Values.config.uploadMaxFilesize | quote }}
+          startupProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 5
+            timeoutSeconds: 3
+            failureThreshold: 24
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            periodSeconds: 10
+            timeoutSeconds: 3
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 20
+            timeoutSeconds: 3
+            failureThreshold: 3
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
+          volumeMounts:
+            - name: data
+              mountPath: /htdocs
+      {{- with .Values.nodeSelector }}
+      nodeSelector:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.tolerations }}
+      tolerations:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      {{- with .Values.affinity }}
+      affinity:
+        {{- toYaml . | nindent 8 }}
+      {{- end }}
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: {{ include "linkstack.fullname" . }}-data
