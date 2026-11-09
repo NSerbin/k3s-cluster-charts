@@ -44,13 +44,7 @@ mysql:
       cpu: 750m
       memory: 768Mi
   nodeSelector:
-    workload.nserbin.com/ai: "true"
     kubernetes.io/hostname: k3s-worker-4
-  tolerations:
-    - key: workload
-      operator: Equal
-      value: ai
-      effect: NoSchedule
 
 config:
   timezone: Europe/Lisbon
