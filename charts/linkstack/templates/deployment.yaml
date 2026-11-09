@@ -56,7 +56,7 @@ spec:
               php83 -r '
               $path = "/htdocs/.env";
               $contents = file_get_contents($path);
-              $contents = str_replace("\\\\n", "\n", $contents);
+              $contents = str_replace("\\n", "\n", $contents);
               $values = [
                 "APP_URL" => "https://{{ .Values.config.publicHost }}",
                 "APP_ENV" => "production",
