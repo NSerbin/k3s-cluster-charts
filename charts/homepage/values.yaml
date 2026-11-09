@@ -157,11 +157,6 @@ config:
         tab: Links
         style: row
         columns: 3
-      Public Links:
-        icon: mdi-link-box-variant-outline
-        tab: Links
-        style: row
-        columns: 3
 
   bookmarksYaml: |
     - Courses:
@@ -219,15 +214,6 @@ config:
               abbr: V
               href: https://vinted.pt
               description: Vinted
-
-    - Public Links:
-        - LinkStack:
-            - icon: mdi-link-box-variant-outline
-              abbr: LS
-              href: https://links-admin.nserbin.com/dashboard
-              siteMonitor: http://linkstack.tools/
-              description: Public link profiles
-              server: k3s
 
   servicesYaml: |
     - Cluster:
@@ -493,6 +479,13 @@ config:
             href: https://shorty-admin.nserbin.com/
             siteMonitor: http://shlink-web-client.tools:8080/
             description: URL shortener
+            server: k3s
+
+        - LinkStack:
+            icon: mdi-link-box-variant-outline
+            href: https://links-admin.nserbin.com/dashboard
+            siteMonitor: http://linkstack.tools/
+            description: Public link profiles
             server: k3s
 
     - Automation:
