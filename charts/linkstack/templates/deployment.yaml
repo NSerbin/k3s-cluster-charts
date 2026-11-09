@@ -46,6 +46,38 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /data
+        - name: migrate-mysql
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          command:
+            - sh
+            - -ec
+            - php artisan migrate --force --no-interaction
+          env:
+            - name: DB_CONNECTION
+              value: mysql
+            - name: DB_HOST
+              value: {{ include "linkstack.fullname" . }}-mysql
+            - name: DB_PORT
+              value: {{ .Values.mysql.service.port | quote }}
+            - name: DB_DATABASE
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName }}
+                  key: MYSQL_DATABASE
+            - name: DB_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName }}
+                  key: MYSQL_USER
+            - name: DB_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.secrets.dbSecretName }}
+                  key: MYSQL_PASSWORD
+          volumeMounts:
+            - name: data
+              mountPath: /htdocs
       containers:
         - name: linkstack
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
