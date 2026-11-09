@@ -58,7 +58,7 @@ spec:
               php83 -r '
               $path = "/htdocs/.env";
               $contents = file_get_contents($path);
-              $contents = str_replace("\\n", "\n", $contents);
+              $contents = str_replace("\\\n", "\n", $contents);
               $values = [
                 "APP_URL" => "https://{{ .Values.config.publicHost }}",
                 "APP_ENV" => "production",
@@ -108,7 +108,7 @@ spec:
           command:
             - sh
             - -ec
-            - php83 artisan migrate --force --no-interaction
+            - cd /htdocs && php83 artisan migrate --force --no-interaction
           env:
             - name: DB_CONNECTION
               value: mysql
@@ -187,7 +187,7 @@ spec:
               command:
                 - sh
                 - -ec
-                - {{ printf "wget -q --header=\"Host: %s\" -O /dev/null http://127.0.0.1/" .Values.config.publicHost | quote }}
+                - {{ printf "wget -q --header=\\"Host: %s\\" -O /dev/null http\://127.0.0.1/" .Values.config.publicHost | quote }}
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 24
@@ -196,7 +196,7 @@ spec:
               command:
                 - sh
                 - -ec
-                - {{ printf "wget -q --header=\"Host: %s\" -O /dev/null http://127.0.0.1/" .Values.config.publicHost | quote }}
+                - {{ printf "wget -q --header=\\"Host: %s\\" -O /dev/null http\://127.0.0.1/" .Values.config.publicHost | quote }}
             periodSeconds: 10
             timeoutSeconds: 3
           livenessProbe:
@@ -204,7 +204,7 @@ spec:
               command:
                 - sh
                 - -ec
-                - {{ printf "wget -q --header=\"Host: %s\" -O /dev/null http://127.0.0.1/" .Values.config.publicHost | quote }}
+                - {{ printf "wget -q --header=\\"Host: %s\\" -O /dev/null http\://127.0.0.1/" .Values.config.publicHost | quote }}
             initialDelaySeconds: 30
             periodSeconds: 20
             timeoutSeconds: 3
