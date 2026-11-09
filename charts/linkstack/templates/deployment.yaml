@@ -185,7 +185,7 @@ spec:
               command:
                 - sh
                 - -ec
-                - wget -q --header="Host: {{ .Values.config.publicHost }}" -O /dev/null http://127.0.0.1/
+                - {{ printf "wget -q --header=\"Host: %s\" -O /dev/null http://127.0.0.1/" .Values.config.publicHost | quote }}
             periodSeconds: 5
             timeoutSeconds: 3
             failureThreshold: 24
@@ -194,7 +194,7 @@ spec:
               command:
                 - sh
                 - -ec
-                - wget -q --header="Host: {{ .Values.config.publicHost }}" -O /dev/null http://127.0.0.1/
+                - {{ printf "wget -q --header=\"Host: %s\" -O /dev/null http://127.0.0.1/" .Values.config.publicHost | quote }}
             periodSeconds: 10
             timeoutSeconds: 3
           livenessProbe:
@@ -202,7 +202,7 @@ spec:
               command:
                 - sh
                 - -ec
-                - wget -q --header="Host: {{ .Values.config.publicHost }}" -O /dev/null http://127.0.0.1/
+                - {{ printf "wget -q --header=\"Host: %s\" -O /dev/null http://127.0.0.1/" .Values.config.publicHost | quote }}
             initialDelaySeconds: 30
             periodSeconds: 20
             timeoutSeconds: 3
