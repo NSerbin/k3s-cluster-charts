@@ -32,6 +32,7 @@ spec:
               if [ ! -f /data/version.json ]; then
                 cp -a /htdocs/. /data/
               fi
+              chown 48:48 /data
           securityContext:
             runAsUser: 0
             runAsGroup: 0
