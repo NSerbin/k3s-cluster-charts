@@ -71,7 +71,7 @@ spec:
           volumeMounts:
             - name: data
               mountPath: /var/lib/mysql
-      {{- with .Values.nodeSelector }}
+      {{- with .Values.mysql.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
