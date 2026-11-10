@@ -4,7 +4,7 @@ fullnameOverride: grafana-mcp
 
 image:
   repository: grafana/mcp-grafana
-  tag: "2.1.1"
+  tag: "2.2.0"
   pullPolicy: IfNotPresent
 
 grafana:
