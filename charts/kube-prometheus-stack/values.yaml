@@ -100,6 +100,20 @@ kube-prometheus-stack:
       - volkovlabs-echarts-panel
       - yesoreyeram-infinity-datasource
 
+    # PostgreSQL is local to the cluster and may need WAL recovery after an
+    # unclean shutdown. Avoid a Grafana crash loop while it is unavailable.
+    extraInitContainers:
+      - name: wait-for-postgres
+        image: busybox:1.36.1
+        command:
+          - sh
+          - -ec
+          - |
+            until nc -z grafana-postgres.monitoring.svc.cluster.local 5432; do
+              echo 'Waiting for Grafana PostgreSQL...'
+              sleep 5
+            done
+
     # Grafana loads and validates bundled plugins before opening :3000.
     startupProbe:
       httpGet:
