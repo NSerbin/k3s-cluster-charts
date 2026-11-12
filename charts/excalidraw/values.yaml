@@ -69,6 +69,7 @@ extraVolumes:
   - name: tmp
     emptyDir: {}
 
-nodeSelector: {}
+nodeSelector:
+  workload.nserbin.com/lenovo: "true"
 tolerations: []
 affinity: {}

@@ -21,7 +21,8 @@ service:
   port: 3000
 
 resources: {}
-nodeSelector: {}
+nodeSelector:
+  workload.nserbin.com/lenovo: "true"
 tolerations: []
 affinity: {}
 

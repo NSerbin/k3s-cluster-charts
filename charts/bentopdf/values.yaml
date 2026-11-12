@@ -72,6 +72,6 @@ securityContext:
       - ALL
 
 nodeSelector:
-  workload.nserbin.com/general: "true"
+  workload.nserbin.com/lenovo: "true"
 tolerations: []
 affinity: {}

@@ -49,6 +49,7 @@ ingressRoute:
     - "/"
 
 # Opcional (pero útil)
-nodeSelector: {}
+nodeSelector:
+  workload.nserbin.com/lenovo: "true"
 tolerations: []
 affinity: {}

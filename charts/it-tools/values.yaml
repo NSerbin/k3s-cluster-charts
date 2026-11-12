@@ -38,4 +38,4 @@ podSecurityContext:
   fsGroup: 65532
 
 nodeSelector:
-  workload.nserbin.com/general: "true"
+  workload.nserbin.com/lenovo: "true"
