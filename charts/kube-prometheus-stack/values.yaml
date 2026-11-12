@@ -47,6 +47,31 @@ kube-prometheus-stack:
 
       enableAdminAPI: false
 
+      # Give the TSDB time to replay its WAL after an unclean host shutdown.
+      containers:
+        - name: prometheus
+          startupProbe:
+            httpGet:
+              path: /-/ready
+              port: http-web
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 80
+          readinessProbe:
+            httpGet:
+              path: /-/ready
+              port: http-web
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 12
+          livenessProbe:
+            httpGet:
+              path: /-/healthy
+              port: http-web
+            periodSeconds: 15
+            timeoutSeconds: 5
+            failureThreshold: 8
+
   prometheusOperator:
     admissionWebhooks:
       enabled: false
@@ -78,9 +103,15 @@ kube-prometheus-stack:
     # Grafana loads and validates bundled plugins before opening :3000.
     livenessProbe:
       initialDelaySeconds: 300
+      timeoutSeconds: 10
+      periodSeconds: 15
+      failureThreshold: 6
+
+    readinessProbe:
+      initialDelaySeconds: 120
       timeoutSeconds: 5
       periodSeconds: 10
-      failureThreshold: 3
+      failureThreshold: 12
 
     securityContext:
       runAsNonRoot: true
