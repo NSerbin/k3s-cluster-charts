@@ -48,7 +48,7 @@ spec:
               valueFrom:
                 secretKeyRef:
                   name: {{ .Values.secrets.dbSecretName }}
-                  key: MYSQL_ROOT_PASSWORD
+                  key: MYSQL_PASSWORD
           startupProbe:
             exec:
               command: ["sh", "-ec", "mysqladmin ping -h 127.0.0.1 -uroot -p\"$MYSQL_ROOT_PASSWORD\""]
