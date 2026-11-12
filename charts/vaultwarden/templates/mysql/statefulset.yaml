@@ -51,6 +51,15 @@ spec:
             timeoutSeconds: 1
             failureThreshold: 6
 
+          # InnoDB may need several minutes to recover its WAL after an unclean shutdown.
+          # Keep liveness disabled until the server has opened its TCP listener once.
+          startupProbe:
+            tcpSocket:
+              port: mysql
+            periodSeconds: 10
+            timeoutSeconds: 3
+            failureThreshold: 60
+
           resources:
             {{- toYaml .Values.mysqlResources | nindent 12 }}
 
