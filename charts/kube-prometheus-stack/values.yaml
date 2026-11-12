@@ -101,6 +101,14 @@ kube-prometheus-stack:
       - yesoreyeram-infinity-datasource
 
     # Grafana loads and validates bundled plugins before opening :3000.
+    startupProbe:
+      httpGet:
+        path: /api/health
+        port: grafana
+      periodSeconds: 15
+      timeoutSeconds: 10
+      failureThreshold: 60
+
     livenessProbe:
       initialDelaySeconds: 300
       timeoutSeconds: 10

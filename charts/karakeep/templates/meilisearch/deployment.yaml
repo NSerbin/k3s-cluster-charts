@@ -7,6 +7,10 @@ metadata:
     {{- include "karakeep.labels" . | nindent 4 }}
     app.kubernetes.io/component: meilisearch
 spec:
+  # Meilisearch uses a single-writer local volume. Recreate avoids two ReplicaSets
+  # concurrently opening its LMDB files during a chart upgrade.
+  strategy:
+    type: Recreate
   replicas: 1
   selector:
     matchLabels:
