@@ -15,7 +15,7 @@ worker:
     tag: "2026.8.5"
     pullPolicy: IfNotPresent
   nodeSelector:
-    kubernetes.io/hostname: k3s-node-2
+    kubernetes.io/hostname: k3s-worker-3
 
 service:
   type: ClusterIP
