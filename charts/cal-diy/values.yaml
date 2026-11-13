@@ -183,13 +183,9 @@ traefik:
       enabled: false
       secretName: ""
 
-# Cal is stateless; keep it off the control-plane node so database recovery
-# and API traffic cannot starve the Kubernetes control plane.
+# Cal is stateless. Run it on the Lenovo workers so it does not add I/O or
+# CPU pressure to the NUC nodes hosting local-path volumes.
 nodeSelector:
-  kubernetes.io/hostname: k3s-node-2
-tolerations:
-  # Existing local-path volumes for Cal are bound to cluster nodes.
-  - key: node.kubernetes.io/unschedulable
-    operator: Exists
-    effect: NoSchedule
+  workload.nserbin.com/ai: "true"
+tolerations: []
 affinity: {}
