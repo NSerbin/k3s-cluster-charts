@@ -183,9 +183,9 @@ traefik:
       enabled: false
       secretName: ""
 
-# Cal is stateless. Run it on the Lenovo workers so it does not add I/O or
-# CPU pressure to the NUC nodes hosting local-path volumes.
+# Cal is stateless. Run it on general workers so it does not add I/O or CPU
+# pressure to the NUC nodes hosting local-path volumes.
 nodeSelector:
-  workload.nserbin.com/ai: "true"
+  workload.nserbin.com/general: "true"
 tolerations: []
 affinity: {}
