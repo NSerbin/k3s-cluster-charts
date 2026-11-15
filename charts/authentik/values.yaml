@@ -49,6 +49,8 @@ authentik:
   extraEnvFromSecrets:
     - name: authentik-apps-oidc-secrets
       optional: false
+    - name: attic-oidc-secrets
+      optional: false
 
 blueprints:
   enabled: true

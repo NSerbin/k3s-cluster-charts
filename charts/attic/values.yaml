@@ -1,0 +1,62 @@
+replicaCount: 1
+
+image:
+  repository: ghcr.io/lmmendes/attic
+  tag: "2.8.1"
+  pullPolicy: IfNotPresent
+
+postgres:
+  image:
+    repository: postgres
+    tag: "16.11-alpine"
+    pullPolicy: IfNotPresent
+  persistence:
+    storageClassName: local-path
+    size: 5Gi
+  resources:
+    requests:
+      cpu: 75m
+      memory: 192Mi
+    limits:
+      cpu: 600m
+      memory: 768Mi
+
+service:
+  type: ClusterIP
+  port: 8080
+
+persistence:
+  storageClassName: local-path
+  uploadsSize: 20Gi
+
+secrets:
+  existingSecret: attic-secrets-app
+  vaultPath: k8s/tools/web/attic/app
+
+config:
+  ATTIC_PORT: "8080"
+  ATTIC_BASE_URL: https://inventory.nserbin.com
+  ATTIC_CORS_ORIGINS: https://inventory.nserbin.com
+  ATTIC_LOCAL_STORAGE_PATH: /data/uploads
+  ATTIC_OIDC_ENABLED: "true"
+  ATTIC_OIDC_AUTO_REDIRECT: "true"
+  ATTIC_OIDC_ISSUER_URL: https://auth.nserbin.com/application/o/attic/
+
+resources:
+  requests:
+    cpu: 75m
+    memory: 192Mi
+  limits:
+    cpu: 750m
+    memory: 768Mi
+
+traefik:
+  host: inventory.nserbin.com
+  entryPoints:
+    - web
+
+nodeSelector:
+  kubernetes.io/hostname: k3s-worker-3
+
+tolerations: []
+affinity: {}

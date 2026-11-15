@@ -157,6 +157,11 @@ ingress:
     originRequest:
       httpHostHeader: "bio-admin.nserbin.com"
 
+  - hostname: "inventory.nserbin.com"
+    service: "http://traefik.traefik.svc.cluster.local:80"
+    originRequest:
+      httpHostHeader: "inventory.nserbin.com"
+
   - service: "http_status:404"
 
 resources:

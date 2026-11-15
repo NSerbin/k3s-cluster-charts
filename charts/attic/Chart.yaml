@@ -1,0 +1,7 @@
+apiVersion: v2
+name: attic
+description: Self-hosted household inventory with PostgreSQL, Authentik OIDC and local attachments
+type: application
+version: 0.1.0
+appVersion: "2.8.1"
+home: https://github.com/lmmendes/attic/releases

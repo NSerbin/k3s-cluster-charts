@@ -1,0 +1,27 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "attic.fullname" . }}-uploads
+  labels:
+    {{- include "attic.labels" . | nindent 4 }}
+spec:
+  storageClassName: {{ .Values.persistence.storageClassName | quote }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.persistence.uploadsSize | quote }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: {{ include "attic.fullname" . }}-postgres-data
+  labels:
+    {{- include "attic.labels" . | nindent 4 }}
+spec:
+  storageClassName: {{ .Values.postgres.persistence.storageClassName | quote }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.postgres.persistence.size | quote }}
