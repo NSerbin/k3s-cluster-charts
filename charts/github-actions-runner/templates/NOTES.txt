@@ -1,8 +1,9 @@
 GitHub Actions Runner Controller:
   controller namespace: {{ .Values.namespaces.controller }}
   runners namespace: {{ .Values.namespaces.runners }}
-  runner scale set: {{ .Values.runnerScaleSet.runnerScaleSetName }}
-  github config url: {{ .Values.runnerScaleSet.githubConfigUrl }}
+  deploy runner scale set: {{ .Values.deployRunnerScaleSet.runnerScaleSetName }}
+  build runner scale set: {{ .Values.buildRunnerScaleSet.runnerScaleSetName }}
+  github config url: {{ .Values.deployRunnerScaleSet.githubConfigUrl }}
 
 Required Vault secret:
   {{ .Values.secrets.vaultPath }}
@@ -18,9 +19,8 @@ Required GitHub App repository permissions for repository-scoped runners:
 
 Alternative PAT auth:
   If using a PAT instead of GitHub App, make the target Kubernetes secret
-  contain github_token and set runnerScaleSet.githubConfigSecret to that secret.
+  contain github_token and set the relevant scale set githubConfigSecret to that secret.
 
 Workflow runs-on labels:
-{{- range .Values.runnerScaleSet.scaleSetLabels }}
-  - {{ . }}
-{{- end }}
+  - {{ .Values.deployRunnerScaleSet.runnerScaleSetName }}
+  - {{ .Values.buildRunnerScaleSet.runnerScaleSetName }}

@@ -2,23 +2,23 @@ namespaces:
   create: false
   controller: arc-systems
   runners: github-runners
-  extraRunners: []
 
 secrets:
   githubConfigSecretName: github-actions-runner-github-app
   vaultPath: k8s/core/cicd/github-actions-runner/github-app
 
 controller:
-  enabled: false
+  enabled: true
   namespaceOverride: arc-systems
+  fullnameOverride: arc-controller
   replicaCount: 1
   image:
     repository: ghcr.io/actions/gha-runner-scale-set-controller
-    tag: "0.15.0"
+    tag: "0.15.1"
     pullPolicy: IfNotPresent
   serviceAccount:
     create: true
-    name: arc-gha-rs-controller
+    name: arc-controller
   flags:
     logLevel: info
     logFormat: text
@@ -40,28 +40,18 @@ controller:
     capabilities:
       drop:
         - ALL
-  nodeSelector: {}
-  tolerations: []
-  affinity: {}
 
-runnerScaleSet:
-  enabled: false
+deployRunnerScaleSet:
+  enabled: true
   namespaceOverride: github-runners
-  githubConfigUrl: https://github.com/NSerbin/tf-cloudflare
+  githubConfigUrl: https://github.com/NSerbin
   githubConfigSecret: github-actions-runner-github-app
   controllerServiceAccount:
     namespace: arc-systems
-    name: arc-gha-rs-controller
-  runnerScaleSetName: gh-arc-dind
-  scaleSetLabels:
-    - self-hosted
-    - gh-arc
-    - k3s
-    - dind
-    - linux
-    - x64
+    name: arc-controller
+  runnerScaleSetName: nserbin-deploy
   minRunners: 0
-  maxRunners: 0
+  maxRunners: 1
   listenerTemplate:
     spec:
       containers:
@@ -75,6 +65,62 @@ runnerScaleSet:
               memory: 256Mi
   template:
     spec:
+      automountServiceAccountToken: false
+      containers:
+        - name: runner
+          image: ghcr.io/actions/actions-runner:2.331.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - /home/runner/run.sh
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: 1000m
+              memory: 1536Mi
+              ephemeral-storage: 4Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+      volumes:
+        - name: work
+          emptyDir:
+            sizeLimit: 4Gi
+
+buildRunnerScaleSet:
+  enabled: true
+  namespaceOverride: github-runners
+  githubConfigUrl: https://github.com/NSerbin
+  githubConfigSecret: github-actions-runner-github-app
+  controllerServiceAccount:
+    namespace: arc-systems
+    name: arc-controller
+  runnerScaleSetName: nserbin-build
+  minRunners: 0
+  maxRunners: 1
+  listenerTemplate:
+    spec:
+      containers:
+        - name: listener
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+  template:
+    spec:
+      automountServiceAccountToken: false
+      nodeSelector:
+        workload.nserbin.com/lenovo: "true"
       securityContext:
         fsGroup: 123
       initContainers:
@@ -103,13 +149,18 @@ runnerScaleSet:
               value: "120"
           resources:
             requests:
-              cpu: 250m
+              cpu: 500m
               memory: 512Mi
               ephemeral-storage: 1Gi
             limits:
-              cpu: 2000m
-              memory: 4Gi
-              ephemeral-storage: 8Gi
+              cpu: 1000m
+              memory: 1Gi
+              ephemeral-storage: 4Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
           volumeMounts:
             - name: work
               mountPath: /home/runner/_work
@@ -129,13 +180,13 @@ runnerScaleSet:
             privileged: true
           resources:
             requests:
-              cpu: 250m
+              cpu: 500m
               memory: 512Mi
-              ephemeral-storage: 4Gi
+              ephemeral-storage: 3Gi
             limits:
-              cpu: 2000m
-              memory: 4Gi
-              ephemeral-storage: 20Gi
+              cpu: 1000m
+              memory: 1Gi
+              ephemeral-storage: 8Gi
           volumeMounts:
             - name: work
               mountPath: /home/runner/_work
@@ -146,7 +197,7 @@ runnerScaleSet:
       volumes:
         - name: work
           emptyDir:
-            sizeLimit: 20Gi
+            sizeLimit: 10Gi
         - name: dind-sock
           emptyDir:
             sizeLimit: 256Mi

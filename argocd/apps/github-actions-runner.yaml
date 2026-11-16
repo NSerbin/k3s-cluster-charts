@@ -20,6 +20,9 @@ spec:
     namespace: arc-systems
 
   syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
       - CreateNamespace=true
       - ServerSideApply=true

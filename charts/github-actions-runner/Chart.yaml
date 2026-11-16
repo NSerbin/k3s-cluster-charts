@@ -3,7 +3,7 @@ name: github-actions-runner
 description: GitHub Actions Runner Controller with a managed runner scale set
 type: application
 version: 0.1.0
-appVersion: "0.15.0"
+appVersion: "0.15.1"
 home: https://github.com/actions/actions-runner-controller/releases
 dependencies:
   - name: gha-runner-scale-set-controller
@@ -12,7 +12,12 @@ dependencies:
     repository: oci://ghcr.io/actions/actions-runner-controller-charts
     condition: controller.enabled
   - name: gha-runner-scale-set
-    alias: runnerScaleSet
+    alias: deployRunnerScaleSet
     version: 0.15.1
     repository: oci://ghcr.io/actions/actions-runner-controller-charts
-    condition: runnerScaleSet.enabled
+    condition: deployRunnerScaleSet.enabled
+  - name: gha-runner-scale-set
+    alias: buildRunnerScaleSet
+    version: 0.15.1
+    repository: oci://ghcr.io/actions/actions-runner-controller-charts
+    condition: buildRunnerScaleSet.enabled
