@@ -556,7 +556,9 @@ config:
         - Vault:
             icon: https://cdn.simpleicons.org/vault/ffffff
             href: https://secrets.nserbin.com/
-            siteMonitor: http://vault-ui:8200/v1/sys/health?standbyok=true
+            # Availability check: Vault intentionally returns 503 while sealed.
+            # Homepage should show reachability rather than seal state.
+            siteMonitor: http://vault-ui:8200/v1/sys/health?standbyok=true&sealedcode=200
             description: Secrets management
             server: k3s
 
