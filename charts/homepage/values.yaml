@@ -128,6 +128,11 @@ config:
         tab: Personal
         style: row
         columns: 3
+      Home:
+        icon: mdi-home-outline
+        tab: Personal
+        style: row
+        columns: 3
       Media:
         icon: mdi-multimedia
         tab: Personal
@@ -485,7 +490,7 @@ config:
         - LinkStack:
             icon: mdi-link-box-variant-outline
             href: https://bio-admin.nserbin.com/dashboard
-            siteMonitor: http://linkstack.tools/
+            siteMonitor: https://bio.nserbin.com/
             description: Public link profiles
             server: k3s
 
@@ -561,6 +566,14 @@ config:
             href: https://money.nserbin.com/
             siteMonitor: http://sure/up
             description: Personal finance
+            server: k3s
+
+    - Home:
+        - Attic:
+            icon: mdi-package-variant-closed
+            href: https://inventory.nserbin.com/
+            siteMonitor: http://attic.tools:8080/
+            description: Household inventory
             server: k3s
 
     - Security:
