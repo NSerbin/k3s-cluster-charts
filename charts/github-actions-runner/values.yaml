@@ -44,7 +44,7 @@ controller:
 deployRunnerScaleSet:
   enabled: true
   namespaceOverride: github-runners
-  githubConfigUrl: https://github.com/NSerbin
+  githubConfigUrl: https://github.com/NSerbin-web
   githubConfigSecret: github-actions-runner-github-app
   controllerServiceAccount:
     namespace: arc-systems
@@ -97,7 +97,7 @@ deployRunnerScaleSet:
 buildRunnerScaleSet:
   enabled: true
   namespaceOverride: github-runners
-  githubConfigUrl: https://github.com/NSerbin
+  githubConfigUrl: https://github.com/NSerbin-web
   githubConfigSecret: github-actions-runner-github-app
   controllerServiceAccount:
     namespace: arc-systems
