@@ -21,3 +21,8 @@ dependencies:
     version: 0.15.1
     repository: oci://ghcr.io/actions/actions-runner-controller-charts
     condition: buildRunnerScaleSet.enabled
+  - name: gha-runner-scale-set
+    alias: terraformRunnerScaleSet
+    version: 0.15.1
+    repository: oci://ghcr.io/actions/actions-runner-controller-charts
+    condition: terraformRunnerScaleSet.enabled

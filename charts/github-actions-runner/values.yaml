@@ -204,3 +204,58 @@ buildRunnerScaleSet:
         - name: dind-externals
           emptyDir:
             sizeLimit: 2Gi
+
+terraformRunnerScaleSet:
+  enabled: true
+  namespaceOverride: github-runners
+  githubConfigUrl: https://github.com/NSerbin-web
+  githubConfigSecret: github-actions-runner-github-app
+  controllerServiceAccount:
+    namespace: arc-systems
+    name: arc-controller
+  runnerScaleSetName: nserbin-terraform
+  runnerGroup: terraform
+  minRunners: 0
+  maxRunners: 1
+  listenerTemplate:
+    spec:
+      containers:
+        - name: listener
+          resources:
+            requests:
+              cpu: 25m
+              memory: 64Mi
+            limits:
+              cpu: 250m
+              memory: 256Mi
+  template:
+    spec:
+      serviceAccountName: arc-terraform-runner
+      automountServiceAccountToken: true
+      containers:
+        - name: runner
+          image: ghcr.io/actions/actions-runner:2.331.0
+          imagePullPolicy: IfNotPresent
+          command:
+            - /home/runner/run.sh
+          resources:
+            requests:
+              cpu: 250m
+              memory: 512Mi
+              ephemeral-storage: 1Gi
+            limits:
+              cpu: 1000m
+              memory: 1536Mi
+              ephemeral-storage: 4Gi
+          securityContext:
+            allowPrivilegeEscalation: false
+            capabilities:
+              drop:
+                - ALL
+          volumeMounts:
+            - name: work
+              mountPath: /home/runner/_work
+      volumes:
+        - name: work
+          emptyDir:
+            sizeLimit: 4Gi
