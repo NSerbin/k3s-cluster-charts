@@ -218,7 +218,7 @@ terraformRunnerScaleSet:
   runnerScaleSetName: nserbin-terraform
   runnerGroup: terraform
   minRunners: 0
-  maxRunners: 1
+  maxRunners: 2
   listenerTemplate:
     spec:
       containers:
