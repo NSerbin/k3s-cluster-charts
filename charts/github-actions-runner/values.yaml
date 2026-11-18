@@ -68,7 +68,7 @@ deployRunnerScaleSet:
       automountServiceAccountToken: false
       containers:
         - name: runner
-          image: ghcr.io/actions/actions-runner:2.331.0
+          image: ghcr.io/actions/actions-runner:2.338.2
           imagePullPolicy: IfNotPresent
           command:
             - /home/runner/run.sh
@@ -125,7 +125,7 @@ buildRunnerScaleSet:
         fsGroup: 123
       initContainers:
         - name: init-dind-externals
-          image: ghcr.io/actions/actions-runner:2.331.0
+          image: ghcr.io/actions/actions-runner:2.338.2
           imagePullPolicy: IfNotPresent
           command:
             - cp
@@ -138,7 +138,7 @@ buildRunnerScaleSet:
               mountPath: /home/runner/tmpDir
       containers:
         - name: runner
-          image: ghcr.io/actions/actions-runner:2.331.0
+          image: ghcr.io/actions/actions-runner:2.338.2
           imagePullPolicy: IfNotPresent
           command:
             - /home/runner/run.sh
@@ -234,7 +234,7 @@ terraformRunnerScaleSet:
       automountServiceAccountToken: true
       containers:
         - name: runner
-          image: ghcr.io/actions/actions-runner:2.331.0
+          image: ghcr.io/actions/actions-runner:2.338.2
           imagePullPolicy: IfNotPresent
           command:
             - /home/runner/run.sh
