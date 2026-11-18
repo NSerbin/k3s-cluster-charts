@@ -66,6 +66,8 @@ deployRunnerScaleSet:
   template:
     spec:
       automountServiceAccountToken: false
+      nodeSelector:
+        workload.nserbin.com/lenovo: "true"
       containers:
         - name: runner
           image: ghcr.io/actions/actions-runner:2.338.2
@@ -232,6 +234,8 @@ terraformRunnerScaleSet:
     spec:
       serviceAccountName: arc-terraform-runner
       automountServiceAccountToken: true
+      nodeSelector:
+        workload.nserbin.com/lenovo: "true"
       containers:
         - name: runner
           image: ghcr.io/actions/actions-runner:2.338.2
