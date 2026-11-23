@@ -84,7 +84,7 @@ kube-prometheus-stack:
     enabled: true
     image:
       repository: grafana/grafana
-      tag: "13.3.0"
+      tag: "13.3.1"
       pullPolicy: IfNotPresent
 
     admin:
